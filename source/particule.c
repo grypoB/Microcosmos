@@ -89,23 +89,40 @@ void part_setForce(PARTICULE *part, VECTOR force) {
 }
 
 void part_setAcceleration(PARTICULE *part, VECTOR acceleration) {
-    return part->acceleration = acceleration;
+    part->acceleration = acceleration;
 }
 
 // return if successful or not (radius must be >=0)
 bool part_setRadius(PARTICULE *part, double radius) {
     if (radius>=0) {
         part->radius = radius;
-        part_initMass(part)
+        part_initMass(part);
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
 
-// Various function
+// -----------
+// Various functions
 static void part_initMass(PARTICULE *part) {
-    part->mass = pow(part->radius, 2) * KMASS;
+    part->mass = pow(part->radius, 2) * KMASSE;
+}
+
+void part_addSpeed(PARTICULE *part, VECTOR deltaSpeed) {
+    part->speed = vector_sum(part->speed, deltaSpeed);
+}
+
+void part_addForce(PARTICULE *part, VECTOR deltaForce) {
+    part->force = vector_sum(part->force, deltaForce);
+}
+
+bool part_updateAcc(PARTICULE *part) {
+    if (part->mass != 0) {
+        part->acceleration = vector_multiply(part->force, 1/part->mass);
+        return true;
+    } else {
+        return false;
+    }
 }
