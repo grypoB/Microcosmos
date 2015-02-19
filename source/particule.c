@@ -7,6 +7,7 @@
 #include "particule.h"
 #include "geometry.h"
 
+#define DEFAULT_RADIUS 0
 
 struct Particule {
    double radius;
@@ -25,8 +26,8 @@ struct Particule {
 PARTICULE part_null() {
     PARTICULE part;
 
-    part.radius = 0;
-    part.mass = 0;
+    part.radius = DEFAULT_RADIUS;
+    part_initMass(&part);
     part.center = point_null();
     part.speed = vector_null();
     part.force = vector_null();
