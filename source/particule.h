@@ -1,7 +1,7 @@
 #ifndef PARTICULE_H
 #define PARTICULE_H
 
-#include "geometrie.h"
+#include "geometry.h"
 
 typedef struct Particule PARTICULE;
 

@@ -5,7 +5,7 @@
 
 #include "constante.h"
 #include "particule.h"
-#include "geometrie.h"
+#include "geometry.h"
 
 
 struct Particule {
