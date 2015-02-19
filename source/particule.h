@@ -1,6 +1,8 @@
 #ifndef PARTICULE_H
 #define PARTICULE_H
 
+#include "geometrie.h"
+
 typedef struct Particule PARTICULE;
 
 // constructer
@@ -19,7 +21,7 @@ double part_getMass(PARTICULE part);
 void part_setCenter(PARTICULE *part, POINT center);
 void part_setSpeed(PARTICULE *part, VECTOR speed);
 void part_setForce(PARTICULE *part, VECTOR force);
-void part_setAcceleration(PARTICULE *part, VECTOR acceleration);
+//void part_setAcceleration(PARTICULE *part, VECTOR acceleration);
 bool part_setRadius(PARTICULE *part, double radius); // return if true successful (radius>=0)
 
 // other functions

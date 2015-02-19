@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stdbool.h>
+#include <math.h>
+
+#include "constante.h"
 #include "particule.h"
 #include "geometrie.h"
-
 
 
 struct Particule {
@@ -19,12 +20,13 @@ struct Particule {
 };
 
 
+// -----------
 // constructers
 PARTICULE part_null() {
     PARTICULE part;
 
     part.radius = 0;
-    part_nullMass(&part);
+    part.mass = 0;
     part.center = point_null();
     part.speed = vector_null();
     part.force = vector_null();
@@ -37,7 +39,7 @@ PARTICULE part_create(double radius, POINT center, VECTOR speed) {
     PARTICULE part;
 
     part.radius = radius;
-    part_nullMass(&part);
+    part_initMass(&part);
     part.center = center;
     part.speed = speed;
     part.force = vector_null();
@@ -47,6 +49,7 @@ PARTICULE part_create(double radius, POINT center, VECTOR speed) {
 }
 
 
+// -----------
 // Getters for the varius field of the structure Particule
 
 POINT part_getCenter(PARTICULE part) {
@@ -69,10 +72,11 @@ double part_getRadius(PARTICULE part) {
 }
 
 double part_getMass(PARTICULE part) {
-    return part.center;
+    return part.mass;
 }
 
 
+// -----------
 // Setters for the various field of the structure Particule
 // mass is not settable without : part_initMass
 
@@ -87,10 +91,10 @@ void part_setSpeed(PARTICULE *part, VECTOR speed) {
 void part_setForce(PARTICULE *part, VECTOR force) {
     part->force = force;
 }
-
+/*
 void part_setAcceleration(PARTICULE *part, VECTOR acceleration) {
     part->acceleration = acceleration;
-}
+}*/
 
 // return if successful or not (radius must be >=0)
 bool part_setRadius(PARTICULE *part, double radius) {
