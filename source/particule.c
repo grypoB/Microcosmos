@@ -6,6 +6,7 @@
 #include "constante.h"
 #include "particule.h"
 #include "geometry.h"
+#include "error.h"
 
 #define PART_TAB_SIZE MAX_RENDU1
 #define DEFAULT_RADIUS 1
@@ -40,18 +41,24 @@ int part_create(double radius, POINT center, VECTOR speed) {
     static int id = 0;
     id++;
 
-    PARTICULE *pPart = part_emptySlot();
+    if (vector_norm(speed) > MAX_VITESSE) {
+        error_vitesse_partic(ERR_PARTIC, id);
+    } else if (radius>=RMAX || radius<=RMIN) {
+        error_rayon_partic(ERR_PARTIC, id);
+    } else { // no errors
+        PARTICULE *pPart = part_emptySlot();
 
-    pPart->locked = false;
-    pPart->id = id; 
-    pPart->radius = radius;
-    part_initMass(pPart);
-    pPart->center = center;
-    pPart->speed = speed;
-    pPart->force = vector_null();
-    pPart->acceleration = vector_null();
+        pPart->locked = false;
+        pPart->id = id; 
+        pPart->radius = radius;
+        part_initMass(pPart);
+        pPart->center = center;
+        pPart->speed = speed;
+        pPart->force = vector_null();
+        pPart->acceleration = vector_null();
+    }
 
-    return pPart->id;
+    return id;
 }
 
 // -----------
