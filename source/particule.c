@@ -108,8 +108,7 @@ POINT part_getCenter(int partID) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
         return pPart->center;
-    }
-    else {
+    } else {
         return point_null();
     }
 }
@@ -118,8 +117,7 @@ VECTOR part_getSpeed(int partID) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
         return pPart->speed;
-    }
-    else {
+    } else {
         return vector_null();
     }
 }
@@ -128,8 +126,7 @@ VECTOR part_getForce(int partID) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
         return pPart->force;
-    }
-    else {
+    } else {
         return vector_null();
     }
 }
@@ -138,8 +135,7 @@ VECTOR part_getAcceleration(int partID) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
         return pPart->acceleration;
-    }
-    else {
+    } else {
         return vector_null();
     }
 }
@@ -148,8 +144,7 @@ double part_getRadius(int partID) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
         return pPart->radius;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -158,8 +153,7 @@ double part_getMass(int partID) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
         return pPart->mass;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -174,8 +168,7 @@ bool part_setCenter(int partID, POINT center) {
     if (pPart != NULL) {
         pPart->center = center;
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -185,8 +178,7 @@ bool part_setSpeed(int partID, VECTOR speed) {
     if (pPart != NULL) {
         part->speed = speed;
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -196,8 +188,7 @@ bool part_setForce(int partID, VECTOR force) {
     if (pPart != NULL) {
         part->force = force;
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -210,8 +201,7 @@ bool part_setRadius(int partID, double radius) {
         part->radius = radius;
         part_initMass(part);
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
