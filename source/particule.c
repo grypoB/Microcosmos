@@ -7,7 +7,7 @@
 #include "particule.h"
 #include "geometry.h"
 
-#define PART_TAB_SIZE MAXRENDU1
+#define PART_TAB_SIZE MAX_RENDU1
 #define DEFAULT_RADIUS 1
 
 struct Particule {
@@ -26,7 +26,7 @@ struct Particule {
 };
 
 static PARTICULE *partTab = NULL;
-static partNb = 0;
+static int partNB = 0;
 
 
 // -----------
@@ -37,19 +37,19 @@ int part_null() {
 }
 
 int part_create(double radius, POINT center, VECTOR speed) {
-    static id = 0
+    static int id = 0;
     id++;
 
     PARTICULE *pPart = part_emptySlot();
 
-    pPart.locked = false;
-    pPart.id = id; 
-    pPart.radius = radius;
-    pPart_initMass(&pPart);
-    pPart.center = center;
-    pPart.speed = speed;
-    pPart.force = vector_null();
-    pPart.acceleration = vector_null();
+    pPart->locked = false;
+    pPart->id = id; 
+    pPart->radius = radius;
+    part_initMass(pPart);
+    pPart->center = center;
+    pPart->speed = speed;
+    pPart->force = vector_null();
+    pPart->acceleration = vector_null();
 
     return pPart->id;
 }
@@ -144,7 +144,7 @@ bool part_setCenter(int partID, POINT center) {
 bool part_setSpeed(int partID, VECTOR speed) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
-        part->speed = speed;
+        pPart->speed = speed;
         return true;
     } else {
         return false;
@@ -154,7 +154,7 @@ bool part_setSpeed(int partID, VECTOR speed) {
 bool part_setForce(int partID, VECTOR force) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
-        part->force = force;
+        pPart->force = force;
         return true;
     } else {
         return false;
@@ -166,8 +166,8 @@ bool part_setForce(int partID, VECTOR force) {
 bool part_setRadius(int partID, double radius) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
-        part->radius = radius;
-        part_initMass(part);
+        pPart->radius = radius;
+        part_initMass(pPart);
         return true;
     } else {
         return false;
@@ -202,7 +202,7 @@ bool part_updateAcc(PARTICULE *part) {
 // -----------
 // utilities function (management finding and managing the particules data structure)
 static PARTICULE* part_emptySlot() {
-    static partTabSize = 0;
+    static int partTabSize = 0;
     int i = 0;
 
 
@@ -235,7 +235,7 @@ static PARTICULE* part_emptySlot() {
 
 static PARTICULE* part_lastPart() {
     if (partTab != NULL && partNB>0) { 
-        return partTab[partNB-1];
+        return &partTab[partNB-1];
     } else {
         return NULL;
     }
