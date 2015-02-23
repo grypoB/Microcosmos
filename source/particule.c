@@ -31,52 +31,6 @@ static partNb = 0;
 
 // -----------
 // constructers
-static PARTICULE* part_emptySlot() {
-    static partTabSize = 0;
-    int i = 0;
-
-
-    // not yet init
-    if (partTab==NULL) {
-        partTab = malloc(sizeof(PARTICULE)*PART_TAB_SIZE);
-        if (partTab==NULL) {
-            printf("MEM allocation failed");
-            exit(EXIT_FAILURE);
-        }
-        partTabSize = PART_TAB_SIZE;
-    }
-    
-    // if full
-    if (partNB == partTabSize) {
-        PARTICULE *newPartTab = malloc(sizeof(PARTICULE)*2);
-        if (newPartTab==NULL) {
-            printf("MEM allocation failed");
-            exit(EXIT_FAILURE);
-        }
-        for (i=0; i<partNB; i++) {
-            newPartTab[i] = partTab[i];
-        }
-        free(partTab);
-        partTab = newPartTab;
-        partTabSize*=2;
-    }
-    return &partTab[partNB];
-}
-
-PARTICULE* part_findPart(int partID) {
-    int i=0;
-    PARTICULE *pPart = NULL;
-    
-    if (partTab != NULL) {
-        while (i < partNB && pPart != NULL) {
-            if (partTab[i].id == partID) {
-                pPart = &partTab[i];
-            } 
-        }
-    }
-
-    return pPart;
-}
 
 int part_null() {
     return part_create(DEFAULT_RADIUS, point_null(), vector_null());
@@ -98,6 +52,20 @@ int part_create(double radius, POINT center, VECTOR speed) {
     pPart.acceleration = vector_null();
 
     return pPart->id;
+}
+
+// -----------
+// destructor
+bool part_deletePart(int partID) {
+    PARTICULE *pPart     = part_findPart(partID);
+    PARTICULE *pLastPart = part_lastPart();
+    if (pPart != NULL && pLastPart != NULL) {
+        *pPart = *pLastPart;
+        partNB--;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -228,4 +196,62 @@ bool part_updateAcc(PARTICULE *part) {
     } else {
         return false;
     }
+}
+
+
+// -----------
+// utilities function (management finding and managing the particules data structure)
+static PARTICULE* part_emptySlot() {
+    static partTabSize = 0;
+    int i = 0;
+
+
+    // if not yet init
+    if (partTab==NULL) {
+        partTab = malloc(sizeof(PARTICULE)*PART_TAB_SIZE);
+        if (partTab==NULL) {
+            printf("MEM allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        partTabSize = PART_TAB_SIZE;
+    }
+    
+    // if full
+    if (partNB == partTabSize) {
+        PARTICULE *newPartTab = malloc(sizeof(PARTICULE)*2);
+        if (newPartTab==NULL) {
+            printf("MEM allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        for (i=0; i<partNB; i++) {
+            newPartTab[i] = partTab[i];
+        }
+        free(partTab);
+        partTab = newPartTab;
+        partTabSize*=2;
+    }
+    return &partTab[partNB];
+}
+
+static PARTICULE* part_lastPart() {
+    if (partTab != NULL && partNB>0) { 
+        return partTab[partNB-1];
+    } else {
+        return NULL;
+    }
+}
+
+static PARTICULE* part_findPart(int partID) {
+    int i=0;
+    PARTICULE *pPart = NULL;
+    
+    if (partTab != NULL) {
+        while (i < partNB && pPart != NULL) {
+            if (partTab[i].id == partID) {
+                pPart = &partTab[i];
+            } 
+        }
+    }
+
+    return pPart;
 }
