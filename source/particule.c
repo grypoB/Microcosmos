@@ -7,73 +7,161 @@
 #include "particule.h"
 #include "geometry.h"
 
-#define DEFAULT_RADIUS 0
+#define PART_TAB_SIZE MAXRENDU1
+#define DEFAULT_RADIUS 1
 
 struct Particule {
-   double radius;
-   double mass;
 
-   POINT center;
+    bool locked; // a locked particle cannot move
+    int id;
 
-   VECTOR speed;
-   VECTOR force;
-   VECTOR acceleration;
+    double radius;
+    double mass;
+
+    POINT center;
+
+    VECTOR speed;
+    VECTOR force;
+    VECTOR acceleration;
 };
+
+static PARTICULE *partTab = NULL;
+static partNb = 0;
 
 
 // -----------
 // constructers
-PARTICULE part_null() {
-    PARTICULE part;
+static PARTICULE* part_emptySlot() {
+    static partTabSize = 0;
+    int i = 0;
 
-    part.radius = DEFAULT_RADIUS;
-    part_initMass(&part);
-    part.center = point_null();
-    part.speed = vector_null();
-    part.force = vector_null();
-    part.acceleration = vector_null();
 
-    return part;
+    // not yet init
+    if (partTab==NULL) {
+        partTab = malloc(sizeof(PARTICULE)*PART_TAB_SIZE);
+        if (partTab==NULL) {
+            printf("MEM allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        partTabSize = PART_TAB_SIZE;
+    }
+    
+    // if full
+    if (partNB == partTabSize) {
+        PARTICULE *newPartTab = malloc(sizeof(PARTICULE)*2);
+        if (newPartTab==NULL) {
+            printf("MEM allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        for (i=0; i<partNB; i++) {
+            newPartTab[i] = partTab[i];
+        }
+        free(partTab);
+        partTab = newPartTab;
+        partTabSize*=2;
+    }
+    return &partTab[partNB];
 }
 
-PARTICULE part_create(double radius, POINT center, VECTOR speed) {
-    PARTICULE part;
+PARTICULE* part_findPart(int partID) {
+    int i=0;
+    PARTICULE *pPart = NULL;
+    
+    if (partTab != NULL) {
+        while (i < partNB && pPart != NULL) {
+            if (partTab[i].id == partID) {
+                pPart = &partTab[i];
+            } 
+        }
+    }
 
-    part.radius = radius;
-    part_initMass(&part);
-    part.center = center;
-    part.speed = speed;
-    part.force = vector_null();
-    part.acceleration = vector_null();
+    return pPart;
+}
 
-    return part;
+int part_null() {
+    return part_create(DEFAULT_RADIUS, point_null(), vector_null());
+}
+
+int part_create(double radius, POINT center, VECTOR speed) {
+    static id = 0
+    id++;
+
+    PARTICULE *pPart = part_emptySlot();
+
+    pPart.locked = false;
+    pPart.id = id; 
+    pPart.radius = radius;
+    pPart_initMass(&pPart);
+    pPart.center = center;
+    pPart.speed = speed;
+    pPart.force = vector_null();
+    pPart.acceleration = vector_null();
+
+    return pPart->id;
 }
 
 
 // -----------
 // Getters for the varius field of the structure Particule
 
-POINT part_getCenter(PARTICULE part) {
-    return part.center;
+POINT part_getCenter(int partID) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        return pPart->center;
+    }
+    else {
+        return point_null();
+    }
 }
 
-VECTOR part_getSpeed(PARTICULE part) {
-    return part.speed;
+VECTOR part_getSpeed(int partID) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        return pPart->speed;
+    }
+    else {
+        return vector_null();
+    }
 }
 
-VECTOR part_getForce(PARTICULE part) {
-    return part.force;
+VECTOR part_getForce(int partID) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        return pPart->force;
+    }
+    else {
+        return vector_null();
+    }
 }
 
-VECTOR part_getAcceleration(PARTICULE part) {
-    return part.acceleration;
-}
-double part_getRadius(PARTICULE part) {
-    return part.radius;
+VECTOR part_getAcceleration(int partID) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        return pPart->acceleration;
+    }
+    else {
+        return vector_null();
+    }
 }
 
-double part_getMass(PARTICULE part) {
-    return part.mass;
+double part_getRadius(int partID) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        return pPart->radius;
+    }
+    else {
+        return 0;
+    }
+}
+
+double part_getMass(int partID) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        return pPart->mass;
+    }
+    else {
+        return 0;
+    }
 }
 
 
@@ -81,29 +169,49 @@ double part_getMass(PARTICULE part) {
 // Setters for the various field of the structure Particule
 // mass is not settable without : part_initMass
 
-void part_setCenter(PARTICULE *part, POINT center) {
-    part->center = center;
+bool part_setCenter(int partID, POINT center) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        pPart->center = center;
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
-void part_setSpeed(PARTICULE *part, VECTOR speed) {
-    part->speed = speed;
+bool part_setSpeed(int partID, VECTOR speed) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        part->speed = speed;
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
-void part_setForce(PARTICULE *part, VECTOR force) {
-    part->force = force;
+bool part_setForce(int partID, VECTOR force) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
+        part->force = force;
+        return true;
+    }
+    else {
+        return false;
+    }
 }
-/*
-void part_setAcceleration(PARTICULE *part, VECTOR acceleration) {
-    part->acceleration = acceleration;
-}*/
 
-// return if successful or not (radius must be >=0)
-bool part_setRadius(PARTICULE *part, double radius) {
-    if (radius>=0) {
+//void part_setAcceleration(PARTICULE *part, VECTOR acceleration) {
+
+bool part_setRadius(int partID, double radius) {
+    PARTICULE *pPart = part_findPart(partID);
+    if (pPart != NULL) {
         part->radius = radius;
         part_initMass(part);
         return true;
-    } else {
+    }
+    else {
         return false;
     }
 }
