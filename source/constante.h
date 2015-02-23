@@ -15,4 +15,6 @@
 #define MAX_VITESSE 10 
 #define NBP 0.05
 
+#define UNASSIGNED -1
+
 #endif
