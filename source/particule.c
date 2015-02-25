@@ -211,6 +211,7 @@ static void part_initMass(PARTICULE *part) {
 // all these fct act on the entire table partTab of particles
 bool part_nextTick(double delta_t) {
     if (partTab!=NULL) {
+        //part_collisionBlackHole();
         part_updateForce();
         part_updateAcc();
         part_updateSpeed(delta_t);
@@ -221,6 +222,8 @@ bool part_nextTick(double delta_t) {
     }
 }
 
+//static part_collisionBlackHole() {}
+
 static void part_updateForce() {
     int i=0, j=0;
 
@@ -230,12 +233,17 @@ static void part_updateForce() {
 
     for (i=0 ; i<partNB ; i++) {
         partTab[i].force = vector_null();
+
+        // TODO add black holes effet
+
+
+        // TODO
     }
 
     for (i=0 ; i<partNB-1 ; i++) {
         for (j=i+1 ; j<partNB ; j++) {
             distance = point_distance(partTab[i].center, partTab[j].center);
-            seuil_d = partTab[i].radius + partTab[j].radius + min(partTab[i].radius, partTab[j].radius);
+            seuil_d = partTab[i].radius + partTab[j].radius + fmin(partTab[i].radius, partTab[j].radius);
 
             if (distance < 3*seuil_d) {
                 if (distance < EPSILON_ZERO) {
@@ -248,14 +256,19 @@ static void part_updateForce() {
                     force_norm = linear_interpolation(distance, 2*seuil_d, MAX_ATTR, 3*seuil_d, 0);
                 }
 
-                // projection of the force
-                //TODO
+                // application of the force
+                if (distance < EPSILON_ZERO) {
+                    partTab[i].force = vector_create(0, force_norm);
+                }
+                else { // general case
+                    partTab[i].force = vector_create(force_norm/distance
+                                                     * (partTab[j].center.x-partTab[i].center.x),
+                                                     force_norm/distance
+                                                     * (partTab[j].center.y-partTab[i].center.y));
 
+                }
+                partTab[j].force = vector_multiply(partTab[i].force, -1);
 
-
-
-
-                //TODO
             }
         }
     }
@@ -268,7 +281,6 @@ static void part_updateAcc() {
     }
 }
 
-
 static void part_updateSpeed(double delta_t) {
     int i=0;
     double speed_norm=0;
@@ -278,7 +290,7 @@ static void part_updateSpeed(double delta_t) {
             partTab[i].speed = vector_sum(partTab[i].speed,
                                           vector_multiply(partTab[i].speed, delta_t));
             speed_norm = vector_norm(partTab[i].speed);
-            if (speed_norm > MAX_VITESSE) {
+            if (speed_norm > MAX_VITESSE) { // scale down the vector
                 partTab[i].speed = vector_multiply(partTab[i].speed, (MAX_VITESSE/speed_norm));
             }
         }
@@ -293,6 +305,32 @@ static void part_updatePos(double delta_t) {
                                                 vector_multiply(partTab[i].speed, delta_t));
         }
     }
+}
+
+// ----------
+// other sims functions
+int part_totalNB() {
+    return partNB;
+}
+
+int part_closestPart(POINT point) {
+    int i = 0;
+    int partID = UNASSIGNED;
+    double dist = 0;
+    double newDist = 0;
+
+    if (partTab!=NULL && partNB>0) {
+        dist = point_distance(partTab[0].center, point);
+        for (i=1 ; i<partNB ; i++) {
+            newDist = point_distance(partTab[i].center, point);
+            if (newDist < dist) {
+                dist = newDist;
+                partID = partTab[i].id;
+            }
+        }
+    }
+
+    return partID;
 }
 
 // -----------

@@ -25,5 +25,8 @@ bool part_setRadius(int partID, double radius);
 bool part_setLock  (int partID, bool lock);
 
 // force/simultaion related
+int part_totalNB();
 bool part_nextTick(double delta_t);
+int part_closestPart(POINT point); // return ID of closest particle
+
 #endif

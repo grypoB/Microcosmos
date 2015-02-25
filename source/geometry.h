@@ -22,6 +22,7 @@ POINT point_translate(POINT p, VECTOR v);
 double vector_norm(VECTOR v);
 VECTOR vector_sum(VECTOR v1, VECTOR v2);
 VECTOR vector_multiply(VECTOR v, double scalar);
+VECTOR vector_create(double x, double y);
 #endif
 
 // give the y coord of point C
