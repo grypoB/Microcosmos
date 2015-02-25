@@ -3,7 +3,8 @@
 
 #include "geometry.h"
 
-typedef struct Particule PARTICULE;
+// all particules are stored with a static in .c
+// creating one returns an unique ID which is used to reference to this particle later
 
 // constructer
 int  part_create(double radius, POINT center, VECTOR speed);
@@ -25,17 +26,4 @@ bool part_setLock  (int partID, bool lock);
 
 // force/simultaion related
 bool part_nextTick(double delta_t);
-static void part_updateForce();
-static void part_updateSpeed(double delta_t);
-static void part_updatePos(double delta_t);
-
-// other functions
-static void part_initMass(PARTICULE *part);
-//bool part_updateAcc(PARTICULE *part); // use the force applied to the particule to calculate the corresponding acceleration, return if true successful (mass!=0)
-
-// utility
-static PARTICULE* part_lastPart();
-static PARTICULE* part_nextEmptySlot();
-static PARTICULE* part_findPart(int partID);
-
 #endif

@@ -5,11 +5,23 @@
 
 #include "constante.h"
 #include "particule.h"
-#include "geometry.h"
 #include "error.h"
 
 #define PART_TAB_SIZE MAX_RENDU1
 #define TAB_GROWTH_RATIO 2
+
+typedef struct Particule PARTICULE;
+
+static void part_updateForce();
+static void part_updateAcc();
+static void part_updateSpeed(double delta_t);
+static void part_updatePos(double delta_t);
+
+static void part_initMass(PARTICULE *part);
+
+static PARTICULE* part_lastPart();
+static PARTICULE* part_nextEmptySlot();
+static PARTICULE* part_findPart(int partID);
 
 struct Particule {
 
@@ -80,7 +92,7 @@ bool part_deletePart(int partID) {
 
 void part_deleteAll() {
     if (partTab != NULL) {
-        free(partTab)
+        free(partTab);
     }
 }
 
@@ -259,10 +271,16 @@ static void part_updateAcc() {
 
 static void part_updateSpeed(double delta_t) {
     int i=0;
+    double speed_norm=0;
+
     for (i=0 ; i<partNB ; i++) {
-        if (!partTab[i].locked) {
+        if (!partTab[i].locked) { // a locked particle doesn't build up speed
             partTab[i].speed = vector_sum(partTab[i].speed,
                                           vector_multiply(partTab[i].speed, delta_t));
+            speed_norm = vector_norm(partTab[i].speed);
+            if (speed_norm > MAX_VITESSE) {
+                partTab[i].speed = vector_multiply(partTab[i].speed, (MAX_VITESSE/speed_norm));
+            }
         }
     }
 }
