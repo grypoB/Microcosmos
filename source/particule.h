@@ -6,9 +6,13 @@
 // all particules are stored with a static in .c
 // creating one returns an unique ID which is used to reference to this particle later
 
+// file lecture
+bool read_dataPart(const char *string);
+
 // constructer
 int  part_create(double radius, POINT center, VECTOR speed);
 bool part_deletePart(int partID);
+void part_deleteAll();
 
 // getters, do not modify the particle (return a default value if ID not found)
 double part_getRadius(int partID);

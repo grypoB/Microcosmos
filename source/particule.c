@@ -41,29 +41,20 @@ struct Particule {
 static PARTICULE *partTab = NULL;
 static int partNB = 0;
 
-void donnees_particules(const char * tab) 
-{
-	PARTICULE particule;
-	particule.nb_particules = 0; 
-	int i = 0;
-	char fin;
-	
-	if(!(sscanf(tab, "%lf", &particule.nb_particules)))
-	{
-		//error_lect_nb_elements(particule);
-	}
-	
-	for(i=0; i<particule.nb_particules; i++)
-	{
-		sscanf(tab, "%lf" "%lf" "%lf" "%lf" "%lf", &particule.rayon, &particule.posx, &particule.posy, &particule.vx, &particule.vy);
-	}	
-	
-	sscanf(tab, "%c", &fin);
-	char fin_entitee[] = "FIN_LISTE";
-	if(!(strcmp(fin_entitee, &fin))) 
-	{	
-		//error_lecture_elements();
-	}
+bool read_dataPart(const char *string) {
+    double param[5] = {0};
+    bool returnVal = false;
+
+    if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2], &param[3], &param[4])==5) {
+        if (part_create(param[0], point_create(param[1], param[2]),
+                                  vector_create(param[3], param[4])) != UNASSIGNED) {
+            returnVal = true;
+        }
+    } else {
+        error_lecture_elements(ERR_PARTIC, ERR_PAS_ASSEZ);
+    }
+
+    return returnVal;
 }
 
 
