@@ -19,23 +19,11 @@ double linear_interpolation(double xC,
 #include <stdlib.h>
 #include <math.h>
 
-typedef struct   //COORDONNEE D'UN POINT
-{
-	double x;
-	double y;
-}COORDONNEE;
-
-typedef struct   //COORDONNEE D'UN VECTEUR
-{
-	double x;
-	double y;
-}VECTEUR;
-
-typedef struct  // PARTICULE
-{
-	double rayon;
-	COORDONNEE centre;
-}PARTICULE;
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+//
+#include "geometrie.h"
 
 int info_particule(PARTICULE particule_1)
 {
@@ -43,18 +31,18 @@ int info_particule(PARTICULE particule_1)
 	scanf("%lf", &(particule_1.rayon)); 
 	
 	//printf("Entrer la coordonnée x du centre de la particule:\n");
-	scanf("%lf", &(particule_1.centre.x)); 
+	scanf("%lf", &(particule_1.posx)); 
 	
 	//printf("Entrer la coordonnée y du centre de la particule:\n");
-	scanf("%lf", &(particule_1.centre.y)); 
+	scanf("%lf", &(particule_1.posy)); 
 	
 	return 0;
 }
 
 double distances_particules(PARTICULE particule_1, PARTICULE particule_2)
 {
-	double distance_abscisse = particule_1.centre.x - particule_2.centre.x;
-	double distance_ordonnee = particule_1.centre.y - particule_2.centre.y;
+	double distance_abscisse = particule_1.posx - particule_2.posx;
+	double distance_ordonnee = particule_1.posy - particule_2.posy;
 	double distance_entre_particules = sqrt(distance_abscisse * distance_abscisse + distance_ordonnee  * distance_ordonnee);
 	
 	return distance_entre_particules;
@@ -81,5 +69,14 @@ VECTEUR multiplication_vecteurs(VECTEUR vecteur, double a)
 	vecteur.y = vecteur.y * a;
 	return vecteur;
 }
+
+double distance(COORDONNEE point_1, COORDONNEE point_2)
+{
+	double distance_abscisse = point_1.x - point_2.x;
+	double distance_ordonnee = point_1.y - point_2.y;
+	return sqrt(distance_abscisse * distance_abscisse + distance_ordonnee * distance_ordonnee);
+}
+
+
 
 

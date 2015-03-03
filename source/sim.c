@@ -31,9 +31,9 @@ int sim()
 			continue;
 		switch(composant)
 		{
-			case GENERATEUR: donnees_generateurs();
-			case TROU_NOIR: donnees_trous_noirs();
-			case PARTICULE: donnees_particules();	
+			case GENERATEUR: donnees_generateurs(tab, &composant);
+			case TROU_NOIR: donnees_trous_noirs(tab, &composant);
+			case PARTICULE: donnees_particules(tab, &composant);	
 		}
 		error_success();
 	}

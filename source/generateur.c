@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "sim.c"
-#include "geometrie.h"
+#include "geometry.h"
 #include "error.h"
 
 void donnees_generateurs(const char * tab,  int *composant) 
@@ -14,7 +14,7 @@ void donnees_generateurs(const char * tab,  int *composant)
 	
 	if(!(sscanf(tab, "%lf", &generateur.nb_de_generateurs))) 
 	{
-		//error_lect_nb_elements(generateur);
+		error_lect_nb_elements(ERR_GENERAT);
 	}
 	
 	for(i=0; i<generateur.nb_de_generateurs; i++)
@@ -28,5 +28,5 @@ void donnees_generateurs(const char * tab,  int *composant)
 	{	
 		//error_lecture_elements();
 	}
-	composant = composant + 1;
+	*composant++;
 }

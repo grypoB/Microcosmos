@@ -11,6 +11,51 @@ typedef struct {
     double y;
 } VECTOR;
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+//
+typedef struct   //COORDONNEE D'UN POINT
+{
+	double x;
+	double y;
+}COORDONNEE;
+
+typedef struct   //COORDONNEE D'UN VECTEUR
+{
+	double x;
+	double y;
+}VECTEUR;
+
+// // //
+
+typedef struct  // PARTICULE
+{
+	double nb_particules;
+	double rayon;
+	double posx;
+	double posy;
+	double vx;
+	double vy;
+}PARTICULE;
+
+typedef struct //GENERATEUR
+{
+	double nb_de_generateurs;
+	double rgen;
+	double posx;
+	double posy;
+	double vpi_x;
+	double vpi_y;
+}GENERATEUR;
+
+typedef struct //TROU NOIR
+{
+	double nb_de_trous_noirs;
+	double posx;
+	double posy;
+}TROU_NOIR;
+
 #if 1
 // function to do (2015-02-19)
 POINT point_null(); // return a point of coord (0,0)
