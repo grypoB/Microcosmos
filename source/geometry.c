@@ -17,8 +17,8 @@ double linear_interpolation(double xC,
     }
 }
 
-// function to do (2015-02-19)
-POINT point_null() // return a point of coord (0,0)
+
+POINT point_null()
 {
 	POINT p;
 	p.x = 0;
@@ -27,7 +27,7 @@ POINT point_null() // return a point of coord (0,0)
 }
 
 
-VECTOR vector_null() // return the null vector (0,0)
+VECTOR vector_null()
 {
 	VECTOR v;
 	v.x = 0;

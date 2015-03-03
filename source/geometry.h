@@ -11,22 +11,6 @@ typedef struct {
     double y;
 } VECTOR;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-//
-typedef struct   //COORDONNEE D'UN POINT
-{
-	double x;
-	double y;
-}COORDONNEE;
-
-typedef struct   //COORDONNEE D'UN VECTEUR
-{
-	double x;
-	double y;
-}VECTEUR;
-
 // // //
 
 typedef struct  // PARTICULE
