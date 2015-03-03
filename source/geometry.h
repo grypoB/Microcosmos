@@ -11,64 +11,17 @@ typedef struct {
     double y;
 } VECTOR;
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-//
-typedef struct   //COORDONNEE D'UN POINT
-{
-	double x;
-	double y;
-}COORDONNEE;
-
-typedef struct   //COORDONNEE D'UN VECTEUR
-{
-	double x;
-	double y;
-}VECTEUR;
-
-// // //
-
-typedef struct  // PARTICULE
-{
-	double nb_particules;
-	double rayon;
-	double posx;
-	double posy;
-	double vx;
-	double vy;
-}PARTICULE;
-
-typedef struct //GENERATEUR
-{
-	double nb_de_generateurs;
-	double rgen;
-	double posx;
-	double posy;
-	double vpi_x;
-	double vpi_y;
-}GENERATEUR;
-
-typedef struct //TROU NOIR
-{
-	double nb_de_trous_noirs;
-	double posx;
-	double posy;
-}TROU_NOIR;
-
-#if 1
-// function to do (2015-02-19)
 POINT point_null(); // return a point of coord (0,0)
-VECTOR vector_null(); // return the null vector (0,0)
-
+POINT point_create(double x, double y);
 double point_distance(POINT p1, POINT p2);
 POINT point_translate(POINT p, VECTOR v);
 
-double vector_norm(VECTOR v);
+VECTOR vector_null(); // return the null vector (0,0)
+VECTOR vector_create(double x, double y);
 VECTOR vector_sum(VECTOR v1, VECTOR v2);
 VECTOR vector_multiply(VECTOR v, double scalar);
-VECTOR vector_create(double x, double y);
-#endif
+double vector_norm(VECTOR v);
+
 
 // give the y coord of point C
 // by linear interpolation of the point A and B
