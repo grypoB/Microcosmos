@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <math.h>
+#include "geometry.h"
+#include "constante.h"
 
 // give the y coord of point C
 // by linear interpolation of the point A and B
@@ -15,30 +17,28 @@ double linear_interpolation(double xC,
     }
 }
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-//
-#include "geometrie.h"
-
-int info_particule(PARTICULE particule_1)
+// function to do (2015-02-19)
+POINT point_null() // return a point of coord (0,0)
 {
-	//printf("Entrer le rayon de la particule:\n");
-	scanf("%lf", &(particule_1.rayon)); 
-	
-	//printf("Entrer la coordonnée x du centre de la particule:\n");
-	scanf("%lf", &(particule_1.posx)); 
-	
-	//printf("Entrer la coordonnée y du centre de la particule:\n");
-	scanf("%lf", &(particule_1.posy)); 
-	
-	return 0;
+	POINT p;
+	p.x = 0;
+	p.y = 0;
+	return p;
 }
 
+
+VECTOR vector_null() // return the null vector (0,0)
+{
+	VECTOR v;
+	v.x = 0;
+	v.y = 0;
+	return v;
+}
+
+
+VECTOR vector_create(double x, double y);  // ??
+
+                            
 double distances_particules(PARTICULE particule_1, PARTICULE particule_2)
 {
 	double distance_abscisse = particule_1.posx - particule_2.posx;
@@ -48,35 +48,34 @@ double distances_particules(PARTICULE particule_1, PARTICULE particule_2)
 	return distance_entre_particules;
 }
 
-VECTEUR addition_vecteurs(VECTEUR vecteur_1, VECTEUR vecteur_2)
+VECTOR vector_sum(VECTOR v1, VECTOR v2)
 {
-	VECTEUR vecteur_resultant;
-	vecteur_resultant.x= vecteur_1.x + vecteur_2.x;
-	vecteur_resultant.y= vecteur_1.y + vecteur_2.y;
-	return vecteur_resultant;
+	VECTOR vf;
+	vf.x= v1.x + v2.x;
+	vf.y= v1.y + v2.y;
+	return vf;
 }
 
-double norme_vecteur(VECTEUR vecteur_1)
+double vector_norm(VECTOR v)
 {
-	double norme_du_vecteur;
-	norme_du_vecteur =sqrt(vecteur_1.x * vecteur_1.x + vecteur_1.y  * vecteur_1.y);
-	return norme_du_vecteur;
+	return sqrt(v.x * v.x + v.y  * v.y);
 }
 
-VECTEUR multiplication_vecteurs(VECTEUR vecteur, double a)
+VECTOR vector_multiply(VECTOR v, double scalar)
 {
-	vecteur.x = vecteur.x * a;
-	vecteur.y = vecteur.y * a;
-	return vecteur;
+	v.x = v.x * scalar;
+	v.y = v.y * scalar;
+	return v;
 }
 
-double distance(COORDONNEE point_1, COORDONNEE point_2)
+double point_distance(POINT p1, POINT p2)
 {
-	double distance_abscisse = point_1.x - point_2.x;
-	double distance_ordonnee = point_1.y - point_2.y;
-	return sqrt(distance_abscisse * distance_abscisse + distance_ordonnee * distance_ordonnee);
+	return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
-
-
-
+POINT point_translate(POINT p, VECTOR v)
+{
+	p.x = p.x + v.x;
+	p.y = p.y + v.y;
+	return p;
+}
