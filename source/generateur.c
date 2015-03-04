@@ -1,10 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sim.c"
 #include "geometry.h"
 #include "error.h"
+#include "generateur.h"
 
+bool read_dataGen(const char *string) {
+    double param[5] = {0};
+    bool returnVal = false;
+    
+    // TODO : handle the string  and to create a generator call :
+    //gen_create(double radius, POINT center, VECTOR speed);
+    // don't forget to call appropriate error if sscanf unnssuscecful
+    // follow model of read_dataPart()
+
+    return returnVal;
+}
+
+/*
 void donnees_generateurs(const char * tab,  int *composant) 
 {
 	GENERATEUR generateur;
@@ -30,3 +43,4 @@ void donnees_generateurs(const char * tab,  int *composant)
 	}
 	*composant++;
 }
+*/

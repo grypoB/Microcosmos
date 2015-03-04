@@ -1,10 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sim.c"
 #include "geometrie.h"
 #include "error.h"
+#include "trou_noir.h"
 
+
+bool read_dataBckH(const char *string) {
+    double param[2] = {0};
+    bool returnVal = false;
+    
+    // TODO : handle the string  and to create a black hole call :
+    //bckH_create(POINT center);
+    // don't forget to call appropriate error if sscanf unnssuscecful
+    // follow model of read_dataPart()
+
+    return returnVal;
+}
+
+/*
 void donnees_trous_noirs(const char * tab,  int *composant)
 {
 	TROU_NOIR trou_noir;
@@ -30,3 +44,4 @@ void donnees_trous_noirs(const char * tab,  int *composant)
 	}
 	composant = composant + 1;
 }
+*/

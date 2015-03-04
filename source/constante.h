@@ -2,6 +2,7 @@
 #define CONSTANTE_H
 #include "tolerance.h"
 
+// simulation related constant
 #define MAX_RENDU1 10 
 #define KMASSE 0.1 
 #define RMIN 0.5 
@@ -15,6 +16,9 @@
 #define MAX_VITESSE 10 
 #define NBP 0.05
 
+// implementation related constant 
 #define UNASSIGNED -1
+#define DATA_SEPARATOR "FIN_LISTE"
+#define BUFFER_SIZE 100
 
 #endif
