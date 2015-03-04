@@ -41,7 +41,7 @@ struct Particule {
 static PARTICULE *partTab = NULL;
 static int partNB = 0;
 
-/*void donnees_particules(const char * tab) 
+void donnees_particules(const char * tab) 
 {
 	PARTICULE particule;
 	particule.nb_particules = 0; 
@@ -65,7 +65,7 @@ static int partNB = 0;
 		//error_lecture_elements();
 	}
 }
-*/
+
 
 
 // -----------

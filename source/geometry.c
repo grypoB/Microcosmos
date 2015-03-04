@@ -36,7 +36,7 @@ VECTOR vector_null()
 }
 
 
-VECTOR vector_create(double x, double y);  // ??
+VECTOR vector_create(double x, double y);  // Quel est le but de cette fonction ?
 
                             
 double distances_particules(PARTICULE particule_1, PARTICULE particule_2)
