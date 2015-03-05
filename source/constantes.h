@@ -1,5 +1,12 @@
-#ifndef CONSTANTE_H
-#define CONSTANTE_H
+/* Nom: constantes.h 
+ * Description: constantes utilisées par le programme
+ * Date: 03.02.2014
+ * version : 1.0
+ * Auteur: PROG II
+ */
+
+#ifndef CONSTANTES_H
+#define CONSTANTES_H
 #include "tolerance.h"
 
 // simulation related constant
