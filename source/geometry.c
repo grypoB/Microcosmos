@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "geometry.h"
-#include "constante.h"
+#include "constantes.h"
 
 // give the y coord of point C
 // by linear interpolation of the point A and B

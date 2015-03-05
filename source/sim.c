@@ -11,7 +11,7 @@
 #include <string.h>
 
 #include "error.h"
-#include "constante.h"
+#include "constantes.h"
 
 #include "generateur.h"
 #include "trou_noir.h"

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "constante.h"
+#include "constantes.h"
 #include "geometry.h"
 #include "error.h"
 #include "generateur.h"

@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include "constante.h"
+#include "constantes.h"
 #include "particule.h"
 #include "error.h"
 
