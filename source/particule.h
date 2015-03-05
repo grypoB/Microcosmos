@@ -22,7 +22,7 @@ VECTOR part_getSpeed (int partID);
 VECTOR part_getForce (int partID);
 VECTOR part_getAcceleration(int partID);
 
-// setters, return true if set was successful
+// setters, return true if set was successful (i.e. particle was found)
 bool part_setCenter(int partID, POINT  center);
 bool part_setSpeed (int partID, VECTOR speed);
 bool part_setRadius(int partID, double radius);

@@ -12,13 +12,17 @@
 
 typedef struct Particule PARTICULE;
 
+static void part_initMass(PARTICULE *part);
+
 static void part_updateForce();
 static void part_updateAcc();
 static void part_updateSpeed(double delta_t);
 static void part_updatePos(double delta_t);
 
-static void part_initMass(PARTICULE *part);
+static double part_calcForce (PARTICULE *p1, PARTICULE *p2, double distance);
+static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, double force_norm);
 
+static PARTICULE* part_firstPart();
 static PARTICULE* part_lastPart();
 static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
@@ -243,9 +247,7 @@ bool part_nextTick(double delta_t) {
 
 static void part_updateForce() {
     int i=0, j=0;
-
     double distance = 0;
-    double seuil_d = 0;
     double force_norm = 0;
 
     for (i=0 ; i<partNB ; i++) {
@@ -259,36 +261,45 @@ static void part_updateForce() {
 
     for (i=0 ; i<partNB-1 ; i++) {
         for (j=i+1 ; j<partNB ; j++) {
+
             distance = point_distance(partTab[i].center, partTab[j].center);
-            seuil_d = partTab[i].radius + partTab[j].radius + fmin(partTab[i].radius, partTab[j].radius);
 
-            if (distance < 3*seuil_d) {
-                if (distance < EPSILON_ZERO) {
-                    force_norm = MAX_REP;
-                } else if (distance < seuil_d) {
-                    force_norm = linear_interpolation(distance, 0, MAX_REP, seuil_d, 0);
-                } else if (distance < 2*seuil_d) {
-                    force_norm = linear_interpolation(distance, seuil_d, 0, 2*seuil_d, MAX_ATTR);
-                } else { // distance < 3*seuil_d
-                    force_norm = linear_interpolation(distance, 2*seuil_d, MAX_ATTR, 3*seuil_d, 0);
-                }
+            force_norm = part_calcForce(&partTab[i], &partTab[j], distance);
 
-                // application of the force
-                if (distance < EPSILON_ZERO) {
-                    partTab[i].force = vector_create(0, force_norm);
-                }
-                else { // general case
-                    partTab[i].force = vector_create(force_norm/distance
-                                                     * (partTab[j].center.x-partTab[i].center.x),
-                                                     force_norm/distance
-                                                     * (partTab[j].center.y-partTab[i].center.y));
-
-                }
-                partTab[j].force = vector_multiply(partTab[i].force, -1);
-
-            }
+            part_applyForce(&partTab[i], &partTab[j], distance, force_norm);
         }
     }
+}
+
+static double part_calcForce(PARTICULE *p1, PARTICULE *p2, double distance) {
+    double force_norm = 0;
+    double seuil_d = 0;
+
+    seuil_d = p1->radius + p2->radius + fmin(p1->radius, p2->radius);
+
+    if (distance < 3*seuil_d) {
+        if (distance < EPSILON_ZERO) {
+            force_norm = MAX_REP;
+        } else if (distance < seuil_d) {
+            force_norm = linear_interpolation(distance, 0, MAX_REP, seuil_d, 0);
+        } else if (distance < 2*seuil_d) {
+            force_norm = linear_interpolation(distance, seuil_d, 0, 2*seuil_d, MAX_ATTR);
+        } else { // distance < 3*seuil_d
+            force_norm = linear_interpolation(distance, 2*seuil_d, MAX_ATTR, 3*seuil_d, 0);
+        }
+    }
+
+    return force_norm;
+}
+
+static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, double force_norm) {
+    if (distance < EPSILON_ZERO) {
+        p1->force = vector_create(0, force_norm);
+    } else { // general case
+        p1->force = vector_create(force_norm/distance * (p2->center.x-p1->center.x),
+                                  force_norm/distance * (p2->center.y-p1->center.y));
+    }
+    p2->force = vector_multiply(p1->force, -1);
 }
 
 static void part_updateAcc() {
@@ -374,8 +385,16 @@ static PARTICULE* part_nextEmptySlot() {
     return &partTab[partNB];
 }
 
+static PARTICULE* part_firstPart() {
+    if (partTab!=NULL && partNB>0) {
+        return &partTab[0];
+    } else {
+        return NULL;
+    }
+}
+
 static PARTICULE* part_lastPart() {
-    if (partTab!=NULL && partNB>0) { 
+    if (partTab!=NULL && partNB>0) {
         return &partTab[partNB-1];
     } else {
         return NULL;

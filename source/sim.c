@@ -19,13 +19,13 @@
 
 
 enum Read_state {NB_GENERATEUR,
-                    GENERATEUR,
-                    NB_TROU_NOIR,
-                    TROU_NOIR,
-                    NB_PARTICULE,
-                    PARTICULE,
-                    FIN,
-                    ERROR};
+                 GENERATEUR,
+                 NB_TROU_NOIR,
+                 TROU_NOIR,
+                 NB_PARTICULE,
+                 PARTICULE,
+                 FIN,
+                 ERROR};
 
 static int read_nbEntities(enum Read_state *state, char *tab);
 static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int nb_entities);
