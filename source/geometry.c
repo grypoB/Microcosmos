@@ -36,18 +36,22 @@ VECTOR vector_null()
 }
 
 
-VECTOR vector_create(double x, double y);  // Quel est le but de cette fonction ?
-
-                            
-double distances_particules(PARTICULE particule_1, PARTICULE particule_2)
+VECTOR vector_create(double x, double y)
 {
-	double distance_abscisse = particule_1.posx - particule_2.posx;
-	double distance_ordonnee = particule_1.posy - particule_2.posy;
-	double distance_entre_particules = sqrt(distance_abscisse * distance_abscisse + distance_ordonnee  * distance_ordonnee);
-	
-	return distance_entre_particules;
+	VECTOR v;
+	v.x = x;
+	v.y = y;
+	return v;
 }
 
+POINT point_create(double x, double y)
+{
+	POINT p;
+	p.x = x;
+	p.y = y;
+	return p;
+}
+                            
 VECTOR vector_sum(VECTOR v1, VECTOR v2)
 {
 	VECTOR vf;
