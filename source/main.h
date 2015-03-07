@@ -8,7 +8,10 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET};
+typedef enum Mode MODE;
+
 int main (int argc, char *argv[]);
-void read_mode(int* mode, char *argv[]);
+MODE read_mode(char string[]);
 
 #endif
