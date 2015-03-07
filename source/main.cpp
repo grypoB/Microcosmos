@@ -17,11 +17,11 @@ enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION};
 int main (int argc, char *argv[])
 { 
 	enum Mode mode;
-    read_mode(&mode, argv[1]);
+    read_mode(&mode, argv[1]);  //régler problème du pointeur sur énumération....
     
 	if(argc!=3)
 	{
-		//sim.x [Error|Force|Integration|Graphic|Simulation,nom_fichier]; pas encore vraiment compris ce que je dois faire
+		//sim.x [Error|Force|Integration|Graphic|Simulation,nom_fichier]; pas encore vraiment compris ceque je dois faire
 	}
 	else
 	{
