@@ -5,10 +5,8 @@
 
 #include "constantes.h"
 #include "particule.h"
-#include "error.h"
 
 #define PART_TAB_SIZE MAX_RENDU1
-#define TAB_GROWTH_RATIO 2
 
 typedef struct Particule PARTICULE;
 
@@ -54,18 +52,18 @@ static int partNB = 0;
 
 bool read_dataPart(const char *string) {
     double param[5] = {0};
-    bool returnVal = false;
+    bool success = false;
 
     if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2], &param[3], &param[4])==5) {
         if (part_create(param[0], point_create(param[1], param[2]),
                                   vector_create(param[3], param[4])) != UNASSIGNED) {
-            returnVal = true;
+            success = true;
         }
     } else {
         error_lecture_elements(ERR_PARTIC, ERR_PAS_ASSEZ);
     }
 
-    return returnVal;
+    return success;
 }
 
 
@@ -75,16 +73,10 @@ bool read_dataPart(const char *string) {
 // return the id of the particle (>=0), if there was an error, return UNASSIGNED (= -1)
 int part_create(double radius, POINT center, VECTOR speed) {
     static int id = 0;
-    int returnID = 0;
+    int returnID = UNASSIGNED;
     PARTICULE *pPart = NULL;
 
-    if (vector_norm(speed) > MAX_VITESSE) {
-        error_vitesse_partic(ERR_PARTIC, id);
-        returnID = UNASSIGNED; 
-    } else if (radius>=RMAX || radius<=RMIN) {
-        error_rayon_partic(ERR_PARTIC, id);
-        returnID = UNASSIGNED;
-    } else { 
+    if (part_validParams(radius, center, speed, true, ERR_PARTIC, id)) {
         pPart = part_nextEmptySlot();
 
         pPart->locked = false;
@@ -97,6 +89,10 @@ int part_create(double radius, POINT center, VECTOR speed) {
         pPart->acceleration = vector_null();
 
         returnID = id;
+
+        #ifdef DEBUG
+        printf("Part id no %d created\n", id);
+        #endif
     }
 
     id++;
@@ -344,6 +340,25 @@ static void part_updatePos(double delta_t) {
 
 // ----------
 // other sims functions
+bool part_validParams(double radius, POINT center, VECTOR speed, bool verbose, ERREUR_ORIG origin, int id) {
+    bool valid = true;
+
+    if (vector_norm(speed) > MAX_VITESSE) {
+        valid = false;
+        if (verbose) {
+            error_vitesse_partic(origin, id);
+        }
+    } else if (radius>=RMAX || radius<=RMIN) {
+        valid = false;
+        if (verbose) {
+            error_rayon_partic(origin, id);
+        }
+    }
+
+    return valid;
+}
+
+
 int part_totalNB() {
     return partNB;
 }

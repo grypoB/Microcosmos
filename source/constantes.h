@@ -27,5 +27,6 @@
 #define UNASSIGNED -1
 #define DATA_SEPARATOR "FIN_LISTE"
 #define BUFFER_SIZE 100
+#define TAB_GROWTH_RATIO 2
 
 #endif

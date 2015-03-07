@@ -2,7 +2,7 @@
 #define PARTICULE_H
 
 #include "geometry.h"
-#include <stdbool.h>
+#include "error.h"
 
 void particule_force_rendu1(void);   //A REVOIR                         8.2.2 
 
@@ -32,6 +32,8 @@ bool part_setRadius(int partID, double radius);
 bool part_setLock  (int partID, bool lock);
 
 // force/simultaion related
+bool part_validParams(double radius, POINT center, VECTOR speed,
+                      bool verbose, ERREUR_ORIG origin, int id);
 int part_totalNB();
 bool part_nextTick(double delta_t);
 int part_closestPart(POINT point); // return ID of closest particle
