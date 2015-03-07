@@ -3,10 +3,28 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "constante.h"
+#include "constantes.h"
 #include "geometry.h"
 #include "error.h"
 #include "generateur.h"
+#include "particule.h"
+
+#define GEN_TAB_SIZE MAX_RENDU1
+
+typedef struct Generateur GENERATEUR;
+
+static GENERATEUR* gen_nextEmptySlot();
+
+struct Generateur {
+    int id;
+
+    double radius;
+    POINT center;
+    VECTOR speed;
+};
+
+static GENERATEUR *genTab = NULL;
+static int genNB = 0;
 
 bool read_dataGen(const char *string) {
     double param[5] = {0};
@@ -24,30 +42,56 @@ bool read_dataGen(const char *string) {
     return returnVal;
 }
 
-/*
-void donnees_generateurs(const char * tab,  int *composant) 
-{
-	GENERATEUR generateur;
-	generateur.nb_de_generateurs = 0; 
-	int i = 0;
-	char fin;
-	
-	if(!(sscanf(tab, "%lf", &generateur.nb_de_generateurs))) 
-	{
-		error_lect_nb_elements(ERR_GENERAT);
-	}
-	
-	for(i=0; i<generateur.nb_de_generateurs; i++)
-	{
-		sscanf(tab, "%lf" "%lf" "%lf" "%lf" "%lf", &generateur.rgen, &generateur.posx, &generateur.posy, &generateur.vpi_x, &generateur.vpi_y);
-	}	
-	
-	sscanf(tab, "%c", &fin);
-	char fin_entitee[] = "FIN_LISTE";
-	if(!(strcmp(fin_entitee, &fin))) 
-	{	
-		//error_lecture_elements();
-	}
-	*composant++;
+
+int gen_create(double radius, POINT center, VECTOR speed) {
+    static int id = 0;
+
+    int returnID = UNASSIGNED;
+    GENERATEUR *pGen = NULL;
+
+    if (part_validParams(radius, center, speed, true, ERR_GENERAT, id)) {
+        pGen = gen_nextEmptySlot();
+
+        pGen->radius = radius;
+        pGen->center = center;
+        pGen->speed  = speed;
+
+        returnID = id;
+
+        #ifdef DEBUG
+        printf("Gen id no %d created\n", id);
+        #endif
+    }
+
+    id++;
+
+    return returnID;
 }
-*/
+
+void gen_deleteAll() {
+    if (genTab != NULL) {
+        free(genTab);
+    }
+}
+
+static GENERATEUR* gen_nextEmptySlot() {
+    static int genTabSize = 0;
+    int i = 0;
+
+    if (genTab==NULL) { // if table doesn't exist
+        genTab = malloc(sizeof(GENERATEUR)*GEN_TAB_SIZE);
+        if (genTab==NULL) error_msg("MEM allocation failed");
+        genTabSize = GEN_TAB_SIZE;
+    } else if (genNB == genTabSize) { // if table full, increase its size
+        GENERATEUR *newGenTab = malloc(sizeof(GENERATEUR)*genTabSize*TAB_GROWTH_RATIO);
+        if (newGenTab==NULL) error_msg("MEM allocation failed");
+        for (i=0; i<genNB; i++) { 
+            newGenTab[i] = genTab[i];
+        }
+        free(genTab);
+        genTab = newGenTab;
+        genTabSize*=2;
+    }
+
+    return &genTab[genNB];
+}

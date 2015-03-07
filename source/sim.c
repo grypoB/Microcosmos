@@ -13,26 +13,50 @@
 #include "error.h"
 #include "constantes.h"
 
+#include "sim.h"
 #include "generateur.h"
 #include "trou_noir.h"
 #include "particule.h"
 
 
 enum Read_state {NB_GENERATEUR,
-                    GENERATEUR,
-                    NB_TROU_NOIR,
-                    TROU_NOIR,
-                    NB_PARTICULE,
-                    PARTICULE,
-                    FIN,
-                    ERROR};
+                 GENERATEUR,
+                 NB_TROU_NOIR,
+                 TROU_NOIR,
+                 NB_PARTICULE,
+                 PARTICULE,
+                 FIN,
+                 ERROR};
 
 static int read_nbEntities(enum Read_state *state, char *tab);
 static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int nb_entities);
 static char* file_nextUsefulLine(char tab[], int line_size, FILE *file);
 
 
+<<<<<<< HEAD
 bool sim_lecture(char mode_de_test[], char filename[])
+=======
+void sim_error(char filename[]) {
+    if (sim_lecture(filename)) {
+        error_success();
+    }
+
+    sim_clean();
+}
+
+
+void sim_clean() {
+    #ifdef DEBUG
+    printf("Freeing memory from entities\n");
+    #endif
+
+    part_deleteAll();
+    gen_deleteAll();
+}
+
+
+bool sim_lecture(char filename[])
+>>>>>>> 305c3b3327782e2268e11f13e6b3438394234c73
 {
     char tab[BUFFER_SIZE] = {0};
     enum Read_state state = NB_GENERATEUR;
@@ -44,9 +68,13 @@ bool sim_lecture(char mode_de_test[], char filename[])
 
     if(file != NULL)
     {
-        while(state!=ERROR || state !=FIN)
+        while(state!=ERROR && state !=FIN)
         {
             if (file_nextUsefulLine(tab, BUFFER_SIZE, file)) {
+                #ifdef DEBUG
+                printf("Read line (state = %d) : %s", state, tab);
+                #endif
+
                 switch (state) {
                     case NB_GENERATEUR:
                     case NB_TROU_NOIR:
@@ -71,7 +99,11 @@ bool sim_lecture(char mode_de_test[], char filename[])
         }
 
         fclose(file);
-        return true;
+        if (state == ERROR) {
+            return false;
+        } else {
+            return true;
+        }
     }
     else
     {
@@ -115,39 +147,56 @@ static int read_nbEntities(enum Read_state *state, char *tab) {
 static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int nb_entities) {
     char string[BUFFER_SIZE] = {0};
     bool success = false;
+    bool missingSeparator = false;
 
     if (*pCounter==nb_entities) {
         sscanf(tab, "%s", string); 
-        if(strcmp(DATA_SEPARATOR, string)) {
+        if(strcmp(DATA_SEPARATOR, string) == 0) { // 0 stands for equality
             (*state)++;
+            success = true;
         } else {
-            //TODO error_lecture_elements();
-            *state = ERROR;
+            missingSeparator = true;
+            // state set to error at the end of switch
         }
-    }  else {
+    }
+    if (!success) {
         switch (*state) {
             case GENERATEUR:
-                success = read_dataGen(tab);
+                if (missingSeparator) {
+                    error_lecture_elements(ERR_GENERAT, ERR_TROP);
+                } else {
+                    success = read_dataGen(tab);
+                }
             break;
             case TROU_NOIR:
-                success = read_dataBckH(tab);
+                if (missingSeparator) {
+                    error_lecture_elements(ERR_TROU_N, ERR_TROP);
+                } else {
+                    success = read_dataBckH(tab);
+                }
             break;
             case PARTICULE:
-                success = read_dataPart(tab);
+                if (missingSeparator) {
+                    error_lecture_elements(ERR_PARTIC, ERR_TROP);
+                } else {
+                    success = read_dataPart(tab);
+                }
             break;
-
+            
             case NB_GENERATEUR:
             case NB_TROU_NOIR:
             case NB_PARTICULE:
             case FIN:
             case ERROR:
             default :
+                printf("state : %d\n", *state);
                 error_msg("invalid state in sim lecture (read_entities)");
         }
+
         if (success) {
             (*pCounter)++;
         } else {
-            // TODO error of some kind in error.h
+            // error message handled in read_dataXXX()
             *state = ERROR;
         }
 
@@ -168,7 +217,7 @@ static char* file_nextUsefulLine(char tab[], int line_size, FILE *file) {
 
     if (file != NULL) {
         do {
-            useful = true;
+            useful = UNASSIGNED;
             returnVal = fgets(tab, line_size, file); 
             if (returnVal != NULL) {
                 for (i=0 ; i<line_size && useful==UNASSIGNED; i++) {
