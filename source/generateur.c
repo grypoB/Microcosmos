@@ -68,7 +68,11 @@ int gen_create(double radius, POINT center, VECTOR speed) {
     return returnID;
 }
 
-
+void gen_deleteAll() {
+    if (genTab != NULL) {
+        free(genTab);
+    }
+}
 
 static GENERATEUR* gen_nextEmptySlot() {
     static int genTabSize = 0;

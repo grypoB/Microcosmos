@@ -20,7 +20,7 @@ static void part_updatePos(double delta_t);
 static double part_calcForce (PARTICULE *p1, PARTICULE *p2, double distance);
 static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, double force_norm);
 
-static PARTICULE* part_firstPart();
+//static PARTICULE* part_firstPart();
 static PARTICULE* part_lastPart();
 static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
@@ -407,6 +407,7 @@ static PARTICULE* part_nextEmptySlot() {
     return &partTab[partNB];
 }
 
+/*
 static PARTICULE* part_firstPart() {
     if (partTab!=NULL && partNB>0) {
         return &partTab[0];
@@ -414,6 +415,7 @@ static PARTICULE* part_firstPart() {
         return NULL;
     }
 }
+*/
 
 static PARTICULE* part_lastPart() {
     if (partTab!=NULL && partNB>0) {

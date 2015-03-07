@@ -37,7 +37,20 @@ void sim_error(char filename[]) {
     if (sim_lecture(filename)) {
         error_success();
     }
+
+    sim_clean();
 }
+
+
+void sim_clean() {
+    #ifdef DEBUG
+    printf("Freeing memory from entities\n");
+    #endif
+
+    part_deleteAll();
+    gen_deleteAll();
+}
+
 
 bool sim_lecture(char filename[])
 {
@@ -82,7 +95,11 @@ bool sim_lecture(char filename[])
         }
 
         fclose(file);
-        return true;
+        if (state == ERROR) {
+            return false;
+        } else {
+            return true;
+        }
     }
     else
     {
@@ -135,10 +152,10 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
             success = true;
         } else {
             missingSeparator = true;
-            *state = ERROR;
+            // state set to error at the end of switch
         }
     }
-    if (!success || missingSeparator) {
+    if (!success) {
         switch (*state) {
             case GENERATEUR:
                 if (missingSeparator) {
@@ -171,6 +188,7 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
                 printf("state : %d\n", *state);
                 error_msg("invalid state in sim lecture (read_entities)");
         }
+
         if (success) {
             (*pCounter)++;
         } else {
