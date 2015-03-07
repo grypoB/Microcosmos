@@ -1,39 +1,27 @@
+/* Nom: main.cpp
+ * Description: Sous-système de contrôle: responsable de la gestion du dialogue avec l'utilisateur et de l'interface graphique
+ * Date: 07.03.2015
+ * version : 1.1
+ * auteur : PROG II
+ */
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "error.h"
 #include "sim.h"
+#include "main.h"
 
 enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION};
 
 int main (int argc, char *argv[])
 { 
-    enum Mode mode;
+	enum Mode mode;
+    read_mode(&mode, argv[1]);
     
-    if(strcmp(argv[1], "Error" ) == 0)
-    { 
-		mode = ERROR;
-    }
-    else if (strcmp(argv[1], "Force" ) == 0)
-    { 
-		mode = FORCE;
-    }
-    else if (strcmp(argv[1], "Integration" ) == 0)
-    { 
-		mode = INTEGRATION;
-    }
-    else if (strcmp(argv[1], "Graphic" ) == 0)
-    { 
-		mode = GRAPHIC;
-    }
-    else if (strcmp(argv[1], "Simulation" ) == 0)
-    { 
-		mode = SIMULATION;
-    }
-    
-	if(argc==1)
+	if(argc!=3)
 	{
-		//initialise interface graphique //demo.x a revoir
+		//sim.x [Error|Force|Integration|Graphic|Simulation,nom_fichier]; pas encore vraiment compris ce que je dois faire
 	}
 	else
 	{
@@ -49,9 +37,32 @@ int main (int argc, char *argv[])
 			break;
 			case SIMULATION: sim_simulation(argv[2]);
 			break;
-			//default: error_msg("invalid argument in main (main.cpp)");
 		}
 	}
 	return EXIT_SUCCESS;
+}
+
+void read_mode(Mode* mode, char *argv[])
+{
+	if(strcmp(argv[1], "Error" ) == 0) 
+    { 
+		*mode = ERROR;
+    }
+    else if (strcmp(argv[1], "Force" ) == 0)
+    { 
+		*mode = FORCE;
+    }
+    else if (strcmp(argv[1], "Integration" ) == 0)
+    { 
+		*mode = INTEGRATION;
+    }
+    else if (strcmp(argv[1], "Graphic" ) == 0)
+    { 
+		*mode = GRAPHIC;
+    }
+    else if (strcmp(argv[1], "Simulation" ) == 0)
+    { 
+		*mode = SIMULATION;
+    }
 }
 
