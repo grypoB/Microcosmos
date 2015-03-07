@@ -33,9 +33,6 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
 static char* file_nextUsefulLine(char tab[], int line_size, FILE *file);
 
 
-<<<<<<< HEAD
-bool sim_lecture(char mode_de_test[], char filename[])
-=======
 void sim_error(char filename[]) {
     if (sim_lecture(filename)) {
         error_success();
@@ -56,7 +53,6 @@ void sim_clean() {
 
 
 bool sim_lecture(char filename[])
->>>>>>> 305c3b3327782e2268e11f13e6b3438394234c73
 {
     char tab[BUFFER_SIZE] = {0};
     enum Read_state state = NB_GENERATEUR;
