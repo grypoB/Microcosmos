@@ -7,7 +7,6 @@
 int main (int argc, char *argv[])
 {
 	enum argument {Error, Force, Integration, Graphic, Simulation};
-	
 	switch(*argv[1]) 
 	{
 		case Error: sim_error(argv[2]);
