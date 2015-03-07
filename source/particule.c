@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <math.h>
 
-#include "constante.h"
+#include "constantes.h"
 #include "particule.h"
 #include "error.h"
 
@@ -22,6 +22,13 @@ static void part_initMass(PARTICULE *part);
 static PARTICULE* part_lastPart();
 static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
+
+void particule_force_rendu1(void)   //A REVOIR          8.2.2 
+{
+	double val=0;
+	printf("%8.3f\n", val);
+	return;
+}
 
 struct Particule {
 
