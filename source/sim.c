@@ -11,7 +11,7 @@
 #include <string.h>
 
 #include "error.h"
-#include "constante.h"
+#include "constantes.h"
 
 #include "generateur.h"
 #include "trou_noir.h"
@@ -127,10 +127,10 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
     }  else {
         switch (*state) {
             case GENERATEUR:
-                //TODO success = read_dataGen(tab);
+                success = read_dataGen(tab);
             break;
             case TROU_NOIR:
-                //TODO success = read_dataBckH(tab);
+                success = read_dataBckH(tab);
             break;
             case PARTICULE:
                 success = read_dataPart(tab);
