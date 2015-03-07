@@ -10,9 +10,9 @@ int main (int argc, char *argv[])
 	
 	switch(*argv[1]) 
 	{
-		case Error: sim_lecture(argv[2]);
-		case Force: sim_lecture(argv[2]);
-					particule_force_rendu1();
+		sim_lecture(argv[1], argv[2]);
+		case Error: 
+		case Force: particule_force_rendu1();
 		case Integration:
 		case Graphic:
 		case Simulation:   ;

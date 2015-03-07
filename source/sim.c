@@ -32,7 +32,7 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
 static char* file_nextUsefulLine(char tab[], int line_size, FILE *file);
 
 
-bool sim_lecture(char filename[])
+bool sim_lecture(char mode_de_test[], char filename[])
 {
     char tab[BUFFER_SIZE] = {0};
     enum Read_state state = NB_GENERATEUR;
