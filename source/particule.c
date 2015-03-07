@@ -25,12 +25,6 @@ static PARTICULE* part_lastPart();
 static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
 
-void particule_force_rendu1(void)   //A REVOIR          8.2.2 
-{
-	double val=0;
-	printf("%8.3f\n", val);
-	return;
-}
 
 struct Particule {
 
@@ -89,6 +83,7 @@ int part_create(double radius, POINT center, VECTOR speed) {
         pPart->acceleration = vector_null();
 
         returnID = id;
+        partNB++;
 
         #ifdef DEBUG
         printf("Part id no %d created\n", id);
@@ -117,6 +112,7 @@ bool part_deletePart(int partID) {
 void part_deleteAll() {
     if (partTab != NULL) {
         free(partTab);
+        partNB = 0;
     }
 }
 
@@ -340,7 +336,21 @@ static void part_updatePos(double delta_t) {
 
 // ----------
 // other sims functions
-bool part_validParams(double radius, POINT center, VECTOR speed, bool verbose, ERREUR_ORIG origin, int id) {
+void particule_force_rendu1() {
+	double force_norm = 0;
+    double distance = 0;
+
+    if (partNB>=2) {
+        distance = point_distance(partTab[0].center, partTab[1].center);
+        force_norm = part_calcForce(&partTab[0], &partTab[1], distance);
+        printf("%8.3f\n", force_norm);
+    } else {
+        error_msg("Not enough particles for Force mode (need at least 2)");
+    }
+}
+
+bool part_validParams(double radius, POINT center, VECTOR speed,
+                      bool verbose, ERREUR_ORIG origin, int id) {
     bool valid = true;
 
     if (vector_norm(speed) > MAX_VITESSE) {
