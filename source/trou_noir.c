@@ -21,11 +21,6 @@ bool read_dataBckH(const char *string) {
         error_lecture_elements(ERR_TROU_N, ERR_PAS_ASSEZ);
     }
 
-    // TODO : handle the string  and to create a black hole call :
-    //bckH_create(POINT center);
-    // don't forget to call appropriate error if sscanf unnssuscecful
-    // follow model of read_dataPart()
-
     return returnVal;
 }
 

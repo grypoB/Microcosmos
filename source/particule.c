@@ -27,6 +27,13 @@ static PARTICULE* part_lastPart();
 static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
 
+void particule_force_rendu1(void)   //A REVOIR          8.2.2 
+{
+	double val=0;
+	printf("%8.3f\n", val);
+	return;
+}
+
 struct Particule {
 
     bool locked; // a locked particle cannot move

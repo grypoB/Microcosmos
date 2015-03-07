@@ -2,6 +2,9 @@
 #define PARTICULE_H
 
 #include "geometry.h"
+#include <stdbool.h>
+
+void particule_force_rendu1(void);   //A REVOIR                         8.2.2 
 
 // all particules are stored with a static in .c
 // creating one returns an unique ID which is used to reference to this particle later
