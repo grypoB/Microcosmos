@@ -1,12 +1,15 @@
 # Definitions de macros
 
-EXEC   = prog.x
+EXEC   = rendu1.x
 
 CC     = gcc
 CFLAGS = -Wall
 LIBS   = -lm
 CFILES =  main.cpp error.c generateur.c trou_noir.c particule.c sim.c geometry.c
-OFILES= $(CFILES:.c,.cpp=.o)
+
+# convert .c and .cpp into .o (2 steps needed)
+TEMP   = $(CFILES:.c=.o)
+OFILES = $(TEMP:.cpp=.o)
 
 
 # Definitions des cibles
