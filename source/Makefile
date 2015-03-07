@@ -32,8 +32,6 @@ clean:
 
 $(EXEC): $(OFILES)
 	$(CC) $(OFILES) $(LIBS) $(CFLAGS) -o $(EXEC)
-	@echo "$(OFILES)"
-
 
 # -- Regles de dependances generees automatiquement
 #
