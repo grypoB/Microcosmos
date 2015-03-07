@@ -14,7 +14,7 @@ int main (int argc, char *argv[])
 		case Integration: sim_integration(argv[2]);
 		case Graphic: sim_graphic(argv[2]);
 		case Simulation: sim_simulation(argv[2]);
-		//default: error_msg("invalid argument in main (main.cpp)");
+		default: error_msg("invalid argument in main (main.cpp)");
 	}
 	return 0;
 }
