@@ -10,17 +10,16 @@ int main (int argc, char *argv[])
 	
 	switch(*argv[1]) 
 	{
-		sim_lecture(argv[1], argv[2]);
-		case Error: 
-		case Force: particule_force_rendu1();
-		case Integration:
-		case Graphic:
-		case Simulation:   ;
+		case Error: sim_error(argv[2]);
+		case Force: sim_force(argv[2]);
+		case Integration: sim_integration(argv[2]);
+		case Graphic: sim_graphic(argv[2]);
+		case Simulation: sim_simulation(argv[2]);
 		//default: error_msg("invalid argument in main (main.cpp)");
 	}
 	return 0;
 }
 
-//argv[0] doit alors pointer sur une chaîne vide.
+//argv[0] pointe sur une chaîne vide.
 //argv[1] mode de test
 //argv[2] nom du fichier
