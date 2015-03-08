@@ -48,23 +48,23 @@ int main (int argc, char *argv[])
 MODE read_mode(char string[])
 {
 	MODE mode;
-	if(strcmp(argv[1], "Error" ) == 0) 
+	if(strcmp(string, "Error" ) == 0) 
     { 
 		mode = ERROR;
     }
-    else if (strcmp(argv[1], "Force" ) == 0)
+    else if (strcmp(string, "Force" ) == 0)
     { 
 		mode = FORCE;
     }
-    else if (strcmp(argv[1], "Integration" ) == 0)
+    else if (strcmp(string, "Integration" ) == 0)
     { 
 		mode = INTEGRATION;
     }
-    else if (strcmp(argv[1], "Graphic" ) == 0)
+    else if (strcmp(string, "Graphic" ) == 0)
     { 
 		mode = GRAPHIC;
     }
-    else if (strcmp(argv[1], "Simulation" ) == 0)
+    else if (strcmp(string, "Simulation" ) == 0)
     { 
 		mode = SIMULATION;
     }
