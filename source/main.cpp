@@ -39,7 +39,7 @@ int main (int argc, char *argv[])
 			case SIMULATION: sim_simulation(argv[2]);
 			break;
 			case MODE_UNSET: printf("syntaxe attendue : sim.x [Error|Force|Integration|Graphic|Simulation,nom_fichier]\n");
-			break;
+			return EXIT_FAILURE;
 		}
 	}
 	return EXIT_SUCCESS;
