@@ -185,7 +185,7 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
                 if (missingSeparator) {
                     error_lecture_elements(ERR_PARTIC, ERR_TROP);
                 } else {
-                    success = read_dataPart(tab);
+                    success = part_readData(tab);
                 }
             break;
             

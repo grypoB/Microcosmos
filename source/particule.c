@@ -16,25 +16,7 @@
 
 #define PART_TAB_SIZE MAX_RENDU1
 
-typedef struct Particule PARTICULE;
-
-static void part_initMass(PARTICULE *part);
-
-static void part_updateForce();
-static void part_updateAcc();
-static void part_updateSpeed(double delta_t);
-static void part_updatePos(double delta_t);
-
-static double part_calcForce (PARTICULE *p1, PARTICULE *p2, double distance);
-static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, double force_norm);
-
-//static PARTICULE* part_firstPart();
-static PARTICULE* part_lastPart();
-static PARTICULE* part_nextEmptySlot();
-static PARTICULE* part_findPart(int partID);
-
-
-struct Particule {
+typedef struct Particule {
 
     bool locked; // a locked particle cannot move
     int id;
@@ -47,12 +29,34 @@ struct Particule {
     VECTOR speed;
     VECTOR force;
     VECTOR acceleration;
-};
+} PARTICULE;
+
+static void part_initMass(PARTICULE *part);
+
+static void part_updateForce();
+static void part_updateAcc();
+static void part_updateSpeed(double delta_t);
+static void part_updatePos(double delta_t);
+
+static double part_calcForce (PARTICULE *p1, PARTICULE *p2, double distance);
+static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, double force_norm);
+
+// to navigate the data structure
+//static PARTICULE* part_firstPart();
+static PARTICULE* part_lastPart();
+static PARTICULE* part_nextEmptySlot();
+static PARTICULE* part_findPart(int partID);
+
+
 
 static PARTICULE *partTab = NULL;
 static int partNB = 0;
 
-bool read_dataPart(const char *string) {
+
+// from an input string, create a particule
+// Expected format (all in double): radius posx posy vx vy 
+// print errors if couldn't read string
+bool part_readData(const char *string) {
     double param[5] = {0};
     bool success = false;
 
@@ -68,11 +72,34 @@ bool read_dataPart(const char *string) {
     return success;
 }
 
+//  check if given params are valid (see part_create)
+// if verbose and if param aren't valid
+// it will call the appropriate error fct sending it the  given orgin and id number
+// see error_vitesse_partic and error_rayon_partic
+bool part_validParams(double radius, POINT center, VECTOR speed,
+                      bool verbose, ERREUR_ORIG origin, int id) {
+    bool valid = true;
+
+    if (vector_norm(speed) > MAX_VITESSE) {
+        valid = false;
+        if (verbose) {
+            error_vitesse_partic(origin, id);
+        }
+    } else if (radius>=RMAX || radius<=RMIN) {
+        valid = false;
+        if (verbose) {
+            error_rayon_partic(origin, id);
+        }
+    }
+
+    return valid;
+}
 
 
 // -----------
-// constructer
-// return the id of the particle (>=0), if there was an error, return UNASSIGNED (= -1)
+// constructor
+// return the id of the particle (>=0)
+// return UNNASIGNED if radius not in [RMIN, RMAX], or speed norm > MAX_VITESSE
 int part_create(double radius, POINT center, VECTOR speed) {
     static int id = 0;
     int returnID = UNASSIGNED;
@@ -105,6 +132,7 @@ int part_create(double radius, POINT center, VECTOR speed) {
 
 // -----------
 // destructors
+// return false if the particule id doesn't exist (anymore)
 bool part_deletePart(int partID) {
     PARTICULE *pPart     = part_findPart(partID);
     PARTICULE *pLastPart = part_lastPart();
@@ -124,98 +152,8 @@ void part_deleteAll() {
     }
 }
 
-// -----------
-// Getters for the varius field of the structure Particule
-POINT part_getCenter(int partID) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        return pPart->center;
-    } else {
-        return point_null();
-    }
-}
-
-VECTOR part_getSpeed(int partID) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        return pPart->speed;
-    } else {
-        return vector_null();
-    }
-}
-
-VECTOR part_getForce(int partID) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        return pPart->force;
-    } else {
-        return vector_null();
-    }
-}
-
-VECTOR part_getAcceleration(int partID) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        return pPart->acceleration;
-    } else {
-        return vector_null();
-    }
-}
-
-double part_getRadius(int partID) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        return pPart->radius;
-    } else {
-        return 0;
-    }
-}
-
-double part_getMass(int partID) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        return pPart->mass;
-    } else {
-        return 0;
-    }
-}
-
-
-// -----------
-// Setters for the various field of the structure Particule
-// return true if the change was made, false otherwise
-// mass is not settable without : part_initMass
-bool part_setCenter(int partID, POINT center) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        pPart->center = center;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool part_setSpeed(int partID, VECTOR speed) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL) {
-        pPart->speed = speed;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool part_setRadius(int partID, double radius) {
-    PARTICULE *pPart = part_findPart(partID);
-    if (pPart != NULL && radius<=RMAX && radius>=RMIN) {
-        pPart->radius = radius;
-        part_initMass(pPart);
-        return true;
-    } else {
-        return false;
-    }
-}
-
+// ----------
+// a locked particule cannot move, but still exerce force on other particules
 bool part_setLock(int partID, bool lock) {
     PARTICULE *pPart = part_findPart(partID);
     if (pPart != NULL) {
@@ -227,18 +165,57 @@ bool part_setLock(int partID, bool lock) {
 }
 
 
-// -----------
-// Various functions
-static void part_initMass(PARTICULE *part) {
-    part->mass = pow(part->radius, 2) * KMASSE;
+// ----------
+// Simulation related functions
+// calc force between the 2 first particule and print it
+void particule_force_rendu1() {
+	double force_norm = 0;
+    double distance = 0;
+
+    if (partNB>=2) {
+        distance = point_distance(partTab[0].center, partTab[1].center);
+        force_norm = part_calcForce(&partTab[0], &partTab[1], distance);
+        printf("%8.3f\n", force_norm);
+    } else {
+        error_msg("Not enough particles for Force mode (need at least 2)");
+    }
+}
+
+// return the total number of current particules
+int part_totalNB() {
+    return partNB;
+}
+
+// return the id of the closest particule form a given point
+int part_closestPart(POINT point) {
+    int i = 0;
+    int partID = UNASSIGNED;
+    double dist = 0;
+    double newDist = 0;
+
+    if (partTab!=NULL && partNB>0) {
+        dist = point_distance(partTab[0].center, point);
+        for (i=1 ; i<partNB ; i++) {
+            newDist = point_distance(partTab[i].center, point);
+            if (newDist < dist) {
+                dist = newDist;
+                partID = partTab[i].id;
+            }
+        }
+    }
+
+    return partID;
 }
 
 
 // ----------
-// force/simulation related
-// all these fct act on the entire table partTab of particles
+// Simulation update fct
+// update the status of all particules (speed + position): 
+// calculating their attraction-repulsion force
+// delta_t is the ammount of time the "tick" lasts 
+// return false if data structure of particule not set or delta_t<0
 bool part_nextTick(double delta_t) {
-    if (partTab!=NULL) {
+    if (partTab!=NULL && delta_t>=0.) {
         //part_collisionBlackHole();
         part_updateForce();
         part_updateAcc();
@@ -250,7 +227,7 @@ bool part_nextTick(double delta_t) {
     }
 }
 
-//static part_collisionBlackHole() {}
+//static void part_collisionBlackHole() {}
 
 static void part_updateForce() {
     int i=0, j=0;
@@ -342,67 +319,17 @@ static void part_updatePos(double delta_t) {
     }
 }
 
-// ----------
-// other sims functions
-void particule_force_rendu1() {
-	double force_norm = 0;
-    double distance = 0;
 
-    if (partNB>=2) {
-        distance = point_distance(partTab[0].center, partTab[1].center);
-        force_norm = part_calcForce(&partTab[0], &partTab[1], distance);
-        printf("%8.3f\n", force_norm);
-    } else {
-        error_msg("Not enough particles for Force mode (need at least 2)");
-    }
-}
-
-bool part_validParams(double radius, POINT center, VECTOR speed,
-                      bool verbose, ERREUR_ORIG origin, int id) {
-    bool valid = true;
-
-    if (vector_norm(speed) > MAX_VITESSE) {
-        valid = false;
-        if (verbose) {
-            error_vitesse_partic(origin, id);
-        }
-    } else if (radius>=RMAX || radius<=RMIN) {
-        valid = false;
-        if (verbose) {
-            error_rayon_partic(origin, id);
-        }
-    }
-
-    return valid;
-}
-
-
-int part_totalNB() {
-    return partNB;
-}
-
-int part_closestPart(POINT point) {
-    int i = 0;
-    int partID = UNASSIGNED;
-    double dist = 0;
-    double newDist = 0;
-
-    if (partTab!=NULL && partNB>0) {
-        dist = point_distance(partTab[0].center, point);
-        for (i=1 ; i<partNB ; i++) {
-            newDist = point_distance(partTab[i].center, point);
-            if (newDist < dist) {
-                dist = newDist;
-                partID = partTab[i].id;
-            }
-        }
-    }
-
-    return partID;
+// -----------
+// set the mass of a particule (proportional to radius^2)
+static void part_initMass(PARTICULE *part) {
+    part->mass = pow(part->radius, 2) * KMASSE;
 }
 
 // -----------
 // utilities function (finding and managing the particules in the data structure)
+// return pointer to an empty slot in the data structure,
+// if not enough space, create some
 static PARTICULE* part_nextEmptySlot() {
     static int partTabSize = 0;
     int i = 0;

@@ -15,35 +15,48 @@
 
 // all particules are stored with a static in .c
 // creating one returns an unique ID which is used to reference to this particle later
+// don't forget to delete afterwards (to clear memory)
 
-// file lecture
-bool read_dataPart(const char *string);
 
-// constructer
+// ------------
+// constructor
+// return UNNASIGNED if radius not in [RMIN, RMAX], or speed norm > MAX_VITESSE
+// otherwise return the id (>=0) of the particule
 int  part_create(double radius, POINT center, VECTOR speed);
-bool part_deletePart(int partID);
-void part_deleteAll();
-
-// getters, do not modify the particle (return a default value if ID not found)
-double part_getRadius(int partID);
-double part_getMass  (int partID);
-POINT  part_getCenter(int partID);
-VECTOR part_getSpeed (int partID);
-VECTOR part_getForce (int partID);
-VECTOR part_getAcceleration(int partID);
-
-// setters, return true if set was successful (i.e. particle was found)
-bool part_setCenter(int partID, POINT  center);
-bool part_setSpeed (int partID, VECTOR speed);
-bool part_setRadius(int partID, double radius);
-bool part_setLock  (int partID, bool lock);
-
-// force/simultaion related
-void particule_force_rendu1();
+//  check if given params are valid (see part_create)
+// if verbose and if param aren't valid
+// it will call the appropriate error fct sending it the  given orgin and id number
 bool part_validParams(double radius, POINT center, VECTOR speed,
                       bool verbose, ERREUR_ORIG origin, int id);
-int part_totalNB();
-bool part_nextTick(double delta_t);
-int part_closestPart(POINT point); // return ID of closest particle
 
+
+// ------------
+// destructors
+// return false if particule wasn't found
+bool part_deletePart(int partID);
+// delete all particles, use with caution
+void part_deleteAll();
+
+// setter, return true if set was successful (i.e. particle was found)
+// locked particles can't move (see part_nextTick)
+bool part_setLock  (int partID, bool lock);
+
+
+// ------------
+// Create particule from data in a string
+// Expected format (all in double): radius posx posy vx vy 
+bool part_readData(const char *string);
+
+// ------------
+// force/simultaion related
+// print force norm between the two first particule
+void particule_force_rendu1();
+// update simulation (calc all forces, acceleration, speed and pos) 
+// for all particules (don't make locked particules move)
+// delta_t is the ammount of time the "tick" lasts 
+// return false if particule data structure not existent (try creating a particule first), or delta_t<0
+bool part_nextTick(double delta_t);
+// return ID of closest part to a point
+int part_closestPart(POINT point);
+int part_totalNB();
 #endif
