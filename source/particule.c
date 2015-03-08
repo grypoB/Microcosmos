@@ -19,16 +19,17 @@
 typedef struct Particule {
 
     bool locked; // a locked particle cannot move
-    int id;
+    int id; // the unique identifier of a particule
 
-    double radius;
-    double mass;
+    double radius; // must in [RMIN, RMAX]
+    double mass; // dependent on radius (see init_mass)
 
-    POINT center;
+    POINT center; // the position of the center of the particule
 
-    VECTOR speed;
+    VECTOR speed; // it's norm must be below 10
     VECTOR force;
     VECTOR acceleration;
+
 } PARTICULE;
 
 static void part_initMass(PARTICULE *part);
@@ -39,7 +40,8 @@ static void part_updateSpeed(double delta_t);
 static void part_updatePos(double delta_t);
 
 static double part_calcForce (PARTICULE *p1, PARTICULE *p2, double distance);
-static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, double force_norm);
+static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
+                                                            double force_norm);
 
 // to navigate the data structure
 //static PARTICULE* part_firstPart();
@@ -60,11 +62,14 @@ bool part_readData(const char *string) {
     double param[5] = {0};
     bool success = false;
 
-    if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2], &param[3], &param[4])==5) {
+    if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2], 
+                                              &param[3], &param[4])==5) {
+
         if (part_create(param[0], point_create(param[1], param[2]),
                                   vector_create(param[3], param[4])) != UNASSIGNED) {
             success = true;
         }
+
     } else {
         error_lecture_elements(ERR_PARTIC, ERR_PAS_ASSEZ);
     }
@@ -101,7 +106,7 @@ bool part_validParams(double radius, POINT center, VECTOR speed,
 // return the id of the particle (>=0)
 // return UNNASIGNED if radius not in [RMIN, RMAX], or speed norm > MAX_VITESSE
 int part_create(double radius, POINT center, VECTOR speed) {
-    static int id = 0;
+    static int id = 0; // static counter (for unique identifier)
     int returnID = UNASSIGNED;
     PARTICULE *pPart = NULL;
 
@@ -136,6 +141,7 @@ int part_create(double radius, POINT center, VECTOR speed) {
 bool part_deletePart(int partID) {
     PARTICULE *pPart     = part_findPart(partID);
     PARTICULE *pLastPart = part_lastPart();
+
     if (pPart != NULL && pLastPart != NULL) {
         *pPart = *pLastPart;
         partNB--;
@@ -146,6 +152,7 @@ bool part_deletePart(int partID) {
 }
 
 void part_deleteAll() {
+
     if (partTab != NULL) {
         free(partTab);
         partNB = 0;
@@ -156,6 +163,7 @@ void part_deleteAll() {
 // a locked particule cannot move, but still exerce force on other particules
 bool part_setLock(int partID, bool lock) {
     PARTICULE *pPart = part_findPart(partID);
+
     if (pPart != NULL) {
         pPart->locked = lock;
         return true;
@@ -187,6 +195,7 @@ int part_totalNB() {
 }
 
 // return the id of the closest particule form a given point
+// UNNASSIGNED if no particules
 int part_closestPart(POINT point) {
     int i = 0;
     int partID = UNASSIGNED;
@@ -215,6 +224,7 @@ int part_closestPart(POINT point) {
 // delta_t is the ammount of time the "tick" lasts 
 // return false if data structure of particule not set or delta_t<0
 bool part_nextTick(double delta_t) {
+
     if (partTab!=NULL && delta_t>=0.) {
         //part_collisionBlackHole();
         part_updateForce();
@@ -245,7 +255,6 @@ static void part_updateForce() {
 
     for (i=0 ; i<partNB-1 ; i++) {
         for (j=i+1 ; j<partNB ; j++) {
-
             distance = point_distance(partTab[i].center, partTab[j].center);
 
             force_norm = part_calcForce(&partTab[i], &partTab[j], distance);
@@ -257,26 +266,29 @@ static void part_updateForce() {
 
 static double part_calcForce(PARTICULE *p1, PARTICULE *p2, double distance) {
     double force_norm = 0;
-    double seuil_d = 0;
-
-    seuil_d = p1->radius + p2->radius + fmin(p1->radius, p2->radius);
+    double seuil_d = p1->radius + p2->radius + fmin(p1->radius, p2->radius);
 
     if (distance < 3*seuil_d) {
         if (distance < EPSILON_ZERO) {
             force_norm = MAX_REP;
         } else if (distance < seuil_d) {
-            force_norm = linear_interpolation(distance, 0, MAX_REP, seuil_d, 0);
+            force_norm = linear_interpolation(distance, 0, MAX_REP,
+                                                        seuil_d, 0);
         } else if (distance < 2*seuil_d) {
-            force_norm = linear_interpolation(distance, seuil_d, 0, 2*seuil_d, MAX_ATTR);
+            force_norm = linear_interpolation(distance, seuil_d, 0,
+                                                        2*seuil_d, MAX_ATTR);
         } else { // distance < 3*seuil_d
-            force_norm = linear_interpolation(distance, 2*seuil_d, MAX_ATTR, 3*seuil_d, 0);
+            force_norm = linear_interpolation(distance, 2*seuil_d, MAX_ATTR,
+                                                        3*seuil_d, 0);
         }
     }
 
     return force_norm;
 }
 
-static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, double force_norm) {
+static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
+                                                          double force_norm) {
+
     if (distance < EPSILON_ZERO) {
         p1->force = vector_create(0, force_norm);
     } else { // general case
@@ -288,6 +300,7 @@ static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance, doubl
 
 static void part_updateAcc() {
     int i=0;
+
     for (i=0 ; i<partNB ; i++) {
         partTab[i].acceleration = vector_multiply(partTab[i].force, 1/partTab[i].mass);
     }
@@ -303,7 +316,8 @@ static void part_updateSpeed(double delta_t) {
                                           vector_multiply(partTab[i].speed, delta_t));
             speed_norm = vector_norm(partTab[i].speed);
             if (speed_norm > MAX_VITESSE) { // scale down the vector
-                partTab[i].speed = vector_multiply(partTab[i].speed, (MAX_VITESSE/speed_norm));
+                partTab[i].speed = vector_multiply(partTab[i].speed,
+                                                   MAX_VITESSE/speed_norm);
             }
         }
     }
@@ -311,10 +325,12 @@ static void part_updateSpeed(double delta_t) {
 
 static void part_updatePos(double delta_t) {
     int i=0;
+
     for (i=0 ; i<partNB ; i++) {
         if (!partTab[i].locked) {
             partTab[i].center = point_translate(partTab[i].center,
-                                                vector_multiply(partTab[i].speed, delta_t));
+                                                vector_multiply(partTab[i].speed,
+                                                                delta_t));
         }
     }
 }
@@ -335,18 +351,23 @@ static PARTICULE* part_nextEmptySlot() {
     int i = 0;
 
     if (partTab==NULL) { // if table doesn't exist
+
         partTab = malloc(sizeof(PARTICULE)*PART_TAB_SIZE);
         if (partTab==NULL) error_msg("MEM allocation failed");
         partTabSize = PART_TAB_SIZE;
+
     } else if (partNB == partTabSize) { // if table full, increase its size
+
         PARTICULE *newPartTab = malloc(sizeof(PARTICULE)*partTabSize*TAB_GROWTH_RATIO);
         if (newPartTab==NULL) error_msg("MEM allocation failed");
-        for (i=0; i<partNB; i++) { 
+
+        for (i=0; i<partNB; i++) {  // copy old table into the new one
             newPartTab[i] = partTab[i];
         }
+
         free(partTab);
         partTab = newPartTab;
-        partTabSize*=2;
+        partTabSize*=TAB_GROWTH_RATIO;
     }
 
     return &partTab[partNB];
@@ -362,7 +383,9 @@ static PARTICULE* part_firstPart() {
 }
 */
 
+// return NULL, if data structure not initialized
 static PARTICULE* part_lastPart() {
+
     if (partTab!=NULL && partNB>0) {
         return &partTab[partNB-1];
     } else {
@@ -370,6 +393,7 @@ static PARTICULE* part_lastPart() {
     }
 }
 
+// return NULL if part not found
 static PARTICULE* part_findPart(int partID) {
     int i=0;
     PARTICULE *pPart = NULL;

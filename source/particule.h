@@ -54,7 +54,8 @@ void particule_force_rendu1();
 // update simulation (calc all forces, acceleration, speed and pos) 
 // for all particules (don't make locked particules move)
 // delta_t is the ammount of time the "tick" lasts 
-// return false if particule data structure not existent (try creating a particule first), or delta_t<0
+// return false if particule data structure not existent
+// (try creating a particule first), or delta_t<0
 bool part_nextTick(double delta_t);
 // return ID of closest part to a point
 int part_closestPart(POINT point);
