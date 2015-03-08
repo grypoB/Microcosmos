@@ -1,3 +1,11 @@
+/* Nom: generateur.c
+ * Description: module qui gère les générateurs
+ * Date: 08.02.2014
+ * version : 1.1
+ * responsable du module : Alexandre Devienne
+ * groupe : Alexandre Devienne, Pauline Maury Laribière
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

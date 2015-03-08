@@ -1,8 +1,9 @@
 /* Nom: sim.c
- * Description: 4. lire le fichier
- * Date: 25.02.2015
- * version : 1.1
- * auteur : PROG II
+ * Description: module qui lit le fichier en entrée
+ * Date: 08.02.2014
+ * version : 1.0
+ * responsable du module : Alexandre Devienne
+ * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 
 #include <stdio.h>

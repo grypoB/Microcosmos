@@ -1,3 +1,11 @@
+/* Nom: trou_noir.c
+ * Description: module qui gère les trous noirs
+ * Date: 08.02.2014
+ * version : 1.0
+ * responsable du module : Pauline Maury Laribière
+ * groupe : Alexandre Devienne, Pauline Maury Laribière
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

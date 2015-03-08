@@ -1,8 +1,9 @@
 /* Nom: error.c
  * Description: module qui gère les messages d'erreur. NE PAS MODIFIER.
- * Date: 04.02.2014
- * version : 1.1
- * auteur : PROG II
+ * Date: 08.02.2014
+ * version : 1.0
+ * responsable du module : Alexandre Devienne
+ * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 
 #include <stdio.h>

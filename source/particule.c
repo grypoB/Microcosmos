@@ -1,3 +1,11 @@
+/* Nom: main.cpp
+ * Description: module qui gère les particules
+ * Date: 08.02.2014
+ * version : 1.0
+ * responsable du module : Alexandre Devienne
+ * groupe : Alexandre Devienne, Pauline Maury Laribière
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
