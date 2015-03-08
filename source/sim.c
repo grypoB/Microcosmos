@@ -41,6 +41,15 @@ void sim_error(char filename[]) {
     sim_clean();
 }
 
+void sim_force(char filename[]) {
+    if (sim_lecture(filename)) {
+        particule_force_rendu1();
+    } else {
+        error_msg("Couldn't open simulation, input file has errors");
+    }
+
+    sim_clean();
+}
 
 void sim_clean() {
     #ifdef DEBUG

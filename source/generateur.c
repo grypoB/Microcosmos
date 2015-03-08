@@ -57,6 +57,7 @@ int gen_create(double radius, POINT center, VECTOR speed) {
         pGen->speed  = speed;
 
         returnID = id;
+        genNB++;
 
         #ifdef DEBUG
         printf("Gen id no %d created\n", id);
@@ -71,6 +72,7 @@ int gen_create(double radius, POINT center, VECTOR speed) {
 void gen_deleteAll() {
     if (genTab != NULL) {
         free(genTab);
+        genNB = 0;
     }
 }
 
