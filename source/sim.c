@@ -19,6 +19,7 @@
 #include "trou_noir.h"
 #include "particule.h"
 
+#define DATA_SEPARATOR "FIN_LISTE"
 
 enum Read_state {NB_GENERATEUR,
                  GENERATEUR,

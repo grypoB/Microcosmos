@@ -18,6 +18,7 @@
 #include "particule.h"
 
 #define GEN_TAB_SIZE MAX_RENDU1
+#define TAB_GROWTH_RATIO 2
 
 typedef struct Generateur GENERATEUR;
 

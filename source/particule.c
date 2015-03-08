@@ -14,7 +14,10 @@
 #include "constantes.h"
 #include "particule.h"
 
+// default size of the partTab
 #define PART_TAB_SIZE MAX_RENDU1
+// multiplier between each increasing in size of partTab
+#define TAB_GROWTH_RATIO 2
 
 typedef struct Particule {
 

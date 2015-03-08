@@ -24,9 +24,7 @@
 #define NBP 0.05
 
 // implementation related constant 
-#define UNASSIGNED -1
-#define DATA_SEPARATOR "FIN_LISTE"
-#define BUFFER_SIZE 100
-#define TAB_GROWTH_RATIO 2
+#define UNASSIGNED -1 // general value for variable  not set
+#define BUFFER_SIZE 100 // size of reading buffer
 
 #endif
