@@ -1,9 +1,8 @@
 /* Nom: error.h
  * Description: module qui gère les messages d'erreur. NE PAS MODIFIER
- * Date: 08.02.2014
+ * Date: 04.02.2014
  * version : 1.1
- * responsable du module : Alexandre Devienne
- * groupe : Alexandre Devienne, Pauline Maury Laribière
+ * auteur : PROG II
  */
 
 #ifndef ERROR_H

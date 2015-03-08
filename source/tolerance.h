@@ -1,9 +1,8 @@
 /* Nom: tolerance.h
- * Description: définit les tolérances
- * Date: 08.02.2014
+ * Description: intervalle de tolérance admis
+ * Date: 03.02.2014
  * version : 1.0
- * responsable du module : Alexandre Devienne
- * groupe : Alexandre Devienne, Pauline Maury Laribière
+ * Auteur: PROG II
  */
 
 #ifndef TOLERANCE_H

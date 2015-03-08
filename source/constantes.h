@@ -1,9 +1,8 @@
 /* Nom: constantes.h 
  * Description: constantes utilisées par le programme
- * Date: 08.02.2014
+ * Date: 03.02.2014
  * version : 1.0
- * responsable du module : Alexandre Devienne
- * groupe : Alexandre Devienne, Pauline Maury Laribière
+ * Auteur: PROG II
  */
 
 #ifndef CONSTANTES_H
