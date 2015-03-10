@@ -19,15 +19,26 @@ typedef struct {
     double y;
 } VECTOR;
 
-POINT point_null(); // return a point of coord (0,0)
-POINT point_create(double x, double y);
-double point_distance(POINT p1, POINT p2);
-POINT point_translate(POINT p, VECTOR v);
 
-VECTOR vector_null(); // return the null vector (0,0)
+// return a point of coord (0, 0)
+POINT point_null();
+// return point of coord (x, y)
+POINT point_create(double x, double y); 
+// return the translation of point p by vector v
+POINT point_translate(POINT p, VECTOR v);
+// return the distance (euclidian) between to points
+double point_distance(POINT p1, POINT p2);
+
+
+// return the null vector (0,0)
+VECTOR vector_null();
+// return vector of coord (x ,y)
 VECTOR vector_create(double x, double y);
+// return the sum of two vectors (v1, v2).
 VECTOR vector_sum(VECTOR v1, VECTOR v2);
+// return the vector v multiplied by a scalar
 VECTOR vector_multiply(VECTOR v, double scalar);
+// return the norm of v
 double vector_norm(VECTOR v);
 
 
