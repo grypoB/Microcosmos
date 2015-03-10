@@ -6,15 +6,20 @@
  * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 
-extern "C"
-{
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "error.h"
+
+extern "C"
+{
 #include "sim.h"
-#include "main.h"
 }
+
+enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET};
+typedef enum Mode MODE;
+
+MODE read_mode(char string[]);
+
 
 int main (int argc, char *argv[])
 { 
