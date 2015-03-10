@@ -16,7 +16,7 @@
 
 // default size of the partTab
 #define PART_TAB_SIZE MAX_RENDU1
-// multiplier between each increasing in size of partTab
+// multiplier between each increase in size of partTab
 #define TAB_GROWTH_RATIO 2
 
 typedef struct Particule {
@@ -24,12 +24,12 @@ typedef struct Particule {
     bool locked; // a locked particle cannot move
     int id; // the unique identifier of a particule
 
-    double radius; // must in [RMIN, RMAX]
-    double mass; // dependent on radius (see init_mass)
+    double radius; // must be included in [RMIN, RMAX]
+    double mass; // depends of the radius (see init_mass)
 
-    POINT center; // the position of the center of the particule
+    POINT center; // position of the center of the particule
 
-    VECTOR speed; // it's norm must be below 10
+    VECTOR speed; // its norm must be below 10
     VECTOR force;
     VECTOR acceleration;
 
@@ -44,10 +44,10 @@ static void part_updatePos(double delta_t);
 
 static double part_calcForce (PARTICULE *p1, PARTICULE *p2, double distance);
 static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
-                                                            double force_norm);
+                                                           double force_norm);
 
-// to navigate the data structure
-//static PARTICULE* part_firstPart();
+// to navigate in the data structure
+// static PARTICULE* part_firstPart();
 static PARTICULE* part_lastPart();
 static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
@@ -58,18 +58,18 @@ static PARTICULE *partTab = NULL;
 static int partNB = 0;
 
 
-// from an input string, create a particule
+// from an input string, creates a particule
 // Expected format (all in double): radius posx posy vx vy 
-// print errors if couldn't read string
+// prints errors if it couldn't read string
 bool part_readData(const char *string) {
     double param[5] = {0};
     bool success = false;
 
-    if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2], 
+    if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2],
                                               &param[3], &param[4])==5) {
 
         if (part_create(param[0], point_create(param[1], param[2]),
-                                  vector_create(param[3], param[4])) != UNASSIGNED) {
+            vector_create(param[3], param[4])) != UNASSIGNED) {
             success = true;
         }
 
@@ -80,10 +80,10 @@ bool part_readData(const char *string) {
     return success;
 }
 
-//  check if given params are valid (see part_create)
+// check if given params are valid (see part_create)
 // if verbose and if param aren't valid
-// it will call the appropriate error fct sending it the  given orgin and id number
-// see error_vitesse_partic and error_rayon_partic
+// it will call the appropriate error fct sending it the  given origin and
+// id number see error_vitesse_partic and error_rayon_partic
 bool part_validParams(double radius, POINT center, VECTOR speed,
                       bool verbose, ERREUR_ORIG origin, int id) {
     bool valid = true;
@@ -106,8 +106,9 @@ bool part_validParams(double radius, POINT center, VECTOR speed,
 
 // -----------
 // constructor
-// return the id of the particle (>=0)
-// return UNNASIGNED if radius not in [RMIN, RMAX], or speed norm > MAX_VITESSE
+// return the id of the particule (>=0)
+// return UNNASIGNED if radius isn't in [RMIN, RMAX], 
+// or if speed norm > MAX_VITESSE
 int part_create(double radius, POINT center, VECTOR speed) {
     static int id = 0; // static counter (for unique identifier)
     int returnID = UNASSIGNED;
@@ -160,11 +161,9 @@ void part_deleteAll() {
         #if DEBUG
         int i;
         for (i=0 ; i<partNB ; i++) {
-            printf("Freing particle no %d : %f %f %f %f %f\n", i, partTab[i].radius,
-                                                                  partTab[i].center.x,
-                                                                  partTab[i].center.y,
-                                                                  partTab[i].speed.x,
-                                                                  partTab[i].speed.y);
+            printf("Freing particle no %d : %f %f %f %f %f\n", i, 
+				   partTab[i].radius, partTab[i].center.x,partTab[i].center.y,
+                   partTab[i].speed.x, partTab[i].speed.y);
         }
         #endif
 
@@ -174,7 +173,7 @@ void part_deleteAll() {
 }
 
 // ----------
-// a locked particule cannot move, but still exerce force on other particules
+// a locked particule cannot move, but still exerces force on other particules
 bool part_setLock(int partID, bool lock) {
     PARTICULE *pPart = part_findPart(partID);
 
@@ -189,7 +188,7 @@ bool part_setLock(int partID, bool lock) {
 
 // ----------
 // Simulation related functions
-// calc force between the 2 first particule and print it
+// calc force between the 2 first particules and prints it
 void particule_force_rendu1() {
 	double force_norm = 0;
     double distance = 0;
@@ -209,7 +208,7 @@ int part_totalNB() {
 }
 
 // return the id of the closest particule form a given point
-// UNNASSIGNED if no particules
+// UNNASSIGNED if no particule
 int part_closestPart(POINT point) {
     int i = 0;
     int partID = UNASSIGNED;
@@ -235,8 +234,8 @@ int part_closestPart(POINT point) {
 // Simulation update fct
 // update the status of all particules (speed + position): 
 // calculating their attraction-repulsion force
-// delta_t is the ammount of time the "tick" lasts 
-// return false if data structure of particule not set or delta_t<0
+// delta_t is the amount of time the "tick" lasts 
+// return false if data structure of particule isn't set or if delta_t<0
 bool part_nextTick(double delta_t) {
 
     if (partTab!=NULL && delta_t>=0.) {
@@ -261,7 +260,7 @@ static void part_updateForce() {
     for (i=0 ; i<partNB ; i++) {
         partTab[i].force = vector_null();
 
-        // TODO add black holes effet
+        // TODO add black holes effects
 
 
         // TODO
@@ -306,8 +305,10 @@ static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
     if (distance < EPSILON_ZERO) {
         p1->force = vector_create(0, force_norm);
     } else { // general case
-        p1->force = vector_create(force_norm/distance * (p2->center.x-p1->center.x),
-                                  force_norm/distance * (p2->center.y-p1->center.y));
+        p1->force = vector_create(force_norm/distance * 
+								 (p2->center.x-p1->center.x), 
+								 (force_norm/distance) * 
+								 (p2->center.y-p1->center.y));
     }
     p2->force = vector_multiply(p1->force, -1);
 }
@@ -316,7 +317,8 @@ static void part_updateAcc() {
     int i=0;
 
     for (i=0 ; i<partNB ; i++) {
-        partTab[i].acceleration = vector_multiply(partTab[i].force, 1/partTab[i].mass);
+        partTab[i].acceleration = vector_multiply(partTab[i].force, 
+												  1/partTab[i].mass);
     }
 }
 
@@ -327,7 +329,7 @@ static void part_updateSpeed(double delta_t) {
     for (i=0 ; i<partNB ; i++) {
         if (!partTab[i].locked) { // a locked particle doesn't build up speed
             partTab[i].speed = vector_sum(partTab[i].speed,
-                                          vector_multiply(partTab[i].speed, delta_t));
+                               vector_multiply(partTab[i].speed, delta_t));
             speed_norm = vector_norm(partTab[i].speed);
             if (speed_norm > MAX_VITESSE) { // scale down the vector
                 partTab[i].speed = vector_multiply(partTab[i].speed,
@@ -343,8 +345,7 @@ static void part_updatePos(double delta_t) {
     for (i=0 ; i<partNB ; i++) {
         if (!partTab[i].locked) {
             partTab[i].center = point_translate(partTab[i].center,
-                                                vector_multiply(partTab[i].speed,
-                                                                delta_t));
+                                vector_multiply(partTab[i].speed, delta_t));
         }
     }
 }
@@ -357,7 +358,8 @@ static void part_initMass(PARTICULE *part) {
 }
 
 // -----------
-// utilities function (finding and managing the particules in the data structure)
+// utilities functions (finding and managing the particules in the data
+// structure)
 // return pointer to an empty slot in the data structure,
 // if not enough space, create some
 static PARTICULE* part_nextEmptySlot() {
@@ -370,9 +372,10 @@ static PARTICULE* part_nextEmptySlot() {
         if (partTab==NULL) error_msg("MEM allocation failed");
         partTabSize = PART_TAB_SIZE;
 
-    } else if (partNB == partTabSize) { // if table full, increase its size
+    } else if (partNB == partTabSize) { // if table full, increases its size
 
-        PARTICULE *newPartTab = malloc(sizeof(PARTICULE)*partTabSize*TAB_GROWTH_RATIO);
+        PARTICULE *newPartTab = NULL;
+        newPartTab = malloc(sizeof(PARTICULE)*partTabSize*TAB_GROWTH_RATIO);
         if (newPartTab==NULL) error_msg("MEM allocation failed");
 
         for (i=0; i<partNB; i++) {  // copy old table into the new one
