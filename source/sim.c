@@ -32,7 +32,8 @@ enum Read_state {NB_GENERATEUR,
 
 static bool sim_lecture(char filename[]);
 static int read_nbEntities(enum Read_state *state, char *tab);
-static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int nb_entities);
+static bool read_entities(enum Read_state *state, char *tab, int *pCounter,
+						  int nb_entities);
 static char* file_nextUsefulLine(char tab[], int line_size, FILE *file);
 
 
@@ -93,12 +94,14 @@ static bool sim_lecture(char filename[])
                     case GENERATEUR: 
                     case TROU_NOIR:
                     case PARTICULE:
-                        (void) read_entities(&state, tab, &counter, nb_entities);
+                        (void) read_entities(&state, tab, &counter, 
+											 nb_entities);
                     break;
                     case FIN:
                     case ERROR:
                     default:
-                        error_msg("invalid state in sim lecture (sim_lecture)");
+                        error_msg("invalid state in sim lecture"
+								  "(sim_lecture)");
                 }
             } else {
                 error_fichier_incomplet();
@@ -152,7 +155,8 @@ static int read_nbEntities(enum Read_state *state, char *tab) {
 
 
 
-static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int nb_entities) {
+static bool read_entities(enum Read_state *state, char *tab, int *pCounter, 
+						  int nb_entities) {
     char string[BUFFER_SIZE] = {0};
     bool success = false;
     bool missingSeparator = false;
@@ -215,9 +219,9 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
 
 
 // uses fgets to store in tab the next useful line of a file
-// omiting the empty lines and commented ones with '#'
-// return the value of fgets (NULL if error, else tab adress)
-// Caution : each line of the file should have less than line_size caracters 
+// omiting empty lines and commented ones with '#'
+// returns the value of fgets (NULL if error, else tab adress)
+// Caution : each line of the file should have less than line_size caracters
 static char* file_nextUsefulLine(char tab[], int line_size, FILE *file) {
     int useful = true;
     char *returnVal = NULL;
@@ -229,7 +233,8 @@ static char* file_nextUsefulLine(char tab[], int line_size, FILE *file) {
             returnVal = fgets(tab, line_size, file); 
             if (returnVal != NULL) {
                 for (i=0 ; i<line_size && useful==UNASSIGNED; i++) {
-                    if (tab[i]=='\n' || tab[i]=='\r' || tab[i]=='#' || tab[i]=='\0') {
+                    if (tab[i]=='\n' || tab[i]=='\r' || 
+                        tab[i]=='#' || tab[i]=='\0') {
                         useful = false;
                     } else if (tab[i] !=' ') {
                         useful = true;
