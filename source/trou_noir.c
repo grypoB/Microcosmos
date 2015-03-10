@@ -17,7 +17,7 @@
 #include "trou_noir.h"
 
 
-bool read_dataBckH(const char *string) {
+bool bckH_readData(const char *string) {
     double param[2] = {0};
     bool returnVal = false;
 

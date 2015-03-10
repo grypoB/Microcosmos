@@ -3,6 +3,7 @@
 EXEC   = rendu1.x
 
 CC     = gcc
+CCXX   = g++
 CFLAGS = -Wall
 LIBS   = -lm
 CFILES =  main.cpp error.c generateur.c trou_noir.c particule.c sim.c geometry.c

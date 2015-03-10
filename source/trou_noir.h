@@ -11,7 +11,7 @@
 
 #include "geometry.h"
 
-bool read_dataBckH(const char *string);
+bool bckH_readData(const char *string);
 
 // return UNNASIGNED=-1 if create unssucceful
 int bckH_create(POINT center);

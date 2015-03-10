@@ -33,11 +33,11 @@ int main (int argc, char *argv[])
 			break;
 			case FORCE: sim_force(argv[2]);
 			break;
-			case INTEGRATION: sim_integration(argv[2]);
+			case INTEGRATION: //sim_integration(argv[2]);
 			break;
-			case GRAPHIC: sim_graphic(argv[2]);
+			case GRAPHIC: //sim_graphic(argv[2]);
 			break;
-			case SIMULATION: sim_simulation(argv[2]);
+			case SIMULATION: //sim_simulation(argv[2]);
 			break;
 			case MODE_UNSET: printf("syntaxe attendue : sim.x [Error|Force|Integration|Graphic|Simulation,nom_fichier]\n");
 			return EXIT_FAILURE;

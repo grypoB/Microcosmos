@@ -30,6 +30,7 @@ enum Read_state {NB_GENERATEUR,
                  FIN,
                  ERROR};
 
+static bool sim_lecture(char filename[]);
 static int read_nbEntities(enum Read_state *state, char *tab);
 static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int nb_entities);
 static char* file_nextUsefulLine(char tab[], int line_size, FILE *file);
@@ -63,7 +64,7 @@ void sim_clean() {
 }
 
 
-bool sim_lecture(char filename[])
+static bool sim_lecture(char filename[])
 {
     char tab[BUFFER_SIZE] = {0};
     enum Read_state state = NB_GENERATEUR;
@@ -172,14 +173,14 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter, int 
                 if (missingSeparator) {
                     error_lecture_elements(ERR_GENERAT, ERR_TROP);
                 } else {
-                    success = read_dataGen(tab);
+                    success = gen_readData(tab);
                 }
             break;
             case TROU_NOIR:
                 if (missingSeparator) {
                     error_lecture_elements(ERR_TROU_N, ERR_TROP);
                 } else {
-                    success = read_dataBckH(tab);
+                    success = bckH_readData(tab);
                 }
             break;
             case PARTICULE:

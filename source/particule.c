@@ -157,6 +157,17 @@ bool part_deletePart(int partID) {
 void part_deleteAll() {
 
     if (partTab != NULL) {
+        #if DEBUG
+        int i;
+        for (i=0 ; i<partNB ; i++) {
+            printf("Freing particle no %d : %f %f %f %f %f\n", i, partTab[i].radius,
+                                                                  partTab[i].center.x,
+                                                                  partTab[i].center.y,
+                                                                  partTab[i].speed.x,
+                                                                  partTab[i].speed.y);
+        }
+        #endif
+
         free(partTab);
         partNB = 0;
     }

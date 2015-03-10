@@ -28,20 +28,20 @@ struct Generateur {
     int id;
 
     double radius;
-    POINT center;
+    POINT  center;
     VECTOR speed;
 };
 
 static GENERATEUR *genTab = NULL;
 static int genNB = 0;
 
-bool read_dataGen(const char *string) {
+bool gen_readData(const char *string) {
     double param[5] = {0};
     bool returnVal = false;
 
     if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2], &param[3], &param[4])==5) {
         if (gen_create(param[0], point_create(param[1], param[2]),
-                                  vector_create(param[3], param[4])) != UNASSIGNED) {
+                                 vector_create(param[3], param[4])) != UNASSIGNED) {
             returnVal = true;
         }
     } else {

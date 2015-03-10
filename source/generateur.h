@@ -12,7 +12,7 @@
 
 #include "geometry.h"
 
-bool read_dataGen(const char *string);
+bool gen_readData(const char *string);
 
 // return UNNASIGNED=-1 if create unssucceful
 int gen_create(double radius, POINT center, VECTOR speed);
