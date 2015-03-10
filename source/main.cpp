@@ -1,5 +1,6 @@
 /* Nom: main.cpp
- * Description: module sous-système de contrôle: gestion du dialogue avec l'utilisateur et interface graphique
+ * Description: module sous-système de contrôle: gestion du dialogue 
+				avec l'utilisateur et interface graphique
  * Date: 08.02.2014
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
@@ -18,40 +19,39 @@ extern "C"
 enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET};
 typedef enum Mode MODE;
 
-MODE read_mode(char string[]);
+static MODE read_mode(char string[]);
 
 
 int main (int argc, char *argv[])
 { 
 	enum Mode mode;
-    mode = read_mode(argv[1]);
+    mode = MODE_UNSET;    
     
-	if(argc!=3)
+	if(argc==3)
 	{
-		printf("syntaxe attendue : sim.x [Error|Force|Integration|Graphic|Simulation,nom_fichier]\n");
+		mode = read_mode(argv[1]);
 	}
-	else
+	switch(mode) 
 	{
-		switch(mode) 
-		{
-			case ERROR: sim_error(argv[2]);
-			break;
-			case FORCE: sim_force(argv[2]);
-			break;
-			case INTEGRATION: //sim_integration(argv[2]);
-			break;
-			case GRAPHIC: //sim_graphic(argv[2]);
-			break;
-			case SIMULATION: //sim_simulation(argv[2]);
-			break;
-			case MODE_UNSET: printf("syntaxe attendue : sim.x [Error|Force|Integration|Graphic|Simulation,nom_fichier]\n");
-			return EXIT_FAILURE;
-		}
+		case ERROR: sim_error(argv[2]);
+		break;
+		case FORCE: sim_force(argv[2]);
+		break;
+		case INTEGRATION: //sim_integration(argv[2]);
+		break;
+		case GRAPHIC: //sim_graphic(argv[2]);
+		break;
+		case SIMULATION: //sim_simulation(argv[2]);
+		break;
+		case MODE_UNSET: printf("Syntaxe attendue : sim.x [Error"
+								"|Force|Integration|Graphic|Simulation,"
+								"nom_fichier]\n");
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
 
-MODE read_mode(char string[])
+static MODE read_mode(char string[])
 {
 	MODE mode;
 	if(strcmp(string, "Error" ) == 0) 
