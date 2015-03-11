@@ -11,8 +11,14 @@
 
 #include "geometry.h"
 
+/*
+Black hole defined by :
+- a center point
+*/
+
 bool bckH_readData(const char *string);
 
 // return UNNASIGNED=-1 if create unssucceful
+// otherwise return id of black hole (starting at 0)
 int bckH_create(POINT center);
 #endif

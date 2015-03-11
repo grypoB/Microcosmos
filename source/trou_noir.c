@@ -16,7 +16,23 @@
 #include "error.h"
 #include "trou_noir.h"
 
+#define BCKH_TAB_SIZE MAX_RENDU1
 
+
+typedef struct Trou_noir {
+
+    POINT center;
+
+} TROU_NOIR;
+
+
+static TROU_NOIR bckHTab[BCKH_TAB_SIZE];
+static int bckHNB = 0;
+
+
+// from an input string, creates a black hole
+// Expected format (all in double): posx posy
+// prints errors if it couldn't read string
 bool bckH_readData(const char *string) {
     double param[2] = {0};
     bool returnVal = false;
@@ -34,5 +50,21 @@ bool bckH_readData(const char *string) {
 
 
 int bckH_create(POINT center) {
-    return 1;
+    static int id = 0;
+    int returnID = UNASSIGNED;
+
+    if (bckHNB < BCKH_TAB_SIZE) {
+        bckHTab[bckHNB].center = center;
+
+        returnID = id;
+
+        bckHNB++;
+
+    } else {
+        error_msg("Error black holes : not enough memory");
+    }
+
+    id++;
+
+    return returnID;
 }

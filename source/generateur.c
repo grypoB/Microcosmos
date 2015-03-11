@@ -20,17 +20,18 @@
 #define GEN_TAB_SIZE MAX_RENDU1
 #define TAB_GROWTH_RATIO 2
 
-typedef struct Generateur GENERATEUR;
 
-static GENERATEUR* gen_nextEmptySlot();
-
-struct Generateur {
+typedef struct Generateur {
     int id;
 
     double radius;
     POINT  center;
     VECTOR speed;
-};
+} GENERATEUR;
+
+
+static GENERATEUR* gen_nextEmptySlot();
+
 
 static GENERATEUR *genTab = NULL;
 static int genNB = 0;
