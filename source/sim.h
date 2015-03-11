@@ -11,16 +11,12 @@
 
 #include <stdbool.h>
 
-void sim_error(char filename[]);
-void sim_force(char filename[]);
+// Different mode supported by the simulation
+// for more details see the specs of the projects
+void sim_error(const char filename[]);
+void sim_force(const char filename[]);
 
-/*
-void sim_integration(char filename[]);
-void sim_graphic(char filename[]);
-void sim_simulation(char filename[]);
-*/
-
-
+// Free memory from all modules accross the simultion
 void sim_clean();
 
 #endif

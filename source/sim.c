@@ -21,6 +21,7 @@
 
 #define DATA_SEPARATOR "FIN_LISTE"
 
+// enum to store state of reading automate
 enum Read_state {NB_GENERATEUR,
                  GENERATEUR,
                  NB_TROU_NOIR,
@@ -30,14 +31,32 @@ enum Read_state {NB_GENERATEUR,
                  FIN,
                  ERROR};
 
-static bool sim_lecture(char filename[]);
-static int read_nbEntities(enum Read_state *state, char *tab);
-static bool read_entities(enum Read_state *state, char *tab, int *pCounter,
-						  int nb_entities);
-static char* file_nextUsefulLine(char tab[], int line_size, FILE *file);
+// read a file and store all entities read into the appropriate module
+// return false, if an error occured
+// (ex : file formated wrong, param not in validity domain, etc.)
+// print the error in the terminal 
+static bool sim_lecture(const char filename[]);
+
+// Centralised way of reading the number of entities in the input file 
+// return the nb_entities read
+// modify the state appropriatly after that
+// print any error detected (then set state=error)
+static int read_nbEntities(enum Read_state *state, const char *line);
+// centralised way to read an entity value
+// update the state (see read_nbEntities) and the counter of entities read
+// return false if an error occured (also print it in the terminal)
+static bool read_entities (enum Read_state *state, const char *line,
+                           int *pCounter, int nb_entities);
+
+// parse the empty or commented lines in a file to find the next useful line
+// Useful line are : none empty and without '#' as first characters
+// return the value fgets returned (line[] address, or NULL if error occured)
+static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
 
 
-void sim_error(char filename[]) {
+// Mode error, called from main.
+// Input : the file to read the entities form
+void sim_error(const char filename[]) {
     if (sim_lecture(filename)) {
         error_success();
     }
@@ -45,7 +64,9 @@ void sim_error(char filename[]) {
     sim_clean();
 }
 
-void sim_force(char filename[]) {
+// Mode Force, called form main.
+// INput : file to read the entities from
+void sim_force(const char filename[]) {
     if (sim_lecture(filename)) {
         particule_force_rendu1();
     } else {
@@ -55,6 +76,7 @@ void sim_force(char filename[]) {
     sim_clean();
 }
 
+// Free memory from all modules accross the simultion
 void sim_clean() {
     #ifdef DEBUG
     printf("Freeing memory from entities\n");
@@ -65,9 +87,14 @@ void sim_clean() {
 }
 
 
-static bool sim_lecture(char filename[])
+// ----------
+// read a file and store all entities read into the appropriate module
+// return false, if an error occured
+// (ex : file formated wrong, param not in validity domain, etc.)
+// print the error in the terminal 
+static bool sim_lecture(const char filename[])
 {
-    char tab[BUFFER_SIZE] = {0};
+    char line[BUFFER_SIZE] = {0};
     enum Read_state state = NB_GENERATEUR;
     int nb_entities = 0;
     int counter = 0;
@@ -79,22 +106,22 @@ static bool sim_lecture(char filename[])
     {
         while(state!=ERROR && state !=FIN)
         {
-            if (file_nextUsefulLine(tab, BUFFER_SIZE, file)) {
+            if (file_nextUsefulLine(line, BUFFER_SIZE, file)) {
                 #ifdef DEBUG
-                printf("Read line (state = %d) : %s", state, tab);
+                printf("Read line (state = %d) : %s", state, line);
                 #endif
 
                 switch (state) {
                     case NB_GENERATEUR:
                     case NB_TROU_NOIR:
                     case NB_PARTICULE:
-                        nb_entities = read_nbEntities(&state, tab);
+                        nb_entities = read_nbEntities(&state, line);
                         counter = 0;
                     break;
-                    case GENERATEUR: 
+                    case GENERATEUR:
                     case TROU_NOIR:
                     case PARTICULE:
-                        (void) read_entities(&state, tab, &counter, 
+                        (void) read_entities(&state, line, &counter,
 											 nb_entities);
                     break;
                     case FIN:
@@ -124,11 +151,21 @@ static bool sim_lecture(char filename[])
 
 }
 
-static int read_nbEntities(enum Read_state *state, char *tab) {
+
+// Centralised way of reading the number of entities in the input file 
+// return the nb_entities read
+// modify the state appropriatly after that
+// print any error detected (then set state=error)
+static int read_nbEntities(enum Read_state *state, const char *line) {
     int nb_entities = 0;
-    if (sscanf(tab, "%d", &nb_entities)==1) {
+    bool success = false;
+
+    if (sscanf(line, "%d", &nb_entities)==1 && nb_entities>=0) {
         (*state)++;
-    } else {
+        success = true;
+    }
+
+    if (!success) {
         switch (*state) {
             case NB_GENERATEUR:
                 error_lect_nb_elements(ERR_GENERAT);
@@ -150,19 +187,23 @@ static int read_nbEntities(enum Read_state *state, char *tab) {
         }
         *state = ERROR;
     }
+
     return nb_entities;
 }
 
 
-
-static bool read_entities(enum Read_state *state, char *tab, int *pCounter, 
-						  int nb_entities) {
+// centralised way to read an entity value
+// call appropriate module to create the entity
+// update the state (see read_nbEntities) and the counter of entities read
+// return false if an error occured (also print it in the terminal)
+static bool read_entities(enum Read_state *state, const char *line,
+                          int *pCounter, int nb_entities) {
     char string[BUFFER_SIZE] = {0};
     bool success = false;
     bool missingSeparator = false;
 
     if (*pCounter==nb_entities) {
-        sscanf(tab, "%s", string); 
+        sscanf(line, "%s", string); 
         if(strcmp(DATA_SEPARATOR, string) == 0) { // 0 stands for equality
             (*state)++;
             success = true;
@@ -177,21 +218,21 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter,
                 if (missingSeparator) {
                     error_lecture_elements(ERR_GENERAT, ERR_TROP);
                 } else {
-                    success = gen_readData(tab);
+                    success = gen_readData(line);
                 }
             break;
             case TROU_NOIR:
                 if (missingSeparator) {
                     error_lecture_elements(ERR_TROU_N, ERR_TROP);
                 } else {
-                    success = bckH_readData(tab);
+                    success = bckH_readData(line);
                 }
             break;
             case PARTICULE:
                 if (missingSeparator) {
                     error_lecture_elements(ERR_PARTIC, ERR_TROP);
                 } else {
-                    success = part_readData(tab);
+                    success = part_readData(line);
                 }
             break;
             
@@ -201,14 +242,13 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter,
             case FIN:
             case ERROR:
             default :
-                printf("state : %d\n", *state);
                 error_msg("invalid state in sim lecture (read_entities)");
         }
 
         if (success) {
             (*pCounter)++;
         } else {
-            // error message handled in read_dataXXX()
+            // error message handled in xxxx_readData()
             *state = ERROR;
         }
 
@@ -218,11 +258,13 @@ static bool read_entities(enum Read_state *state, char *tab, int *pCounter,
 }
 
 
+
+// ---------
 // uses fgets to store in tab the next useful line of a file
 // omiting empty lines and commented ones with '#'
 // returns the value of fgets (NULL if error, else tab adress)
 // Caution : each line of the file should have less than line_size caracters
-static char* file_nextUsefulLine(char tab[], int line_size, FILE *file) {
+static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     int useful = true;
     char *returnVal = NULL;
     int i = 0;
@@ -230,13 +272,13 @@ static char* file_nextUsefulLine(char tab[], int line_size, FILE *file) {
     if (file != NULL) {
         do {
             useful = UNASSIGNED;
-            returnVal = fgets(tab, line_size, file); 
+            returnVal = fgets(line, line_size, file); 
             if (returnVal != NULL) {
                 for (i=0 ; i<line_size && useful==UNASSIGNED; i++) {
-                    if (tab[i]=='\n' || tab[i]=='\r' || 
-                        tab[i]=='#' || tab[i]=='\0') {
+                    if (line[i]=='\n' || line[i]=='\r' || 
+                        line[i]=='#' || line[i]=='\0') {
                         useful = false;
-                    } else if (tab[i] !=' ') {
+                    } else if (line[i] !=' ') {
                         useful = true;
                     }
                 }
