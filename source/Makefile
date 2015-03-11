@@ -2,11 +2,16 @@
 
 EXEC   = rendu1.x
 
-CC     = gcc
-CCXX   = g++
-CFLAGS = -Wall
-LIBS   = -lm
-CFILES =  main.cpp error.c generateur.c trou_noir.c particule.c sim.c geometry.c
+CC       = gcc
+CXX      = g++
+CFLAGS   = -Wall
+CXXFLAGS = $(CFLAGS)
+LIBS     = -lm
+CFILES   =  main.cpp error.c generateur.c trou_noir.c particule.c sim.c \
+  geometry.c
+
+# debug flags to append in target debug
+DEBUGFLAGS = -g -D DEBUG
 
 # convert .c and .cpp into .o (2 steps needed)
 TEMP   = $(CFILES:.c=.o)
@@ -16,7 +21,8 @@ OFILES = $(TEMP:.cpp=.o)
 # Definitions des cibles
 all : $(EXEC)
 
-debug: CFLAGS += -g -D DEBUG
+debug: CFLAGS   += $(DEBUGFLAGS)
+#debug: CXXFLAGS += $(DEBUGFLAGS) # seems that is already appended
 debug: $(EXEC)
 
 depend:
@@ -35,7 +41,7 @@ clean:
 # Dependance particuliere
 
 $(EXEC): $(OFILES)
-	$(CC) $(OFILES) $(LIBS) $(CFLAGS) -o $(EXEC)
+	$(CC) $(OFILES) $(LIBS) -o $(EXEC)
 
 # -- Regles de dependances generees automatiquement
 #

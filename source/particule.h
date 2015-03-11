@@ -1,4 +1,4 @@
-/* Nom: main.cpp
+/* Nom: particule.h
  * Description: module qui gère les particules
  * Date: 08.02.2014
  * version : 1.0
