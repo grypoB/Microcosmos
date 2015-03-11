@@ -20,11 +20,15 @@
 #define GEN_TAB_SIZE MAX_RENDU1
 
 typedef struct Generateur {
-    int id;
 
+    int id; // unique identifier
+    
+    // params of the particles it creates
+    // (see particule module for validity domain of params)
     double radius;
     POINT  center;
     VECTOR speed;
+
 } GENERATEUR;
 
 

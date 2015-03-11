@@ -13,6 +13,7 @@
 
 /*
 Black hole defined by :
+- an id
 - a center point
 */
 

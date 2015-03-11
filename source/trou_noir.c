@@ -21,7 +21,9 @@
 
 typedef struct Trou_noir {
 
-    POINT center;
+    int id; // unique identifier
+
+    POINT center; // the center point of the black hole
 
 } TROU_NOIR;
 

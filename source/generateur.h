@@ -12,9 +12,19 @@
 
 #include "geometry.h"
 
+/*
+Generator (of particles) defined by :
+- an id
+- the position (point) of the particles it creates
+- the radius of the particles it creates
+- the speed vector of the particles it creates
+*/
+
+// from an input string, creates a particule generator
+// Expected format (all in double): radius posx posy vx vy 
+// prints errors if it couldn't read string
 bool gen_readData(const char *string);
 
 // return UNNASIGNED=-1 if create unssucceful
 int gen_create(double radius, POINT center, VECTOR speed);
-void gen_deleteAll();
 #endif
