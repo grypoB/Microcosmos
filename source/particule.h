@@ -55,6 +55,7 @@ bool part_setLock  (int partID, bool lock);
 // ------------
 // Create particule from data in a string
 // Expected format (all in double): radius posx posy vx vy 
+// prints errors if it couldn't read string
 bool part_readData(const char *string);
 
 // ------------

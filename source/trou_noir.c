@@ -60,8 +60,12 @@ int bckH_create(POINT center) {
 
         bckHNB++;
 
+        #ifdef DEBUG
+        printf("BlackHole id no %d created\n", id);
+        #endif
+
     } else {
-        error_msg("Error black holes : not enough memory");
+        error_msg("Error creating black hole : not enough memory");
     }
 
     id++;

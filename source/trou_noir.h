@@ -16,6 +16,9 @@ Black hole defined by :
 - a center point
 */
 
+// from an input string, creates a black hole
+// Expected format (all in double): posx posy
+// prints errors if it couldn't read string
 bool bckH_readData(const char *string);
 
 // return UNNASIGNED=-1 if create unssucceful
