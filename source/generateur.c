@@ -32,9 +32,6 @@ typedef struct Generateur {
 } GENERATEUR;
 
 
-static GENERATEUR* gen_nextEmptySlot();
-
-
 static GENERATEUR genTab[GEN_TAB_SIZE];
 static int genNB = 0;
 
