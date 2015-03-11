@@ -61,7 +61,7 @@ void sim_clean() {
     #endif
 
     part_deleteAll();
-    gen_deleteAll();
+    //gen_deleteAll();
 }
 
 
