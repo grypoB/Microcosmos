@@ -19,7 +19,7 @@ extern "C"
 enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET};
 typedef enum Mode MODE;
 
-static MODE read_mode(char string[]);
+static MODE read_mode(const char string[]);
 
 
 int main (int argc, char *argv[])
@@ -51,7 +51,7 @@ int main (int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-static MODE read_mode(char string[])
+static MODE read_mode(const char string[])
 {
 	MODE mode;
 	if(strcmp(string, "Error" ) == 0) 
@@ -80,4 +80,3 @@ static MODE read_mode(char string[])
     }
     return mode;
 }
-
