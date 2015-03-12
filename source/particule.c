@@ -53,8 +53,10 @@ static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
 
 
-
+// tab to store all the particle in
+// part_nextEmptySlot() inits it
 static PARTICULE *partTab = NULL;
+// strore the current number of particles
 static int partNB = 0;
 
 
@@ -83,21 +85,21 @@ bool part_readData(const char *string) {
 // check if given params are valid (see part_create)
 // if verbose and if param aren't valid
 // it will call the appropriate error fct sending it the  given origin and
-// id number see error_vitesse_partic and error_rayon_partic
+// id number (see error_vitesse_partic and error_rayon_partic)
 bool part_validParams(double radius, POINT center, VECTOR speed,
                       bool verbose, ERREUR_ORIG origin, int id) {
-    bool valid = true;
+    bool valid = false;
 
     if (vector_norm(speed) > MAX_VITESSE) {
-        valid = false;
         if (verbose) {
             error_vitesse_partic(origin, id);
         }
     } else if (radius>=RMAX || radius<=RMIN) {
-        valid = false;
         if (verbose) {
             error_rayon_partic(origin, id);
         }
+    } else {
+        valid = true;
     }
 
     return valid;
@@ -118,7 +120,7 @@ int part_create(double radius, POINT center, VECTOR speed) {
         pPart = part_nextEmptySlot();
 
         pPart->locked = false;
-        pPart->id = id; 
+        pPart->id = id;
         pPart->radius = radius;
         part_initMass(pPart);
         pPart->center = center;
@@ -140,7 +142,7 @@ int part_create(double radius, POINT center, VECTOR speed) {
 }
 
 // -----------
-// destructors
+// destructors (from particle ID)
 // return false if the particule id doesn't exist (anymore)
 bool part_deletePart(int partID) {
     PARTICULE *pPart     = part_findPart(partID);
@@ -208,7 +210,7 @@ int part_totalNB() {
 }
 
 // return the id of the closest particule form a given point
-// UNNASSIGNED if no particule
+// UNNASSIGNED if no particule exists
 int part_closestPart(POINT point) {
     int i = 0;
     int partID = UNASSIGNED;

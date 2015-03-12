@@ -65,7 +65,7 @@ void sim_error(const char filename[]) {
 }
 
 // Mode Force, called form main.
-// INput : file to read the entities from
+// Input : file to read the entities from
 void sim_force(const char filename[]) {
     if (sim_lecture(filename)) {
         particule_force_rendu1();
@@ -84,6 +84,7 @@ void sim_clean() {
 
     part_deleteAll();
     //gen_deleteAll();
+    //bckH_deleteAll();
 }
 
 
@@ -273,6 +274,7 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
         do {
             useful = UNASSIGNED;
             returnVal = fgets(line, line_size, file); 
+
             if (returnVal != NULL) {
                 for (i=0 ; i<line_size && useful==UNASSIGNED; i++) {
                     if (line[i]=='\n' || line[i]=='\r' || 

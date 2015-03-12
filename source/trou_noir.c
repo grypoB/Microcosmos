@@ -28,7 +28,9 @@ typedef struct Trou_noir {
 } TROU_NOIR;
 
 
+// tab where all blackholes are stored
 static TROU_NOIR bckHTab[BCKH_TAB_SIZE];
+// store the number of current black holes
 static int bckHNB = 0;
 
 

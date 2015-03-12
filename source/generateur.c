@@ -32,7 +32,9 @@ typedef struct Generateur {
 } GENERATEUR;
 
 
+// tab where all generators are stored
 static GENERATEUR genTab[GEN_TAB_SIZE];
+// store the number of current generators
 static int genNB = 0;
 
 
@@ -57,6 +59,9 @@ bool gen_readData(const char *string) {
 }
 
 
+// return UNNASIGNED=-1 if create unssucceful
+// otherwise return the id of the generator
+// See particule module for params validity
 int gen_create(double radius, POINT center, VECTOR speed) {
     static int id = 0;
     int returnID = UNASSIGNED;

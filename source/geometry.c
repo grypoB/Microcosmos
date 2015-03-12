@@ -66,7 +66,7 @@ double vector_norm(VECTOR v)
 
 // give the y coord of point C
 // by linear interpolation of the point A and B
-// return 0 if A and B are too clolse (EPSILON_ZERO)
+// return 0 if A and B are too close (EPSILON_ZERO)
 double linear_interpolation(double xC,
                             double xA, double yA,
                             double xB, double yB) {

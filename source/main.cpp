@@ -16,9 +16,12 @@ extern "C"
 #include "sim.h"
 }
 
+// Mode of the simulation to be ran on, see specs sheet for details
 enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET};
 typedef enum Mode MODE;
 
+// Return the mode read from a string (argv[1])
+// return MODE_UNSET if string wasn't valid
 static MODE read_mode(const char string[]);
 
 
