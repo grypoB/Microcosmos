@@ -85,8 +85,6 @@ int main(int argc, char **argv)
     glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, NULL, -1, control_cb);
     glui-> add_button_to_panel(file,"Save", -1, control_cb);
     
-	glui->add_button_to_panel( file ,"Load");  //remplace la simulation par le contenu du fichier dont le nom est fourni. simulation dans etat stoppé
-	glui->add_button_to_panel( file ,"Save");   //mémorise l'état actuel dela simulation dans le fichier dont le nom et fourni
 	
 	//Simulation avec start et step
 	simulation = glui->add_panel("Simulation" );
@@ -95,10 +93,10 @@ int main(int argc, char **argv)
 
 	
 	//Information avec nb elements
-	information = glui->add_panel("Information" );              //tient a jour et affiche nb éléments
-	glui->add_button_to_panel( information ,"Nb particule");  
-	glui->add_button_to_panel( information ,"Nb Generateur");
-	glui->add_button_to_panel( information ,"Nb Trou noir");
+	information = glui->add_panel("Information" );
+	glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_TEXT, NULL, -1, control_cb);
+	glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_TEXT, NULL, -1, control_cb);
+	glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_TEXT, NULL, -1, control_cb);
 	
 	glui->add_button( "Quit",0,(GLUI_Update_CB)exit );  //doit fermer les fenetres et et fichiers et quitter le programme
 	
