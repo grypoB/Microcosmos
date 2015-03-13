@@ -1,5 +1,7 @@
 /*------------------------------------------------------------------------*/
 #define _USE_MATH_DEFINES
+#define NB_COTES 50
+
 #include <stdio.h>
 #include <math.h>
 #include <GL/glu.h>
@@ -73,9 +75,9 @@ void graphic_draw_circle (float xc,
   for (i=0; i < SIDES; i++)
     {
       float alpha = i * 2. * M_PI / SIDES;
-
-       /* A vous de completer ici, avec un
-          appel a glVertex2f (serie 17) */;
+	  float x = xc + r * cos (alpha);
+	  float y = yc + r * sin (alpha);
+      glVertex2f(x,y);
     }
 
   glEnd ();
