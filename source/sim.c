@@ -83,7 +83,7 @@ void sim_clean() {
     printf("Freeing memory from entities\n");
     #endif
 
-    part_deleteAll();
+    //part_deleteAll();
     //gen_deleteAll();
     //bckH_deleteAll();
 }
