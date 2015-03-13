@@ -49,6 +49,7 @@ static bool read_entities (enum Read_state *state, const char *line,
                            int *pCounter, int nb_entities);
 
 // parse the empty or commented lines in a file to find the next useful line
+// file should have already open, line content stored in char line[]
 // Useful line are : none empty and without '#' as first characters
 // return the value fgets returned (line[] address, or NULL if error occured)
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
@@ -261,9 +262,10 @@ static bool read_entities(enum Read_state *state, const char *line,
 
 
 // ---------
-// uses fgets to store in tab the next useful line of a file
-// omiting empty lines and commented ones with '#'
-// returns the value of fgets (NULL if error, else tab adress)
+// parse the empty or commented lines in a file to find the next useful line
+// file should have already open, line content stored in char line[]
+// Useful line are : none empty and without '#' as first characters
+// return the value fgets returned (line[] address, or NULL if error occured)
 // Caution : each line of the file should have less than line_size caracters
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     int useful = true;
