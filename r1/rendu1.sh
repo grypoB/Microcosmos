@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $1 ]; then
+if [ "$1" = "-c" ]; then
     SOURCE_FOLDER="../source"
     RENDU_PATH="../source/rendu1.x"
 
@@ -19,7 +19,7 @@ then
     while [ $i -le 6 ]
     do
         echo "Running E$i.txt!"
-        "./"rendu1.x Error "E$i.txt" >> "out_E$i.txt"
+        "./"rendu1.x Error "E$i.txt" > "out_E$i.txt"
         let "i++"
         echo "Done!"
     done
@@ -28,7 +28,7 @@ then
     while [ $j -le 3 ]
     do
         echo "Running F$j.txt!"
-        "./"rendu1.x Force "F$j.txt" >> "out_F$j.txt"
+        "./"rendu1.x Force "F$j.txt" > "out_F$j.txt"
         let "j++"
         echo "Done!"
     done
