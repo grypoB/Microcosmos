@@ -140,16 +140,23 @@ void initOpenGl(void)
 	glutMouseFunc(mouse);
 	
 	/*
-	 * AJOUTER OPENGL appeler graphic.c ici
-	 * revoir aussi affichage
+	 * AJOUTER OPENGL
+	 * graphic.c
+	 * revoir aussi affichage/cadrage
+	 * affichage();
 	 */
 		
 	/*Code GLUI pour l'interface*/
 	GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 	
 	file = glui->add_panel("File" );
+	
+	//GLUI_EditText *filename;
+	//GLUI_Button * load;
+	//filename = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
+	//load = glui-> add_button_to_panel(file,"Load", -1, load_cb);
 	glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
-    glui-> add_button_to_panel(file,"Load", -1, load_cb);
+	glui-> add_button_to_panel(file,"Load", -1, load_cb);
     
     glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, save_cb);
     glui-> add_button_to_panel(file,"Save", -1, save_cb);
