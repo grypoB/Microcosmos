@@ -12,9 +12,6 @@ namespace
 	GLUI_Panel *information;
 }
 
-/********** User IDs pour les fonctions callback ********/
-	#define RADIOBUTTON_ID 100
-
 void control_cb(int control)
 {
 	
@@ -35,16 +32,7 @@ void affichage(void)
 	else
 	glOrtho(gauche*aspect_ratio, droite*aspect_ratio, bas, haut, -1.0, 1.0);
 	
-	//fairelesfonctions pour dessiner les particules, trou noirs et généraeurs
-	/*glBegin(GL_POLYGON);
-	glColor3f(0.0,0.0,0.0);
-	glVertex2f(-0.5,-0.5);
-	glColor3f(1.0,0.0,0.0);
-	glVertex2f(0.5,-0.5);
-	glColor3f(0.0,0.0,1.0);
-	glVertex2f(0.5,0.5);
-	glEnd();
-	*/   
+	//fct qui créent particules
 	glutSwapBuffers();
 }
 
@@ -68,14 +56,13 @@ int main(int argc, char **argv)
 	glutInitWindowSize(250, 250);
 	
 	main_window = glutCreateWindow("Microcosmos");
-	/*Initialisation Open GL */
-	glClearColor(1.0, 1.0, 1.0, 0.0); //pour un fond blanc;
+
+	glClearColor(1.0, 1.0, 1.0, 0.0);
 	
-	/* Enregistrement des fonctions de callback*/
 	glutDisplayFunc(affichage);
 	glutReshapeFunc(reshape);
 	
-	GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );   //avant ajouter code de création de fenetre glui
+	GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 	
 	//File avec filename load et save
 	file = glui->add_panel("File" );
