@@ -27,6 +27,6 @@ bool gen_readData(const char *string);
 
 // return UNNASIGNED=-1 if create unssucceful
 // otherwise return the id of the generator
-// See particule module for params validity
+// See particule module for params validity domain
 int gen_create(double radius, POINT center, VECTOR speed);
 #endif

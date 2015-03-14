@@ -19,6 +19,8 @@
 #include "trou_noir.h"
 #include "particule.h"
 
+#define BUFFER_SIZE 100 // size of reading buffer
+// separator in input file between enity declarations
 #define DATA_SEPARATOR "FIN_LISTE"
 
 // enum to store state of reading automate
@@ -34,6 +36,7 @@ enum Read_state {NB_GENERATEUR,
 // read a file and store all entities read into the appropriate module
 // return false, if an error occured
 // (ex : file formated wrong, param not in validity domain, etc.)
+// see specs of the project for file syntax
 // print the error in the terminal 
 static bool sim_lecture(const char filename[]);
 
@@ -49,7 +52,7 @@ static bool read_entities (enum Read_state *state, const char *line,
                            int *pCounter, int nb_entities);
 
 // parse the empty or commented lines in a file to find the next useful line
-// file should have already open, line content stored in char line[]
+// line content stored in char line[], file should have already open
 // Useful line are : none empty and without '#' as first characters
 // return the value fgets returned (line[] address, or NULL if error occured)
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
@@ -65,7 +68,7 @@ void sim_error(const char filename[]) {
     sim_clean();
 }
 
-// Mode Force, called form main.
+// Mode Force, called from main.
 // Input : file to read the entities from
 void sim_force(const char filename[]) {
     if (sim_lecture(filename)) {
@@ -196,7 +199,7 @@ static int read_nbEntities(enum Read_state *state, const char *line) {
 
 // centralised way to read an entity value
 // call appropriate module to create the entity
-// update the state (see read_nbEntities) and the counter of entities read
+// update the state and the counter of entities read
 // return false if an error occured (also print it in the terminal)
 static bool read_entities(enum Read_state *state, const char *line,
                           int *pCounter, int nb_entities) {
@@ -250,7 +253,7 @@ static bool read_entities(enum Read_state *state, const char *line,
         if (success) {
             (*pCounter)++;
         } else {
-            // error message handled in xxxx_readData()
+            // error message handled in ...._readData()
             *state = ERROR;
         }
 
@@ -263,7 +266,7 @@ static bool read_entities(enum Read_state *state, const char *line,
 
 // ---------
 // parse the empty or commented lines in a file to find the next useful line
-// file should have already open, line content stored in char line[]
+// line content stored in char line[], file should have already open
 // Useful line are : none empty and without '#' as first characters
 // return the value fgets returned (line[] address, or NULL if error occured)
 // Caution : each line of the file should have less than line_size caracters

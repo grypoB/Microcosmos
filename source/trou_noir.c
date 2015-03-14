@@ -16,6 +16,7 @@
 #include "error.h"
 #include "trou_noir.h"
 
+// size of the tab to store the black holes in
 #define BCKH_TAB_SIZE MAX_RENDU1
 
 
@@ -28,7 +29,7 @@ typedef struct Trou_noir {
 } TROU_NOIR;
 
 
-// tab where all blackholes are stored
+// tab where all black holes are stored
 static TROU_NOIR bckHTab[BCKH_TAB_SIZE];
 // store the number of current black holes
 static int bckHNB = 0;
@@ -53,6 +54,8 @@ bool bckH_readData(const char *string) {
 }
 
 
+// return UNNASIGNED=-1 if create unssucceful
+// otherwise return id of black hole (starting at 0)
 int bckH_create(POINT center) {
     static int id = 0;
     int returnID = UNASSIGNED;
