@@ -24,7 +24,6 @@
 #define NBP 0.05
 
 // implementation related constant 
-#define UNASSIGNED -1 // general value for variable  not set
-#define BUFFER_SIZE 100 // size of reading buffer
+#define UNASSIGNED -1 // general value for variable not set
 
 #endif

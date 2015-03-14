@@ -14,7 +14,7 @@
 #include "constantes.h"
 #include "particule.h"
 
-// default size of the partTab
+// default size of the tab to store the particule in
 #define PART_TAB_SIZE MAX_RENDU1
 // multiplier between each increase in size of partTab
 #define TAB_GROWTH_RATIO 2
@@ -109,8 +109,8 @@ bool part_validParams(double radius, POINT center, VECTOR speed,
 // -----------
 // constructor
 // return the id of the particule (>=0)
-// return UNNASIGNED if radius isn't in [RMIN, RMAX], 
-// or if speed norm > MAX_VITESSE
+// return UNASSIGNED if radius isn't in [RMIN, RMAX], 
+// or if speed's norm > MAX_VITESSE
 int part_create(double radius, POINT center, VECTOR speed) {
     static int id = 0; // static counter (for unique identifier)
     int returnID = UNASSIGNED;

@@ -26,7 +26,7 @@ POINT point_null();
 POINT point_create(double x, double y); 
 // return the translation of point p by vector v
 POINT point_translate(POINT p, VECTOR v);
-// return the distance (euclidian) between to points
+// return the (euclidiian) distance between to points
 double point_distance(POINT p1, POINT p2);
 
 
@@ -44,7 +44,7 @@ double vector_norm(VECTOR v);
 
 // give the y coord of point C
 // by linear interpolation of the point A and B
-// return 0 if A and B are too clolse (EPSILON_ZERO)
+// return 0 if A and B are too close (EPSILON_ZERO)
 double linear_interpolation(double xC,
                             double xA, double yA,
                             double xB, double yB);
