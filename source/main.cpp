@@ -13,10 +13,6 @@
 #include <GL/glu.h>
 #include <GL/glui.h>
 
-#define NB_PARTICULE 1
-#define NB_GENERATEUR 2
-#define NB_TROU_NOIR 3
-
 extern "C"
 {
 #include "constantes.h"
@@ -48,8 +44,6 @@ void initOpenGl(void);
 void load_cb(int control);
 void save_cb(int control);
 void simulation_cb(int control);
-void information_cb(int control);
-void quit_cb(int control);
 
 // Mode of the simulation to be ran on, see specs sheet for details
 enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET};
@@ -125,7 +119,6 @@ static MODE read_mode(const char string[])
 void initOpenGl(void)
 {
 	/*Initialise Glut and Create Window*/
-	
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); // ??
 	glutInitWindowPosition(200, 200);
 	glutInitWindowSize(250, 250);
@@ -149,29 +142,34 @@ void initOpenGl(void)
 	/*Code GLUI pour l'interface*/
 	GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 	
+	//File
 	file = glui->add_panel("File" );
-	
-	//GLUI_EditText *filename;
-	//GLUI_Button * load;
-	//filename = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
-	//load = glui-> add_button_to_panel(file,"Load", -1, load_cb);
-	glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
+	GLUI_EditText *filename_load = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
+	filename_load->get_text();
 	glui-> add_button_to_panel(file,"Load", -1, load_cb);
+
+	GLUI_EditText *filename_save = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
+	filename_save->get_text();
+	glui-> add_button_to_panel(file,"Save", -1, load_cb);
     
-    glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, save_cb);
-    glui-> add_button_to_panel(file,"Save", -1, save_cb);
-    
-	
+	//Simulation
 	simulation = glui->add_panel("Simulation" );
-	glui->add_button_to_panel( simulation ,"Start", 1, simulation_cb);
-	glui->add_button_to_panel( simulation ,"Step", 2, simulation_cb);
+	glui->add_button_to_panel(simulation ,"Start", 1, simulation_cb);
+	glui->add_button_to_panel(simulation ,"Step", 2, simulation_cb);
 	
+	//Information
 	information = glui->add_panel("Information" );
-	glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_INT, NULL, NB_PARTICULE, information_cb); 
-	glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_INT, NULL, NB_GENERATEUR, information_cb);
-	glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT, NULL, NB_TROU_NOIR, information_cb);
+	GLUI_EditText *nb_particule = glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_INT); 
+	nb_particule->set_text(""); 																				//mettre a jour
+	GLUI_EditText *nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_INT);
+	nb_generateur->set_text("");																				//mettre ajour
+	GLUI_EditText *nb_trou_noir = glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT);
+	nb_trou_noir->set_text(""); 																				//mettre à jour
 	
-	glui->add_button( "Quit",0, quit_cb );
+	glui->add_button( "Quit",0,exit);
+	//fichier.close
+	//windows fermer 
+	//quitter
 	
 	glui->set_main_gfx_window( main_window );
 	
@@ -198,25 +196,7 @@ void simulation_cb(int control)
 	//start:bouton pour commencer/stopper la simulation
 	//step:lorsque la simulation est stoppée -> calcule seulement un pas // enable seulement quand simulation est stoppée
 }
-void information_cb(int control)
-{
-	switch(control)
-	{
-		case NB_PARTICULE: //mettre a jour
-		break;
-		case NB_GENERATEUR: //mettre a jour
-		break;
-		case NB_TROU_NOIR: //mettre a jour
-		break;
-		
-		return;
-	}
-}
 
-void quit_cb(int control)
-{
-	//fermer les fenetres et fichiers puis quitter programme
-}
 
 void affichage(void)
 {
