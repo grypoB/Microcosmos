@@ -119,7 +119,7 @@ int part_create(double radius, POINT center, VECTOR speed) {
             printf("Part id no %d created\n", id);
             #endif
         } else {
-            error_msg("Not ebough memory to create particule");
+            error_msg("Not enough memory to create particule");
         }
     }
 

@@ -15,7 +15,6 @@
 
 // all particules are stored with a static in .c
 // creating one returns a unique ID (used to reference this particule later)
-// don't forget to delete afterwards (to clear memory)
 
 /*
 Particles caracterised by : 
