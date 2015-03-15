@@ -135,13 +135,6 @@ void initOpenGl(void)
 	glutKeyboardFunc(keyboard);
 	glutMouseFunc(mouse);
 	
-	/*
-	 * AJOUTER OPENGL
-	 * graphic.c
-	 * revoir aussi affichage/cadrage
-	 * affichage();
-	 */
-		
 	/*Code GLUI pour l'interface*/
 	GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 	

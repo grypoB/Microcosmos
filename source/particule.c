@@ -12,6 +12,7 @@
 #include <math.h>
 
 #include "constantes.h"
+#include "graphic.h"
 #include "particule.h"
 
 // default size of the tab to store the particles

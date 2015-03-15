@@ -12,6 +12,7 @@
 #include <stdbool.h>
 
 #include "constantes.h"
+#include "graphic.h"
 #include "geometry.h"
 #include "error.h"
 #include "trou_noir.h"

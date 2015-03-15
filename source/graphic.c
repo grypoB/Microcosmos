@@ -6,7 +6,7 @@
 #include <math.h>
 #include <GL/glu.h>
 #include "graphic.h"
-
+#include "geometry.h"
 /*=================================================================*/
 /* Fonctions pour afficher un segment, un rectangle ou un cercle.  */
 /*								   */
@@ -59,12 +59,9 @@ void graphic_draw_rectangle (float xc,
 }
 /*-----------------------------------------------------------------------*/
 
-void graphic_draw_circle (float xc,
-                          float yc,
-                          float r,
-                          int   filled)
-
-{ int i;
+void graphic_draw_circle (POINT center, double radius, int filled)
+{ 
+  int i;
   const int SIDES = 50;
 
   if (filled == GRAPHIC_FILLED)
@@ -75,8 +72,8 @@ void graphic_draw_circle (float xc,
   for (i=0; i < SIDES; i++)
     {
       float alpha = i * 2. * M_PI / SIDES;
-	  float x = xc + r * cos (alpha);
-	  float y = yc + r * sin (alpha);
+	  float x = center.x + radius * cos (alpha);
+	  float y = center.y + radius * sin (alpha);
       glVertex2f(x,y);
     }
 

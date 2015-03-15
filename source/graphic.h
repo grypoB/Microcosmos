@@ -1,6 +1,7 @@
 /*------------------------------------------------------------------------*/
 /*                          fichier en-tete (graphic.h)                   */
 /*------------------------------------------------------------------------*/
+#include "geometry.h"
 
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
@@ -36,10 +37,7 @@ void       graphic_draw_rectangle (float xc,
                                    float height,
                                    int   filled);
 
-void       graphic_draw_circle (float xc,
-                                float yc,
-			        float r,
-                                int   filled);
+void graphic_draw_circle (POINT center, double radius, int filled);
 
 void       graphic_set_color3f(float r,
                              float g, 
