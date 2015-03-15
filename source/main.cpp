@@ -45,8 +45,8 @@ void idle(void);
 void initOpenGl(int * nb_element);
 
 //fonction callback (interface)
-void load_cb(int control);
-void save_cb(int control);
+void load_cb(int live_var);
+void save_cb(int live_var);
 void simulation_cb(int control);
 
 // Mode of the simulation to be ran on, see specs sheet for details
@@ -144,20 +144,17 @@ void initOpenGl(int * nb_element)
 	//File
 	file = glui->add_panel("File" );
 	
-	GLUI_EditText *filename_load = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
-	filename_load->get_text();
-	
+	glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
 	glui-> add_button_to_panel(file,"Load", -1, load_cb);
 
-	GLUI_EditText *filename_save = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
-	filename_save->get_text();
-	
-	glui-> add_button_to_panel(file,"Save", -1, load_cb);
+	glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, save_cb);
+	glui-> add_button_to_panel(file,"Save", -1, save_cb);
     
 	//Simulation
 	simulation = glui->add_panel("Simulation" );
 	glui->add_button_to_panel(simulation ,"Start", START, simulation_cb);
-	glui->add_button_to_panel(simulation ,"Step", STEP, simulation_cb);  //part_nextTick(double delta_t)
+	glui->add_button_to_panel(simulation ,"Step", STEP, simulation_cb);					//A FINIR
+	
 	
 	//Information
 	information = glui->add_panel("Information" );
@@ -168,7 +165,7 @@ void initOpenGl(int * nb_element)
 	nb_generateur->set_int_val(nb_element[1]);
 	
 	GLUI_EditText *nb_trou_noir = glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT);
-	nb_trou_noir->set_int_val(nb_element[2]); //																				//mettre à jour
+	nb_trou_noir->set_int_val(nb_element[2]);
 	
 	
 	glui->add_button( "Quit", QUIT, (GLUI_Update_CB) simulation_cb);
@@ -182,13 +179,12 @@ void initOpenGl(int * nb_element)
 
 }
 
-void load_cb(int control, char live_var)
+void load_cb(int control, const char* live_var)
 {
-	// recoit un nom pour openfile
-	//ouvre le fichier dont le nom est donné
+	sim_graphic(live_var);
 }
 
-void save_cb(int control)
+void save_cb(int control, const char* live_var)
 {
 	//recoit un nom pour enregistrer
 	//enregistre etat actuel de simulation dans ce fichier
@@ -202,7 +198,7 @@ void simulation_cb(int control)
 		
 	switch(control)    
 	{
-		case START:              //je sais pas si ca marche
+		case START:
 				if(etat==ON)
 				{
 					glutIdleFunc(NULL);
@@ -218,17 +214,19 @@ void simulation_cb(int control)
 				break;
 				
 		case STEP:
-				//step : lorsque la simulation est stoppée -> calcule seulement un pas // enable seulement quand simulation est stoppée
+				glutIdleFunc(NULL);
+				etat = OFF;
+				//calcule seulement un pas
 				glutSetWindow( main_window );
 				glutPostRedisplay( );
 				break;
 
 		case QUIT:
-			Glui->close( );  //ferme fenetre glui
-			glutSetWindow( main_window );
-			glFinish( );    //ferme les images
-			glutDestroyWindow( main_window ); //ferme fenetre image
-			exit( 0 ); //quitte programme
+			Glui->close();						//ferme fenetre glui
+			glutSetWindow(main_window);
+			glFinish();						//ferme les images
+			glutDestroyWindow(main_window);	//ferme fenetre image
+			exit(0);							//quitte programme
 			break;
 
 		default:
