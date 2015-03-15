@@ -202,7 +202,7 @@ void simulation_cb(int control)
 		
 	switch(control)    
 	{
-		case START:              //je sais pas ca marche
+		case START:              //je sais pas si ca marche
 				if(etat==ON)
 				{
 					glutIdleFunc(NULL);

@@ -89,6 +89,11 @@ int gen_create(double radius, POINT center, VECTOR speed) {
     return returnID;
 }
 
+// return the total number of current generator
+int gen_totalNB() {
+    return genNB;
+}
+
 void gen_draw(double radius, POINT center)    //PAS DU TOUT A JOUR
 {
 	//graphic_set_line_width(1.);

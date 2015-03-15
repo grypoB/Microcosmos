@@ -81,6 +81,11 @@ int bckH_create(POINT center) {
     return returnID;
 }
 
+// return the total number of current black hole
+int bckH_totalNB() {
+    return bckHNB;
+}
+
 void BCKh_draw(POINT center)
 {
 	//graphic_set_line_width(1.);

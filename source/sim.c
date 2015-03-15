@@ -312,16 +312,12 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     return returnVal;
 }
 
-int* sim_nb_element(void)  //TO DO 
+int* sim_nb_element(void)
 {
 	int* nb_element=NULL;
 	
-	int nb_particule  = 0;
-	int nb_generateur = 0;
-	int nb_trou_noir  = 0;
-	
-	*(nb_element) = nb_particule;
-	*(nb_element+1) = nb_generateur;
-	*(nb_element+2) = nb_trou_noir;
+	*(nb_element) = part_totalNB();
+	*(nb_element+1) = gen_totalNB();
+	*(nb_element+2) = gen_totalNB();
 	return nb_element;
 }
