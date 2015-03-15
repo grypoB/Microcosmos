@@ -318,6 +318,21 @@ int* sim_nb_element(void)
 	
 	*(nb_element) = part_totalNB();
 	*(nb_element+1) = gen_totalNB();
-	*(nb_element+2) = gen_totalNB();
+	*(nb_element+2) = bckH_totalNB();
 	return nb_element;
+}
+
+char* sim_ecriture(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)
+{
+	char* file[200];
+	*file[0] = gen_totalNB();
+	*file[8] = "FIN_LISTE"
+	
+	*file[10] = bckH_totalNB();
+	*file[18] = "FIN_LISTE"
+	
+	*file[20] = part_totalNB();
+	*file[28] = "FIN_LISTE"
+	
+	return *file;
 }

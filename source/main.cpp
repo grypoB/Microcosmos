@@ -14,6 +14,7 @@
 #include <GL/glu.h>
 #include <GL/glui.h>
 //#include <GL/glut.h>
+#include <string.h>
 
 extern "C"
 {
@@ -23,7 +24,7 @@ extern "C"
 
 namespace
 {
-	GLUI *	Glui;
+	GLUI*	Glui;
 	GLfloat aspect_ratio ;
 	int main_window;
 	GLUI_Panel *file;
@@ -182,12 +183,18 @@ void initOpenGl(int * nb_element)
 void load_cb(int control, const char* live_var)
 {
 	sim_graphic(live_var);
+	glutIdleFunc(NULL);
 }
 
 void save_cb(int control, const char* live_var)
 {
-	//recoit un nom pour enregistrer
 	//enregistre etat actuel de simulation dans ce fichier
+	FILE *fichier = NULL;
+	fichier = fopen(live_var,"w");
+	
+	fprintf(fichier, "%s", sim_ecriture());
+
+	fclose(fichier);
 }
 
 void simulation_cb(int control)
@@ -224,13 +231,13 @@ void simulation_cb(int control)
 		case QUIT:
 			Glui->close();						//ferme fenetre glui
 			glutSetWindow(main_window);
-			glFinish();						//ferme les images
-			glutDestroyWindow(main_window);	//ferme fenetre image
+			glFinish();							//ferme les images
+			glutDestroyWindow(main_window);		//ferme fenetre image
 			exit(0);							//quitte programme
 			break;
 
 		default:
-			fprintf( stderr, "Don't know what to do with Button ID %d\n", control );
+			fprintf(stderr, "Don't know what to do with Button ID %d\n", control);
 	}
 	
 }
