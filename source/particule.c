@@ -431,5 +431,8 @@ static PARTICULE* part_findPart(int partID) {
 
 void part_draw(double radius, POINT center, VECTOR speed)
 {
-	//TO DO
+	//graphic_set_color3f(0.2, 0.8,1.0);
+	//graphic_set_line_width(3.);
+	graphic_draw_particule(center, radius, GRAPHIC_FILLED);
+	//graphic_set_line_width(1.);
 }

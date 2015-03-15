@@ -83,5 +83,8 @@ int bckH_create(POINT center) {
 
 void BCKh_draw(POINT center)
 {
-	//TO DO
+	//graphic_set_color3f(0.2, 0.8,1.0);
+	//graphic_set_line_width(3.);
+	graphic_draw_bckH(center);
+	//graphic_set_line_width(1.);
 }

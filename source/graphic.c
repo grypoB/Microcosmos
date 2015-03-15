@@ -59,7 +59,7 @@ void graphic_draw_rectangle (float xc,
 }
 /*-----------------------------------------------------------------------*/
 
-void graphic_draw_circle (POINT center, double radius, int filled)
+void graphic_draw_particule(POINT center, double radius, int filled) //a revoir
 { 
   int i;
   const int SIDES = 50;
@@ -78,6 +78,36 @@ void graphic_draw_circle (POINT center, double radius, int filled)
     }
 
   glEnd ();
+}
+
+void graphic_draw_generateur(POINT center, double radius, int filled)   //a revoir
+{ 
+  int i;
+  const int SIDES = 50;
+
+  if (filled == GRAPHIC_FILLED)
+    glBegin (GL_POLYGON);
+  else
+    glBegin (GL_LINE_LOOP);
+  
+  for (i=0; i < SIDES; i++)
+    {
+      float alpha = i * 2. * M_PI / SIDES;
+	  float x = center.x + radius * cos (alpha);
+	  float y = center.y + radius * sin (alpha);
+      glVertex2f(x,y);
+    }
+
+  glEnd ();
+}
+
+void graphic_draw_bckH(POINT center)  //a revoir
+{
+	glBegin (GL_POINT);
+
+    glVertex2f (center.x, center.y);
+
+    glEnd ();
 }
 
 void graphic_set_color3f(float r,

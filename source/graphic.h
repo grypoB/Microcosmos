@@ -37,7 +37,11 @@ void       graphic_draw_rectangle (float xc,
                                    float height,
                                    int   filled);
 
-void graphic_draw_circle (POINT center, double radius, int filled);
+void graphic_draw_particule(POINT center, double radius, int filled); //PAS FINI
+
+void graphic_draw_generateur(POINT center, double radius, int filled); //PAS FINI
+
+void graphic_draw_bckH(POINT center); //PAS FINI
 
 void       graphic_set_color3f(float r,
                              float g, 

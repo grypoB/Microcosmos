@@ -93,6 +93,6 @@ void gen_draw(double radius, POINT center)    //PAS DU TOUT A JOUR
 {
 	//graphic_set_color3f(0.2, 0.8,1.0);
 	//graphic_set_line_width(3.);
-	graphic_draw_circle(center.x, center.y, radius, GRAPHIC_FILLED);
+	graphic_draw_generateur(center, radius, GRAPHIC_FILLED);
 	//graphic_set_line_width(1.);
 }
