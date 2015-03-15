@@ -10,8 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//#include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glui.h>
+//#include <GL/glut.h>
 
 extern "C"
 {
@@ -38,7 +40,6 @@ void reshape(int w, int h);
 void keyboard(unsigned char Key, int x, int y);
 void mouse(int button, int button_state, int x, int y );
 void idle(void);
-
 
 //fonction pour le mode GRAPHIC
 void initOpenGl(int * nb_element);
@@ -195,10 +196,23 @@ void save_cb(int control)
 
 void simulation_cb(int control)
 {
-	switch(control)
+	enum Etat {ON, OFF};
+	enum Etat etat;
+	etat = ON;
+		
+	switch(control)    
 	{
-		case START:
-				//start : bouton pour commencer/stopper la simulation
+		case START:              //je sais pas ca marche
+				if(etat==ON)
+				{
+					glutIdleFunc(NULL);
+					etat = OFF;
+				}
+				else if(etat==OFF)
+				{
+					glutIdleFunc(idle);
+					etat = ON;
+				}			
 				glutSetWindow( main_window );
 				glutPostRedisplay( );
 				break;

@@ -33,6 +33,8 @@ enum Read_state {NB_GENERATEUR,
                  FIN,
                  ERROR};
 
+int* sim_nb_element(void);
+
 // read a file and store all entities read into the appropriate module
 // return false, if an error occured
 // (ex : file formated wrong, param not in validity domain, etc.)
@@ -50,7 +52,7 @@ static int read_nbEntities(enum Read_state *state, const char *line);
 // return false if an error occured (also print it in the terminal)
 static bool read_entities (enum Read_state *state, const char *line,
                            int *pCounter, int nb_entities);
-
+                           
 // parse the empty or commented lines in a file to find the next useful line
 // line content stored in char line[], file should have already open
 // Useful line are : none empty and without '#' as first characters
@@ -58,7 +60,7 @@ static bool read_entities (enum Read_state *state, const char *line,
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
 
 
-// Mode error, called from main.
+// Mode Error, called from main.
 // Input : the file to read the entities form
 void sim_error(const char filename[]) {
     if (sim_lecture(filename)) {
@@ -78,6 +80,20 @@ void sim_force(const char filename[]) {
     }
 
     sim_clean();
+}
+
+//Mode Graphic, called from main.
+// Input : the file to read the entities form
+int* sim_graphic(const char filename[])
+{
+	int* nb_element;
+	if (sim_lecture(filename)) {
+		nb_element = sim_nb_element();
+    } else {
+        error_msg("Couldn't open simulation, input file has errors");
+    }
+	
+	return nb_element;
 }
 
 // Free memory from all modules accross the simultion
@@ -294,4 +310,18 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     }
 
     return returnVal;
+}
+
+int* sim_nb_element(void)  //TO DO 
+{
+	int* nb_element=NULL;
+	
+	int nb_particule  = 0;
+	int nb_generateur = 0;
+	int nb_trou_noir  = 0;
+	
+	*(nb_element) = nb_particule;
+	*(nb_element+1) = nb_generateur;
+	*(nb_element+2) = nb_trou_noir;
+	return nb_element;
 }
