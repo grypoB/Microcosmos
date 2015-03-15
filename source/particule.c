@@ -430,9 +430,19 @@ static PARTICULE* part_findPart(int partID) {
 }
 
 void part_draw(double radius, POINT center, VECTOR speed)
-{
-	//graphic_set_color3f(0.2, 0.8,1.0);
+{	
+	if(speed.x == 0 && speed.y == 0)
+	{
+		graphic_set_color3f(0, 0, 0);
+	}
+	else if(vector_norm(speed) == MAX_VITESSE)  //TROP FIERE DE MOI LA OMG
+	{
+		graphic_set_color3f(1, 0.2, 0.2);
+	}
+	else
+	{
+		//graphic_set_color3f(1, 0.2, 0.2);    ?
+	}
 	//graphic_set_line_width(3.);
 	graphic_draw_particule(center, radius, GRAPHIC_FILLED);
-	//graphic_set_line_width(1.);
 }
