@@ -79,3 +79,8 @@ int bckH_create(POINT center) {
 
     return returnID;
 }
+
+void BCKh_draw(POINT center)
+{
+	//TO DO
+}

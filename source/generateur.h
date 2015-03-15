@@ -11,6 +11,7 @@
 #define GENERATEUR_H
 
 #include "geometry.h"
+#include <stdbool.h>
 
 /*
 Generator (of particles) defined by :
@@ -29,4 +30,7 @@ bool gen_readData(const char *string);
 // otherwise return the id of the generator
 // See particle module for params validity domain
 int gen_create(double radius, POINT center, VECTOR speed);
+
+void gen_draw(double radius, POINT center);
+
 #endif

@@ -10,6 +10,7 @@
 #define TROU_NOIR_H
 
 #include "geometry.h"
+#include <stdbool.h>
 
 /*
 Black hole defined by :
@@ -25,4 +26,7 @@ bool bckH_readData(const char *string);
 // return UNNASIGNED=-1 if create unssucceful
 // otherwise return id of black hole (starting at 0)
 int bckH_create(POINT center);
+
+void BCKh_draw(POINT center);
+
 #endif

@@ -87,3 +87,8 @@ int gen_create(double radius, POINT center, VECTOR speed) {
 
     return returnID;
 }
+
+void gen_draw(double radius, POINT center)
+{
+	//TODO
+}

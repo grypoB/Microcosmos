@@ -16,13 +16,12 @@
 extern "C"
 {
 #include "constantes.h"
-#include "particule.h"
-#include "graphic.h"
 #include "sim.h"
 }
 
 namespace
 {
+	GLUI *	Glui;
 	GLfloat aspect_ratio ;
 	int main_window;
 	GLUI_Panel *file;
@@ -171,9 +170,6 @@ void initOpenGl(void)
 	nb_trou_noir->set_text(""); //																				//mettre à jour
 	
 	glui->add_button( "Quit", QUIT, (GLUI_Update_CB) simulation_cb);
-	//fichier.close
-	//windows fermer 
-	//quitter
 	
 	glui->set_main_gfx_window( main_window );
 	
@@ -200,19 +196,19 @@ void simulation_cb(int control)
 	switch(control)
 	{
 		case START:
-				//start:bouton pour commencer/stopper la simulation
+				//start : bouton pour commencer/stopper la simulation
 				glutSetWindow( main_window );
 				glutPostRedisplay( );
 				break;
 				
 		case STEP:
-				//step:lorsque la simulation est stoppée -> calcule seulement un pas // enable seulement quand simulation est stoppée
+				//step : lorsque la simulation est stoppée -> calcule seulement un pas // enable seulement quand simulation est stoppée
 				glutSetWindow( main_window );
 				glutPostRedisplay( );
 				break;
 
 		case QUIT:
-			//Glui->close( );  //ferme fenetre glui
+			Glui->close( );  //ferme fenetre glui
 			glutSetWindow( main_window );
 			glFinish( );    //ferme les images
 			glutDestroyWindow( main_window ); //ferme fenetre image
@@ -264,9 +260,9 @@ void keyboard(unsigned char Key, int x, int y)
 	if(1)  // si une entitée est selectionnée
 	{	switch(Key)
 		{
-			case 'd': //détruire entitée
+			case 'd': //détruire entitée  //part_deletePart
 			break;
-			default :
+			default : //rien
 			break;
 		}
 	}

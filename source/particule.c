@@ -427,3 +427,8 @@ static PARTICULE* part_findPart(int partID) {
 
     return pPart;
 }
+
+void part_draw(double radius, POINT center, VECTOR speed)
+{
+	//TO DO
+}

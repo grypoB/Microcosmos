@@ -11,7 +11,7 @@
 
 #include "geometry.h"
 #include "error.h"
-
+#include <stdbool.h>
 
 // all particles are stored with a static in .c
 // creating one returns a unique ID (used to reference this particle later)
@@ -71,4 +71,6 @@ bool part_nextTick(double delta_t);
 // return ID of closest part to a point
 int part_closestPart(POINT point);
 int part_totalNB();
+
+void part_draw(double radius, POINT center, VECTOR speed);
 #endif
