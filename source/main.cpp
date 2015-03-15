@@ -16,6 +16,8 @@
 extern "C"
 {
 #include "constantes.h"
+#include "particule.h"
+#include "graphic.h"
 #include "sim.h"
 }
 
@@ -28,6 +30,8 @@ namespace
 	GLUI_Panel *information;
 	char* live_var;
 }
+
+enum Boutton {START, STEP, QUIT};
 
 //fonction pour opengl
 void affichage(void);
@@ -154,19 +158,19 @@ void initOpenGl(void)
     
 	//Simulation
 	simulation = glui->add_panel("Simulation" );
-	glui->add_button_to_panel(simulation ,"Start", 1, simulation_cb);
-	glui->add_button_to_panel(simulation ,"Step", 2, simulation_cb);
+	glui->add_button_to_panel(simulation ,"Start", START, simulation_cb);
+	glui->add_button_to_panel(simulation ,"Step", STEP, simulation_cb);  //part_nextTick(double delta_t)
 	
 	//Information
 	information = glui->add_panel("Information" );
 	GLUI_EditText *nb_particule = glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_INT); 
-	nb_particule->set_text(""); 																				//mettre a jour
+	nb_particule->set_text(""); //																				//mettre a jour
 	GLUI_EditText *nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_INT);
-	nb_generateur->set_text("");																				//mettre ajour
+	nb_generateur->set_text("");//																				//mettre ajour
 	GLUI_EditText *nb_trou_noir = glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT);
-	nb_trou_noir->set_text(""); 																				//mettre à jour
+	nb_trou_noir->set_text(""); //																				//mettre à jour
 	
-	glui->add_button( "Quit",0,exit);
+	glui->add_button( "Quit", QUIT, (GLUI_Update_CB) simulation_cb);
 	//fichier.close
 	//windows fermer 
 	//quitter
@@ -193,8 +197,32 @@ void save_cb(int control)
 
 void simulation_cb(int control)
 {
-	//start:bouton pour commencer/stopper la simulation
-	//step:lorsque la simulation est stoppée -> calcule seulement un pas // enable seulement quand simulation est stoppée
+	switch(control)
+	{
+		case START:
+				//start:bouton pour commencer/stopper la simulation
+				glutSetWindow( main_window );
+				glutPostRedisplay( );
+				break;
+				
+		case STEP:
+				//step:lorsque la simulation est stoppée -> calcule seulement un pas // enable seulement quand simulation est stoppée
+				glutSetWindow( main_window );
+				glutPostRedisplay( );
+				break;
+
+		case QUIT:
+			//Glui->close( );  //ferme fenetre glui
+			glutSetWindow( main_window );
+			glFinish( );    //ferme les images
+			glutDestroyWindow( main_window ); //ferme fenetre image
+			exit( 0 ); //quitte programme
+			break;
+
+		default:
+			fprintf( stderr, "Don't know what to do with Button ID %d\n", control );
+	}
+	
 }
 
 
@@ -225,7 +253,7 @@ void mouse(int button, int button_state, int x, int y )
 {
   if (button == GLUT_LEFT_BUTTON && button_state == GLUT_DOWN ) 
   {
-    //particule la plus proche selectionnée 
+    //particule la plus proche selectionnée                   //part_closestPart(POINT point);
     //doit rester immobile
     //peut aussi selectionner generateur ou trou_noir
   }
