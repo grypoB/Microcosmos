@@ -41,7 +41,7 @@ void idle(void);
 
 
 //fonction pour le mode GRAPHIC
-void initOpenGl(void);
+void initOpenGl(int * nb_element);
 
 //fonction callback (interface)
 void load_cb(int control);
@@ -60,7 +60,8 @@ static MODE read_mode(const char string[]);
 int main (int argc, char *argv[])
 { 
 	enum Mode mode;
-    mode = MODE_UNSET;    
+    mode = MODE_UNSET;
+    int* nb_element;   
     
 	if(argc==3)
 	{
@@ -74,9 +75,10 @@ int main (int argc, char *argv[])
 		break;
 		case INTEGRATION: //sim_integration(argv[2]);
 		break;
-		case GRAPHIC: //sim_graphic(argv[2]);
+		case GRAPHIC: 
+			 nb_element = sim_graphic(argv[2]);
 			 glutInit(&argc, argv);
-			 initOpenGl();
+			 initOpenGl(nb_element);
 		break;
 		case SIMULATION: //sim_simulation(argv[2]);
 		break;
@@ -119,7 +121,7 @@ static MODE read_mode(const char string[])
     return mode;
 }
 
-void initOpenGl(void)
+void initOpenGl(int * nb_element)
 {
 	/*Initialise Glut and Create Window*/
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); // ??
@@ -140,12 +142,15 @@ void initOpenGl(void)
 	
 	//File
 	file = glui->add_panel("File" );
+	
 	GLUI_EditText *filename_load = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
 	filename_load->get_text();
+	
 	glui-> add_button_to_panel(file,"Load", -1, load_cb);
 
 	GLUI_EditText *filename_save = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
 	filename_save->get_text();
+	
 	glui-> add_button_to_panel(file,"Save", -1, load_cb);
     
 	//Simulation
@@ -156,13 +161,17 @@ void initOpenGl(void)
 	//Information
 	information = glui->add_panel("Information" );
 	GLUI_EditText *nb_particule = glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_INT); 
-	nb_particule->set_text(""); //																				//mettre a jour
+	nb_particule->set_int_val(nb_element[0]); 
+	
 	GLUI_EditText *nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_INT);
-	nb_generateur->set_text("");//																				//mettre ajour
+	nb_generateur->set_int_val(nb_element[1]);
+	
 	GLUI_EditText *nb_trou_noir = glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT);
-	nb_trou_noir->set_text(""); //																				//mettre à jour
+	nb_trou_noir->set_int_val(nb_element[2]); //																				//mettre à jour
+	
 	
 	glui->add_button( "Quit", QUIT, (GLUI_Update_CB) simulation_cb);
+	
 	
 	glui->set_main_gfx_window( main_window );
 	
