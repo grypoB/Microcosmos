@@ -14,7 +14,7 @@
 #include "constantes.h"
 #include "particule.h"
 
-// default size of the tab to store the particule in
+// default size of the tab to store the particles
 #define PART_TAB_SIZE MAX_RENDU1
 // multiplier between each increase in size of partTab
 #define TAB_GROWTH_RATIO 2
@@ -22,12 +22,12 @@
 typedef struct Particule {
 
     bool locked; // a locked particle cannot move
-    int id; // the unique identifier of a particule
+    int id; // the unique identifier of a particle
 
     double radius; // must be included in [RMIN, RMAX]
     double mass; // depends of the radius (see init_mass)
 
-    POINT center; // position of the center of the particule
+    POINT center; // position of the center of the particle
 
     VECTOR speed; // its norm must be below 10
     VECTOR force;
@@ -56,11 +56,11 @@ static PARTICULE* part_findPart(int partID);
 // tab to store all the particle in
 // part_nextEmptySlot() inits it
 static PARTICULE *partTab = NULL;
-// strore the current number of particles
+// store the current number of particles
 static int partNB = 0;
 
 
-// from an input string, creates a particule
+// from an input string, creates a particle
 // Expected format (all in double): radius posx posy vx vy 
 // prints errors if it couldn't read string
 bool part_readData(const char *string) {
@@ -108,7 +108,7 @@ bool part_validParams(double radius, POINT center, VECTOR speed,
 
 // -----------
 // constructor
-// return the id of the particule (>=0)
+// return the id of the particle (>=0)
 // return UNASSIGNED if radius isn't in [RMIN, RMAX], 
 // or if speed's norm > MAX_VITESSE
 int part_create(double radius, POINT center, VECTOR speed) {
@@ -143,7 +143,7 @@ int part_create(double radius, POINT center, VECTOR speed) {
 
 // -----------
 // destructors (from particle ID)
-// return false if the particule id doesn't exist (anymore)
+// return false if the particle id doesn't exist (anymore)
 bool part_deletePart(int partID) {
     PARTICULE *pPart     = part_findPart(partID);
     PARTICULE *pLastPart = part_lastPart();
@@ -175,7 +175,7 @@ void part_deleteAll() {
 }
 
 // ----------
-// a locked particule cannot move, but still exerces force on other particules
+// a locked particle cannot move, but still exerces force on other particles
 bool part_setLock(int partID, bool lock) {
     PARTICULE *pPart = part_findPart(partID);
 
@@ -190,7 +190,7 @@ bool part_setLock(int partID, bool lock) {
 
 // ----------
 // Simulation related functions
-// calc force between the 2 first particules and prints it
+// calc force between the 2 first particles and prints it
 void particule_force_rendu1() {
 	double force_norm = 0;
     double distance = 0;
@@ -204,13 +204,13 @@ void particule_force_rendu1() {
     }
 }
 
-// return the total number of current particules
+// return the total number of current particles
 int part_totalNB() {
     return partNB;
 }
 
-// return the id of the closest particule form a given point
-// UNNASSIGNED if no particule exists
+// return the id of the closest particle form a given point
+// UNNASSIGNED if no particle exists
 int part_closestPart(POINT point) {
     int i = 0;
     int partID = UNASSIGNED;
@@ -234,10 +234,10 @@ int part_closestPart(POINT point) {
 
 // ----------
 // Simulation update fct
-// update the status of all particules (speed + position): 
+// update the status of all particles (speed + position): 
 // calculating their attraction-repulsion force
 // delta_t is the amount of time the "tick" lasts 
-// return false if data structure of particule isn't set or if delta_t<0
+// return false if data structure of particle isn't set or if delta_t<0
 bool part_nextTick(double delta_t) {
 
     if (partTab!=NULL && delta_t>=0.) {
@@ -354,16 +354,16 @@ static void part_updatePos(double delta_t) {
 
 
 // -----------
-// set the mass of a particule (proportional to radius^2)
+// set the mass of a particle (proportional to radius^2)
 static void part_initMass(PARTICULE *part) {
     part->mass = pow(part->radius, 2) * KMASSE;
 }
 
 // -----------
-// utilities functions (finding and managing the particules in the data
+// utilities functions (finding and managing the particles in the data
 // structure)
 // return pointer to an empty slot in the data structure,
-// if not enough space, create some
+// if not enough space, creates some
 static PARTICULE* part_nextEmptySlot() {
     static int partTabSize = 0;
     int i = 0;
