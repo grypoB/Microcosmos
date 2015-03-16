@@ -41,22 +41,21 @@ int milliseconds = 0;
 
 enum Boutton {START, STEP, QUIT};
 
-//fonction pour opengl
+//fonction pour GLUI
 void display(void);
 void reshape(int w, int h);
-void keyboard_cb(unsigned char Key, int x, int y);
-void mouse_cb(int button, int button_state, int x, int y );
+void load_cb(int live_var);
+void save_cb(int live_var);
+void simulation_cb(int control);
+void keyboard(unsigned char Key, int x, int y);
+void mouse(int button, int button_state, int x, int y );
+void move_entity(int x, int y);
 void idle(void);
 
 //fonction pour le mode GRAPHIC
 void initOpenGl(int * nb_element);
 
-void timer_cb(int value);
-
-//fonction callback (interface)
-void load_cb(int live_var);
-void save_cb(int live_var);
-void simulation_cb(int control);
+//void timer_cb(int value);
 
 // Mode of the simulation to be ran on, see specs sheet for details
 enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET};
@@ -142,23 +141,23 @@ void initOpenGl(int * nb_element)
 
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	
-	glutKeyboardFunc(keyboard_cb);
-	glutMouseFunc(mouse_cb);
+	/* Fonctions callback*/
+	GLUI_Master.set_glutDisplayFunc(display);
+	GLUI_Master.set_glutReshapeFunc(reshape);
+	GLUI_Master.set_glutMouseFunc(mouse);
+	glutMotionFunc(move_entity);
+	GLUI_Master.set_glutKeyboardFunc(keyboard);
+	GLUI_Master.set_glutIdleFunc(idle);
 
-	glutTimerFunc(100, &timer_cb, 0);
+	//glutTimerFunc(100, &timer_cb, 0);
 		
 	/*Code GLUI pour l'interface*/
 	GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 	
 	//File
 	file = glui->add_panel("File" );
-	
 	glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, load_cb);
 	glui-> add_button_to_panel(file,"Load", -1, load_cb);
-
 	glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, save_cb);
 	glui-> add_button_to_panel(file,"Save", -1, save_cb);            					//A FINIR
     
@@ -167,31 +166,19 @@ void initOpenGl(int * nb_element)
 	glui->add_button_to_panel(simulation ,"Start", START, simulation_cb);
 	glui->add_button_to_panel(simulation ,"Step", STEP, simulation_cb);					//A FINIR
 	
-	
 	//Information
 	information = glui->add_panel("Information" );
 	GLUI_EditText *nb_particule = glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_INT); 
 	nb_particule->set_int_val(nb_element[0]); 
-	
 	GLUI_EditText *nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_INT);
 	nb_generateur->set_int_val(nb_element[1]);
-	
 	GLUI_EditText *nb_trou_noir = glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT);
 	nb_trou_noir->set_int_val(nb_element[2]);
 	
-	
 	glui->add_button( "Quit", QUIT, (GLUI_Update_CB) simulation_cb);
 	
-	
 	glui->set_main_gfx_window( main_window );
-	
-	//Callback
-	GLUI_Master.set_glutMouseFunc( mouse_cb );
-	GLUI_Master.set_glutKeyboardFunc( keyboard_cb );
-	GLUI_Master.set_glutIdleFunc(idle);
-
 	glutMainLoop();
-
 }
 
 void load_cb(int control, const char* live_var)
@@ -243,11 +230,11 @@ void simulation_cb(int control)
 				break;
 
 		case QUIT:
-			Glui->close();						//ferme fenetre glui
+			Glui->close();						
 			glutSetWindow(main_window);
-			glFinish();							//ferme les images
-			glutDestroyWindow(main_window);		//ferme fenetre image
-			exit(0);							//quitte programme
+			glFinish();
+			glutDestroyWindow(main_window);
+			exit(0);
 			break;
 
 		default:
@@ -269,7 +256,20 @@ void display(void)
 	else
 	glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
 	
-	//voir: 6. Affichage et interaction dans la fenetre graphique
+	/*switch(particuleNB)                  //fonctionne evidemment pas mais idée
+	{
+		case: particuleNB == 0
+			  GLfloat left= -RMAX, right = RMAX, down= -RMAX, up= RMAX;
+		break;
+		case: particuleNB == 1
+			  GLfloat left = (part.point.x-RMAX), right = (part.point.x+RMAX),
+					  down = (part.point.y-RMAX), up    = (part.point.y+RMAX);
+		break;
+		default: GLfloat left = (centre de masse.x-RMAX), right = (centre de masse.x+RMAX),
+					  down = (centre de masse.y-RMAX), up    = (centre de masse.y+RMAX);
+		break;
+	}	*/	
+	
 	//rapport entre les dimensions X/Y du domaine Open GL et taille en pixels du widget glut //exo8 serie19
 
 	glutSwapBuffers();
@@ -282,7 +282,7 @@ void reshape(int w, int h)
 	glutPostRedisplay(); 
 }
 
-void mouse_cb(int button, int button_state, int x, int y )
+void mouse(int button, int button_state, int x, int y )
 {
   while (button == GLUT_LEFT_BUTTON && button_state == GLUT_DOWN ) 
   {
@@ -294,7 +294,12 @@ void mouse_cb(int button, int button_state, int x, int y )
   }
 }
 
-void keyboard_cb(unsigned char Key, int x, int y)
+void move_entity(int x, int y)
+{
+	//deplacer entitée séléctionnée
+}
+
+void keyboard(unsigned char Key, int x, int y)
 {
 	if(1)  // si une entitée est selectionnée
 	{	switch(Key)
@@ -343,8 +348,3 @@ void idle(void)
 	}
 	glutPostRedisplay();
 }*/
-
-
-
-
-
