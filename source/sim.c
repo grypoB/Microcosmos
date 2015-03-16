@@ -66,7 +66,7 @@ void sim_error(const char filename[]) {
     if (sim_lecture(filename)) {
         error_success();
     }
-
+	printf("sim_error\n");  //stub
     sim_clean();
 }
 
@@ -78,7 +78,7 @@ void sim_force(const char filename[]) {
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
-
+	printf("sim_force\n");  //stub
     sim_clean();
 }
 
@@ -92,7 +92,7 @@ int* sim_graphic(const char filename[])
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
-	
+	printf("sim_graphic\n");  //stub
 	return elementnb;
 }
 
@@ -169,7 +169,7 @@ static bool sim_lecture(const char filename[])
         error_fichier_inexistant();
         return false;
 	}
-
+	printf("sim_lecture\n");  //stub
 }
 
 
@@ -274,7 +274,7 @@ static bool read_entities(enum Read_state *state, const char *line,
         }
 
     }
-
+    
     return success;
 }
 
@@ -320,6 +320,7 @@ int* sim_elementnb(void)
 	*(elementnb+1) = gen_totalNB();
 	*(elementnb+2) = bckH_totalNB();
 	return elementnb;
+	printf("sim_element\n");  //stub
 }
 
 /*char* sim_write(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)
@@ -348,6 +349,8 @@ int* sim_elementnb(void)
 	}
 	*file[28] = "FIN_LISTE";
 	
+	printf("sim_write\n");  //stub
+	* 
 	return *file;
 }
 * */
