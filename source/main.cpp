@@ -24,7 +24,7 @@ extern "C"
 
 namespace
 {
-	GLUI*	Glui;
+	GLUI* Glui;
 	GLfloat aspect_ratio ;
 	int main_window;
 	GLUI_Panel *file;
@@ -224,8 +224,8 @@ void simulation_cb(int control)
 				glutIdleFunc(NULL);
 				etat = OFF;
 				//calcule seulement un pas
-				glutSetWindow( main_window );
-				glutPostRedisplay( );
+				glutSetWindow(main_window);
+				glutPostRedisplay();
 				break;
 
 		case QUIT:
@@ -256,6 +256,8 @@ void affichage(void)
 	else
 	glOrtho(gauche*aspect_ratio, droite*aspect_ratio, bas, haut, -1.0, 1.0);
 	
+	//voir: 6. Affichage et interaction dans la fenetre graphique
+	
 	glutSwapBuffers();
 }
 
@@ -281,7 +283,7 @@ void keyboard(unsigned char Key, int x, int y)
 	if(1)  // si une entitée est selectionnée
 	{	switch(Key)
 		{
-			case 'd': //détruire entitée  //part_deletePart
+			case 'd': //détruire entitée  
 			break;
 			default : //rien
 			break;
