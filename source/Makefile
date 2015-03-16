@@ -47,14 +47,15 @@ $(EXEC): $(OFILES)
 #
 # DO NOT DELETE THIS LINE
 main.o: main.cpp constantes.h tolerance.h particule.h geometry.h error.h \
- sim.h
+ sim.h graphic.h
 error.o: error.c error.h
 generateur.o: generateur.c constantes.h tolerance.h geometry.h error.h \
- generateur.h particule.h
+ generateur.h particule.h graphic.h
 trou_noir.o: trou_noir.c constantes.h tolerance.h geometry.h error.h \
- trou_noir.h
+ trou_noir.h graphic.h
 particule.o: particule.c constantes.h tolerance.h particule.h geometry.h \
- error.h
+ error.h graphic.h
 sim.o: sim.c error.h constantes.h tolerance.h sim.h generateur.h \
- geometry.h trou_noir.h particule.h
+ geometry.h trou_noir.h particule.h graphic.h
 geometry.o: geometry.c geometry.h constantes.h tolerance.h
+graphic.o: graphic.c graphic.h geometry.c geometry.h

@@ -33,10 +33,11 @@ namespace
 	char* live_var;
 }
 
-// Variables to count the elapsed time
+/* Variables to count the elapsed time
 int minutes = 0;
 int seconds = 0;
 int milliseconds = 0;
+*/
 
 enum Boutton {START, STEP, QUIT};
 
@@ -147,8 +148,6 @@ void initOpenGl(int * nb_element)
 	glutKeyboardFunc(keyboard_cb);
 	glutMouseFunc(mouse_cb);
 
-	// Variables to count the elapsed time
-	
 	glutTimerFunc(100, &timer_cb, 0);
 		
 	/*Code GLUI pour l'interface*/
@@ -161,10 +160,10 @@ void initOpenGl(int * nb_element)
 	glui-> add_button_to_panel(file,"Load", -1, load_cb);
 
 	glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, live_var, -1, save_cb);
-	glui-> add_button_to_panel(file,"Save", -1, save_cb);
+	glui-> add_button_to_panel(file,"Save", -1, save_cb);            					//A FINIR
     
 	//Simulation
-	simulation = glui->add_panel("Simulation" );
+	simulation = glui->add_panel("Simulation");
 	glui->add_button_to_panel(simulation ,"Start", START, simulation_cb);
 	glui->add_button_to_panel(simulation ,"Step", STEP, simulation_cb);					//A FINIR
 	
@@ -197,6 +196,7 @@ void initOpenGl(int * nb_element)
 
 void load_cb(int control, const char* live_var)
 {
+	
 	sim_graphic(live_var);
 	glutIdleFunc(NULL);
 }
@@ -254,7 +254,6 @@ void simulation_cb(int control)
 		default:
 			fprintf(stderr, "Don't know what to do with Button ID %d\n", control);
 	}
-	
 }
 
 
@@ -293,7 +292,6 @@ void mouse_cb(int button, int button_state, int x, int y )
     //peut aussi selectionner generateur ou trou_noir
     
     //set_point_cb                    //coordonnées x et y de la souris (differentes coordonnes a convertir pour opengl: exo3 serie19)
-
   }
 }
 
