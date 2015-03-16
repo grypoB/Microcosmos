@@ -11,7 +11,7 @@
 
 #include <stdbool.h>
 
-char* sim_ecriture(void);
+char* sim_write(void);
 // Different mode supported by the simulation
 // for more details see the specs of the projects
 void sim_error(const char filename[]);

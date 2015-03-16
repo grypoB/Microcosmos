@@ -442,7 +442,7 @@ void part_draw(double radius, POINT center, VECTOR speed)
 	else
 	{
 		//aucune idée comment faire pour interpoler pour l'instant
-		graphic_set_color3f(1, 0.2, 0.2);    ?
+		graphic_set_color3f(1, 0.2, 0.2);  //  ?
 	}
 	
 	//graphic_set_line_width(3.);

@@ -42,7 +42,7 @@ int milliseconds = 0;
 enum Boutton {START, STEP, QUIT};
 
 //fonction pour opengl
-void affichage(void);
+void display(void);
 void reshape(int w, int h);
 void keyboard_cb(unsigned char Key, int x, int y);
 void mouse_cb(int button, int button_state, int x, int y );
@@ -71,7 +71,7 @@ int main (int argc, char *argv[])
 { 
 	enum Mode mode;
     mode = MODE_UNSET;
-    int* nb_element;   
+    int* elementnb;   
     
 	if(argc==3)
 	{
@@ -86,9 +86,9 @@ int main (int argc, char *argv[])
 		case INTEGRATION: //sim_integration(argv[2]);
 		break;
 		case GRAPHIC: 
-			 nb_element = sim_graphic(argv[2]);
+			 elementnb = sim_graphic(argv[2]);
 			 glutInit(&argc, argv);
-			 initOpenGl(nb_element);
+			 initOpenGl(elementnb);
 		break;
 		case SIMULATION: //sim_simulation(argv[2]);
 		break;
@@ -142,7 +142,7 @@ void initOpenGl(int * nb_element)
 
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	
-	glutDisplayFunc(affichage);
+	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	
 	glutKeyboardFunc(keyboard_cb);
@@ -196,7 +196,6 @@ void initOpenGl(int * nb_element)
 
 void load_cb(int control, const char* live_var)
 {
-	
 	sim_graphic(live_var);
 	glutIdleFunc(NULL);
 }
@@ -204,40 +203,40 @@ void load_cb(int control, const char* live_var)
 void save_cb(int control, const char* live_var)
 {
 	//enregistre etat actuel de simulation dans ce fichier
-	FILE *fichier = NULL;
-	fichier = fopen(live_var,"w");
+	FILE *file = NULL;
+	file = fopen(live_var,"w");
 	
-	fprintf(fichier, "%s", sim_ecriture());
+	fprintf(file, "%s", sim_write());
 
-	fclose(fichier);
+	fclose(file);
 }
 
 void simulation_cb(int control)
 {
-	enum Etat {ON, OFF};
-	enum Etat etat;
-	etat = ON;
+	enum State {ON, OFF};
+	enum State state;
+	state = ON;
 		
 	switch(control)    
 	{
 		case START:
-				if(etat==ON)
+				if(state==ON)
 				{
 					glutIdleFunc(NULL);
-					etat = OFF;
+					state = OFF;
 				}
-				else if(etat==OFF)
+				else if(state==OFF)
 				{
 					glutIdleFunc(idle);
-					etat = ON;
+					state = ON;
 				}			
-				glutSetWindow( main_window );
-				glutPostRedisplay( );
+				glutSetWindow(main_window);
+				glutPostRedisplay();
 				break;
 				
 		case STEP:
 				glutIdleFunc(NULL);
-				etat = OFF;
+				state = OFF;
 				//calcule seulement un pas
 				glutSetWindow(main_window);
 				glutPostRedisplay();
@@ -257,18 +256,18 @@ void simulation_cb(int control)
 }
 
 
-void affichage(void)
+void display(void)
 {
-	GLfloat gauche= -RMAX, droite = RMAX, bas= -RMAX, haut= RMAX;
+	GLfloat left= -RMAX, right = RMAX, down= -RMAX, up= RMAX;
 	glClear(GL_COLOR_BUFFER_BIT);
 	
 	glLoadIdentity();
 	
 	if (aspect_ratio <= 1.)
-	glOrtho(gauche, droite, bas/aspect_ratio, haut/aspect_ratio, -1.0, 1.0);
+	glOrtho(left, right, down/aspect_ratio, up/aspect_ratio, -1.0, 1.0);
 	
 	else
-	glOrtho(gauche*aspect_ratio, droite*aspect_ratio, bas, haut, -1.0, 1.0);
+	glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
 	
 	//voir: 6. Affichage et interaction dans la fenetre graphique
 	//rapport entre les dimensions X/Y du domaine Open GL et taille en pixels du widget glut //exo8 serie19
@@ -318,7 +317,7 @@ void idle(void)
   glutPostRedisplay();
 }
 
-void timerCB(int value)                      //fonction du prof (pas sure si besoin pour STEP)
+/*void timerCB(int value)                      //fonction du prof (pas sure si besoin pour STEP)
 {
 	// Set the timer to 100 milliseconds.
 	// It means that it will be called 10 times a second.
@@ -343,7 +342,8 @@ void timerCB(int value)                      //fonction du prof (pas sure si bes
 		}
 	}
 	glutPostRedisplay();
-}
+}*/
+
 
 
 

@@ -1,4 +1,11 @@
-/*------------------------------------------------------------------------*/
+/* Nom: graphic.c
+ * Description: module pour les dessins Opengl
+ * Date: 08.02.2014
+ * version : 1.1
+ * responsable du module : Pauline Maury Laribière
+ * groupe : Alexandre Devienne, Pauline Maury Laribière
+ */
+
 #define _USE_MATH_DEFINES
 #define NB_COTES 50
 
@@ -9,8 +16,8 @@
 #include "geometry.h"
 
 
-void graphic_draw_particule(POINT center, double radius, int filled) //a revoir  //aussi le machin avec la couleur en fonction de la vitesse
-{ 
+void graphic_draw_particule(POINT center, double radius, int filled) //a revoir  
+{ 																	//aussi couleur en fonction de la vitesse (ici ou laisser dans sim.c)
   int i;
   const int SIDES = 50;
 

@@ -33,7 +33,7 @@ enum Read_state {NB_GENERATEUR,
                  FIN,
                  ERROR};
 
-int* sim_nb_element(void);
+int* sim_elementnb(void);
 
 // read a file and store all entities read into the appropriate module
 // return false, if an error occured
@@ -86,14 +86,14 @@ void sim_force(const char filename[]) {
 // Input : the file to read the entities form
 int* sim_graphic(const char filename[])
 {
-	int* nb_element;
+	int* elementnb;
 	if (sim_lecture(filename)) {
-		nb_element = sim_nb_element();
+		elementnb = sim_elementnb();
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
 	
-	return nb_element;
+	return elementnb;
 }
 
 // Free memory from all modules accross the simultion
@@ -312,41 +312,43 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     return returnVal;
 }
 
-int* sim_nb_element(void)
+int* sim_elementnb(void)
 {
-	int* nb_element=NULL;
+	int* elementnb=NULL;
 	
-	*(nb_element) = part_totalNB();
-	*(nb_element+1) = gen_totalNB();
-	*(nb_element+2) = bckH_totalNB();
-	return nb_element;
+	*(elementnb) = part_totalNB();
+	*(elementnb+1) = gen_totalNB();
+	*(elementnb+2) = bckH_totalNB();
+	return elementnb;
 }
 
-char* sim_ecriture(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)
+/*char* sim_write(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)
 {
 	int i;
 	char* file[200];
 	
 	*file[0] = gen_totalNB();
-	for(i=0, i<gen_totalNB(), i++)
+	for(i=0, i<gen_totalNB(), i++);
 	{
 		//rayon POINT(center) VECTOR
 	}
-	*file[8] = "FIN_LISTE"
+	*file[8] = "FIN_LISTE";
 	
 	*file[10] = bckH_totalNB();
-	for(i=0, i<bckH_totalNB(), i++)
+	for(i=0, i<bckH_totalNB(), i++);
 	{
 		//POINT(center)
 	}
-	*file[18] = "FIN_LISTE"
+	*file[18] = "FIN_LISTE";
 	
 	*file[20] = part_totalNB();
-	for(i=0, i<part_totalNB(), i++)
+	for(i=0, i<part_totalNB(), i++);
 	{
 		//rayon POINT(center) VECTOR(speed)
 	}
-	*file[28] = "FIN_LISTE"
+	*file[28] = "FIN_LISTE";
 	
 	return *file;
 }
+* */
+

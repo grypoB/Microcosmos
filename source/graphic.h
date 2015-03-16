@@ -1,6 +1,11 @@
-/*------------------------------------------------------------------------*/
-/*                          fichier en-tete (graphic.h)                   */
-/*------------------------------------------------------------------------*/
+/* Nom: graphic.c
+ * Description: module pour les dessins Opengl
+ * Date: 08.02.2014
+ * version : 1.1
+ * responsable du module : Pauline Maury Laribière
+ * groupe : Alexandre Devienne, Pauline Maury Laribière
+ */
+ 
 #include "geometry.h"
 
 #ifndef GRAPHIC_H
@@ -10,21 +15,6 @@
 #define GRAPHIC_FILLED 1
 
 
-/*=================================================================*/
-/* Fonctions pour afficher un segment, un rectangle ou un cercle.  */
-/*								   */
-/* Pour le segment, on fournit les coordonnnees des deux extremites*/
-/*                                                                 */
-/* Pour le rectangle, on fournit les coordonnees de son centre et  */
-/* de sa taille (width, height).                                   */
-/*                                                                 */
-/* Pour le cercle, on fournit les coordonnees de son centre et son */
-/* rayon.                                                          */
-/*                                                                 */
-/* Le rectangle et le cercle peuvent etre creux ou pleins (filled) */
-/* suivant la valeur du dernier argument (GRAPHIC_FILLED ou bien   */
-/* GRAPHIC_EMPTY).                                              */
-/*=================================================================*/
 
 void       graphic_draw_segment (float x1,
                                  float y1,
