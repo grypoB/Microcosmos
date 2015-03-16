@@ -324,14 +324,28 @@ int* sim_nb_element(void)
 
 char* sim_ecriture(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)
 {
+	int i;
 	char* file[200];
+	
 	*file[0] = gen_totalNB();
+	for(i=0, i<gen_totalNB(), i++)
+	{
+		//rayon POINT(center) VECTOR
+	}
 	*file[8] = "FIN_LISTE"
 	
 	*file[10] = bckH_totalNB();
+	for(i=0, i<bckH_totalNB(), i++)
+	{
+		//POINT(center)
+	}
 	*file[18] = "FIN_LISTE"
 	
 	*file[20] = part_totalNB();
+	for(i=0, i<part_totalNB(), i++)
+	{
+		//rayon POINT(center) VECTOR(speed)
+	}
 	*file[28] = "FIN_LISTE"
 	
 	return *file;

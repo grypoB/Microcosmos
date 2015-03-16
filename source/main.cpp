@@ -33,17 +33,24 @@ namespace
 	char* live_var;
 }
 
+// Variables to count the elapsed time
+int minutes = 0;
+int seconds = 0;
+int milliseconds = 0;
+
 enum Boutton {START, STEP, QUIT};
 
 //fonction pour opengl
 void affichage(void);
 void reshape(int w, int h);
-void keyboard(unsigned char Key, int x, int y);
-void mouse(int button, int button_state, int x, int y );
+void keyboard_cb(unsigned char Key, int x, int y);
+void mouse_cb(int button, int button_state, int x, int y );
 void idle(void);
 
 //fonction pour le mode GRAPHIC
 void initOpenGl(int * nb_element);
+
+void timer_cb(int value);
 
 //fonction callback (interface)
 void load_cb(int live_var);
@@ -136,9 +143,14 @@ void initOpenGl(int * nb_element)
 	
 	glutDisplayFunc(affichage);
 	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboard);
-	glutMouseFunc(mouse);
 	
+	glutKeyboardFunc(keyboard_cb);
+	glutMouseFunc(mouse_cb);
+
+	// Variables to count the elapsed time
+	
+	glutTimerFunc(100, &timer_cb, 0);
+		
 	/*Code GLUI pour l'interface*/
 	GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 	
@@ -174,6 +186,9 @@ void initOpenGl(int * nb_element)
 	
 	glui->set_main_gfx_window( main_window );
 	
+	//Callback
+	GLUI_Master.set_glutMouseFunc( mouse_cb );
+	GLUI_Master.set_glutKeyboardFunc( keyboard_cb );
 	GLUI_Master.set_glutIdleFunc(idle);
 
 	glutMainLoop();
@@ -257,7 +272,8 @@ void affichage(void)
 	glOrtho(gauche*aspect_ratio, droite*aspect_ratio, bas, haut, -1.0, 1.0);
 	
 	//voir: 6. Affichage et interaction dans la fenetre graphique
-	
+	//rapport entre les dimensions X/Y du domaine Open GL et taille en pixels du widget glut //exo8 serie19
+
 	glutSwapBuffers();
 }
 
@@ -268,17 +284,20 @@ void reshape(int w, int h)
 	glutPostRedisplay(); 
 }
 
-void mouse(int button, int button_state, int x, int y )
+void mouse_cb(int button, int button_state, int x, int y )
 {
-  if (button == GLUT_LEFT_BUTTON && button_state == GLUT_DOWN ) 
+  while (button == GLUT_LEFT_BUTTON && button_state == GLUT_DOWN ) 
   {
     //particule la plus proche selectionnée                   //part_closestPart(POINT point);
     //doit rester immobile
     //peut aussi selectionner generateur ou trou_noir
+    
+    //set_point_cb                    //coordonnées x et y de la souris (differentes coordonnes a convertir pour opengl: exo3 serie19)
+
   }
 }
 
-void keyboard(unsigned char Key, int x, int y)
+void keyboard_cb(unsigned char Key, int x, int y)
 {
 	if(1)  // si une entitée est selectionnée
 	{	switch(Key)
@@ -293,11 +312,41 @@ void keyboard(unsigned char Key, int x, int y)
   glutPostRedisplay();
 }
 
-void idle(void)
+void idle(void)                                       
 {
 	if ( glutGetWindow() != main_window ) 
 		glutSetWindow(main_window);  
 
   glutPostRedisplay();
 }
+
+void timerCB(int value)                      //fonction du prof (pas sure si besoin pour STEP)
+{
+	// Set the timer to 100 milliseconds.
+	// It means that it will be called 10 times a second.
+	glutTimerFunc(100, &timerCB, 0);
+	
+	// Update the milliseconds count
+	++milliseconds;
+	
+	// If elapsed milliseconds reach to 10 x 100 = 1000
+	// reset it and increment seconds.
+	if(milliseconds == 10)
+	{
+		milliseconds = 0;
+		++seconds;
+		
+		// If elapsed seconds reach to 60
+		// reset it and increment minutes
+		if(seconds == 60)
+		{
+		seconds = 0;
+		++minutes;
+		}
+	}
+	glutPostRedisplay();
+}
+
+
+
 
