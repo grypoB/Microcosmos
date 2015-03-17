@@ -11,6 +11,11 @@
 
 #include <stdbool.h>
 
+#define ENTITY_NB 3
+#define PART_SLOT 0
+#define GEN_SLOT 1
+#define BCKH_SLOT 2
+
 char* sim_write(void);
 // Different mode supported by the simulation
 // for more details see the specs of the projects
@@ -18,7 +23,10 @@ void sim_error(const char filename[]);
 void sim_force(const char filename[]);
 int* sim_graphic(const char filename[]);
 
+void sim_nbEntities(int elementnb[3]);
 // Free memory from all modules accross the simultion
 void sim_clean();
 
 #endif
+
+

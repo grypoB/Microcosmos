@@ -14,33 +14,15 @@
 #define GRAPHIC_EMPTY  0
 #define GRAPHIC_FILLED 1
 
+void graphic_draw_particule(POINT center, double radius); //PAS FINI
 
-
-void       graphic_draw_segment (float x1,
-                                 float y1,
-                                 float x2, 
-                                 float y2);
-
-void       graphic_draw_rectangle (float xc,
-			           float yc, 
-			           float width,
-                                   float height,
-                                   int   filled);
-
-void graphic_draw_particule(POINT center, double radius, int filled); //PAS FINI
-
-void graphic_draw_generateur(POINT center, double radius, int filled); //PAS FINI
+void graphic_draw_generateur(POINT center, double radius, VECTOR vector); //PAS FINI
 
 void graphic_draw_bckH(POINT center); //PAS FINI
 
-void       graphic_set_color3f(float r,
-                             float g, 
-                             float b);
+void graphic_set_color3f(float r,  float g, float b);
 
-void       graphic_set_color3fv(float color[3]);
-
-
-void       graphic_set_line_width(float width);
+void graphic_set_line_width(float width);
 
 
 #endif

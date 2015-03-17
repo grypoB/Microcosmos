@@ -429,22 +429,14 @@ static PARTICULE* part_findPart(int partID) {
     return pPart;
 }
 
+//dans particule ou graphic
 void part_draw(double radius, POINT center, VECTOR speed)
 {	
-	if(vector_norm(speed) == 0)
-	{
-		graphic_set_color3f(0, 0, 0);
-	}
-	else if(vector_norm(speed) == MAX_VITESSE) 
-	{
-		graphic_set_color3f(1, 0.2, 0.2);
-	}
-	else
-	{
-		//aucune idée comment faire pour interpoler pour l'instant
-		graphic_set_color3f(1, 0.2, 0.2);  //  ?
-	}
+	double red   = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 1  );
+	double green = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
+	double blue  = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
 	
-	//graphic_set_line_width(3.);
-	graphic_draw_particule(center, radius, GRAPHIC_FILLED);
+	graphic_set_color3f(red, green, blue);
+
+	graphic_draw_particule(center, radius);
 }

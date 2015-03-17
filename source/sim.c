@@ -312,19 +312,18 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     return returnVal;
 }
 
-int* sim_elementnb(void)
+void sim_nbEntities(int elementnb[3])
 {
-	int* elementnb=NULL;
-	
-	*(elementnb) = part_totalNB();
-	*(elementnb+1) = gen_totalNB();
-	*(elementnb+2) = bckH_totalNB();
-	return elementnb;
+	elementnb[PART_SLOT] = part_totalNB();
+	elementnb[GEN_SLOT] = gen_totalNB();
+	elementnb[BCKH_SLOT] = bckH_totalNB();
 	printf("sim_element\n");  //stub
 }
 
 /*char* sim_write(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)
 {
+	//appeler chaque module pour mettre info
+	* //fprintf
 	int i;
 	char* file[200];
 	

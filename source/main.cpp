@@ -189,6 +189,7 @@ void load_cb(int control, const char* live_var)
 
 void save_cb(int control, const char* live_var)
 {
+	//glutIdleFunc(NULL);
 	//enregistre etat actuel de simulation dans ce fichier
 	FILE *file = NULL;
 	file = fopen(live_var,"w");
@@ -222,6 +223,7 @@ void simulation_cb(int control)
 				break;
 				
 		case STEP:
+				//sim_next_step
 				glutIdleFunc(NULL);
 				state = OFF;
 				//calcule seulement un pas
@@ -242,11 +244,17 @@ void simulation_cb(int control)
 	}
 }
 
+//fonction next_step
+	//mettre a jour information -> sim_nb_entities (au lieu de elementnb) qui renvoit nbre entitées
 
 void display(void)
 {
+	//sim_display appelle chaque module qui gerent elles memes leur affichage
+	
+	
+	//dans reshape
 	GLfloat left= -RMAX, right = RMAX, down= -RMAX, up= RMAX;
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);  //display
 	
 	glLoadIdentity();
 	
@@ -272,11 +280,12 @@ void display(void)
 	
 	//rapport entre les dimensions X/Y du domaine Open GL et taille en pixels du widget glut //exo8 serie19
 
-	glutSwapBuffers();
+	glutSwapBuffers();  //display
 }
 
 void reshape(int w, int h)
 {
+	//appel sim pour savoir centre de masse
 	glViewport(0, 0, w, h);
 	aspect_ratio = (GLfloat) w / (GLfloat) h ;
 	glutPostRedisplay(); 
@@ -318,9 +327,15 @@ void idle(void)
 {
 	if ( glutGetWindow() != main_window ) 
 		glutSetWindow(main_window);  
+		//switch
+			//rien
+			//main_next_step
+		//state ON sim_next_step
 
   glutPostRedisplay();
 }
+
+	
 
 /*void timerCB(int value)                      //fonction du prof (pas sure si besoin pour STEP)
 {
