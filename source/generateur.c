@@ -38,6 +38,8 @@ static GENERATEUR genTab[GEN_TAB_SIZE];
 // store the number of current generators
 static int genNB = 0;
 
+void gen_draw(double radius, POINT center, VECTOR speed);
+void gen_display(void);
 
 // from an input string, creates a particle generator
 // Expected format (all in double): radius posx posy vx vy 
@@ -94,9 +96,18 @@ int gen_totalNB() {
     return genNB;
 }
 
-void gen_draw(double radius, POINT center)    //PAS DU TOUT A JOUR
+void gen_display(void)
+{
+	int i;
+	for (i=0; i<genNB; i++)
+	{
+		gen_draw(genTab[i].radius, genTab[i].center, genTab[i].speed);
+	}
+}
+
+void gen_draw(double radius, POINT center, VECTOR speed)    //PAS DU TOUT A JOUR
 {
 	//graphic_set_line_width(1.);
 	//graphic_set_color3f(0.2, 0.8,1.0);
-	graphic_draw_generateur(center, radius, GRAPHIC_FILLED);
+	graphic_draw_generateur(center, radius, speed);
 }

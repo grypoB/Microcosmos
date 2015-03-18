@@ -29,6 +29,7 @@ typedef struct Trou_noir {
 
 } TROU_NOIR;
 
+void bckH_draw(POINT center);
 
 // tab where all black holes are stored
 static TROU_NOIR bckHTab[BCKH_TAB_SIZE];
@@ -84,6 +85,15 @@ int bckH_create(POINT center) {
 // return the total number of current black hole
 int bckH_totalNB() {
     return bckHNB;
+}
+
+void bckH_display(void)
+{
+	int i;
+	for (i=0; i<bckHNB; i++)
+	{
+		bckH_draw(bckHTab[i].center);
+	}
 }
 
 void bckh_draw(POINT center)

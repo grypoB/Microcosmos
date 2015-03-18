@@ -14,11 +14,11 @@
 #define GRAPHIC_EMPTY  0
 #define GRAPHIC_FILLED 1
 
-void graphic_draw_particule(POINT center, double radius); //PAS FINI
+void graphic_draw_particule(POINT center, double radius);
 
-void graphic_draw_generateur(POINT center, double radius, VECTOR vector); //PAS FINI
+void graphic_draw_generateur(POINT center, double radius, VECTOR vector);
 
-void graphic_draw_bckH(POINT center); //PAS FINI
+void graphic_draw_bckH(POINT center);
 
 void graphic_set_color3f(float r,  float g, float b);
 

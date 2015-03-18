@@ -53,6 +53,7 @@ static PARTICULE* part_lastPart();
 static PARTICULE* part_nextEmptySlot();
 static PARTICULE* part_findPart(int partID);
 
+void part_draw(double radius, POINT center, VECTOR speed);
 
 // tab to store all the particle in
 // part_nextEmptySlot() inits it
@@ -427,6 +428,15 @@ static PARTICULE* part_findPart(int partID) {
     }
 
     return pPart;
+}
+
+void part_display(void)
+{
+	int i;
+	for (i=0; i<partNB; i++)
+	{
+		part_draw(partTab[i].radius, partTab[i].center, partTab[i].speed);
+	}
 }
 
 //dans particule ou graphic
