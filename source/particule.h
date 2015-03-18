@@ -72,5 +72,6 @@ bool part_nextTick(double delta_t);
 int part_closestPart(POINT point);
 int part_totalNB();
 
-void part_draw(double radius, POINT center, VECTOR speed);
+void part_display(void);
+
 #endif

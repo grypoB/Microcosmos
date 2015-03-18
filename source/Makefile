@@ -8,7 +8,7 @@ CFLAGS   = -Wall
 CXXFLAGS = $(CFLAGS)
 LIBS     = -lm -lstdc++ -lglui
 CFILES   =  main.cpp error.c generateur.c trou_noir.c particule.c sim.c \
-  geometry.c
+  geometry.c graphic.c
 
 # debug flags to append in target debug
 DEBUGFLAGS = -g -D DEBUG

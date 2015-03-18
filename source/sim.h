@@ -17,13 +17,15 @@
 #define BCKH_SLOT 2
 
 char* sim_write(void);
+void sim_display(void);
 // Different mode supported by the simulation
 // for more details see the specs of the projects
 void sim_error(const char filename[]);
 void sim_force(const char filename[]);
-int* sim_graphic(const char filename[]);
+void sim_graphic(const char filename[]);
 
 void sim_nbEntities(int elementnb[3]);
+double sim_centre_masse(void);
 // Free memory from all modules accross the simultion
 void sim_clean();
 

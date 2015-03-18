@@ -32,6 +32,6 @@ bool gen_readData(const char *string);
 int gen_create(double radius, POINT center, VECTOR speed);
 int gen_totalNB(void);
 
-void gen_draw(double radius, POINT center);
+void gen_display(void);
 
 #endif

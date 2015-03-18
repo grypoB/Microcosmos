@@ -86,7 +86,7 @@ int bckH_totalNB() {
     return bckHNB;
 }
 
-void BCKh_draw(POINT center)
+void bckh_draw(POINT center)
 {
 	//graphic_set_line_width(1.);
 	//graphic_set_color3f(0.2, 0.8,1.0);

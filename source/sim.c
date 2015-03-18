@@ -33,7 +33,6 @@ enum Read_state {NB_GENERATEUR,
                  FIN,
                  ERROR};
 
-int* sim_elementnb(void);
 
 // read a file and store all entities read into the appropriate module
 // return false, if an error occured
@@ -84,16 +83,14 @@ void sim_force(const char filename[]) {
 
 //Mode Graphic, called from main.
 // Input : the file to read the entities form
-int* sim_graphic(const char filename[])
+void sim_graphic(const char filename[])
 {
-	int* elementnb;
 	if (sim_lecture(filename)) {
-		elementnb = sim_elementnb();
+		//
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
 	printf("sim_graphic\n");  //stub
-	return elementnb;
 }
 
 // Free memory from all modules accross the simultion
@@ -312,12 +309,25 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     return returnVal;
 }
 
+void sim_display(void)				//pas void mais doit recevoir les infos
+{
+	part_display();
+	gen_display();
+	bckH_display();
+}
+
 void sim_nbEntities(int elementnb[3])
 {
 	elementnb[PART_SLOT] = part_totalNB();
 	elementnb[GEN_SLOT] = gen_totalNB();
 	elementnb[BCKH_SLOT] = bckH_totalNB();
 	printf("sim_element\n");  //stub
+}
+
+double sim_centre_masse(void)                       //TODO
+{
+	double cm = 0;
+	return cm;
 }
 
 /*char* sim_write(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)

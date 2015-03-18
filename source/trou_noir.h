@@ -28,6 +28,6 @@ bool bckH_readData(const char *string);
 int bckH_create(POINT center);
 int bckH_totalNB();
 
-void BCKh_draw(POINT center);
+void bckH_display(void);
 
 #endif

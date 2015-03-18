@@ -40,6 +40,7 @@ int milliseconds = 0;
 */
 
 enum Boutton {START, STEP, QUIT};
+int elementnb[ENTITY_NB];
 
 //fonction pour GLUI
 void display(void);
@@ -53,7 +54,7 @@ void move_entity(int x, int y);
 void idle(void);
 
 //fonction pour le mode GRAPHIC
-void initOpenGl(int * nb_element);
+void initOpenGl(void);
 
 //void timer_cb(int value);
 
@@ -69,8 +70,7 @@ static MODE read_mode(const char string[]);
 int main (int argc, char *argv[])
 { 
 	enum Mode mode;
-    mode = MODE_UNSET;
-    int* elementnb;   
+    mode = MODE_UNSET;  
     
 	if(argc==3)
 	{
@@ -85,9 +85,9 @@ int main (int argc, char *argv[])
 		case INTEGRATION: //sim_integration(argv[2]);
 		break;
 		case GRAPHIC: 
-			 elementnb = sim_graphic(argv[2]);
+			 sim_graphic(argv[2]);
 			 glutInit(&argc, argv);
-			 initOpenGl(elementnb);
+			 initOpenGl();
 		break;
 		case SIMULATION: //sim_simulation(argv[2]);
 		break;
@@ -130,10 +130,10 @@ static MODE read_mode(const char string[])
     return mode;
 }
 
-void initOpenGl(int * nb_element)
+void initOpenGl()
 {
 	/*Initialise Glut and Create Window*/
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH); // ??
+	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowPosition(200, 200);
 	glutInitWindowSize(250, 250);
 	
@@ -169,11 +169,11 @@ void initOpenGl(int * nb_element)
 	//Information
 	information = glui->add_panel("Information" );
 	GLUI_EditText *nb_particule = glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_INT); 
-	nb_particule->set_int_val(nb_element[0]); 
+	nb_particule->set_int_val(elementnb[PART_SLOT]);  
 	GLUI_EditText *nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_INT);
-	nb_generateur->set_int_val(nb_element[1]);
+	nb_generateur->set_int_val(elementnb[GEN_SLOT]);
 	GLUI_EditText *nb_trou_noir = glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT);
-	nb_trou_noir->set_int_val(nb_element[2]);
+	nb_trou_noir->set_int_val(elementnb[BCKH_SLOT]);
 	
 	glui->add_button( "Quit", QUIT, (GLUI_Update_CB) simulation_cb);
 	
@@ -181,22 +181,36 @@ void initOpenGl(int * nb_element)
 	glutMainLoop();
 }
 
-void load_cb(int control, const char* live_var)
+void next_step(void)
 {
-	sim_graphic(live_var);
-	glutIdleFunc(NULL);
+	//mettre a jour information
+	sim_nbEntities(elementnb);
+	
+	//met a jour simulation
+	
+	//met a jour affichage
+	display();
 }
 
-void save_cb(int control, const char* live_var)
+void idle()                                       
 {
-	//glutIdleFunc(NULL);
-	//enregistre etat actuel de simulation dans ce fichier
-	FILE *file = NULL;
-	file = fopen(live_var,"w");
+	enum State {ON, OFF};
+	enum State state;
+	state = ON;
 	
-	fprintf(file, "%s", sim_write());
-
-	fclose(file);
+	if ( glutGetWindow() != main_window ) 
+		glutSetWindow(main_window);  
+	
+	switch(state)
+	{
+		case ON : next_step();
+		break;
+		case OFF :
+		break;
+		default :
+		break;
+	}
+  glutPostRedisplay();
 }
 
 void simulation_cb(int control)
@@ -223,10 +237,9 @@ void simulation_cb(int control)
 				break;
 				
 		case STEP:
-				//sim_next_step
+				next_step();
 				glutIdleFunc(NULL);
 				state = OFF;
-				//calcule seulement un pas
 				glutSetWindow(main_window);
 				glutPostRedisplay();
 				break;
@@ -244,19 +257,28 @@ void simulation_cb(int control)
 	}
 }
 
-//fonction next_step
-	//mettre a jour information -> sim_nb_entities (au lieu de elementnb) qui renvoit nbre entitées
-
+	
 void display(void)
 {
 	//sim_display appelle chaque module qui gerent elles memes leur affichage
+	sim_display();
 	
-	
-	//dans reshape
-	GLfloat left= -RMAX, right = RMAX, down= -RMAX, up= RMAX;
-	glClear(GL_COLOR_BUFFER_BIT);  //display
+	glClear(GL_COLOR_BUFFER_BIT);
 	
 	glLoadIdentity();
+
+	glutSwapBuffers();
+}
+
+void reshape(int w, int h)
+{
+	//appel sim pour savoir centre de masse
+	sim_centre_masse();                              //devrait renvoyer un point et non un double
+	
+	GLfloat left = (sim_centre_masse()) - RMAX, 
+			right= (sim_centre_masse()) + RMAX, 
+			down = (sim_centre_masse()) - RMAX, 
+			up   = (sim_centre_masse()) + RMAX;
 	
 	if (aspect_ratio <= 1.)
 	glOrtho(left, right, down/aspect_ratio, up/aspect_ratio, -1.0, 1.0);
@@ -264,31 +286,30 @@ void display(void)
 	else
 	glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
 	
-	/*switch(particuleNB)                  //fonctionne evidemment pas mais idée
-	{
-		case: particuleNB == 0
-			  GLfloat left= -RMAX, right = RMAX, down= -RMAX, up= RMAX;
-		break;
-		case: particuleNB == 1
-			  GLfloat left = (part.point.x-RMAX), right = (part.point.x+RMAX),
-					  down = (part.point.y-RMAX), up    = (part.point.y+RMAX);
-		break;
-		default: GLfloat left = (centre de masse.x-RMAX), right = (centre de masse.x+RMAX),
-					  down = (centre de masse.y-RMAX), up    = (centre de masse.y+RMAX);
-		break;
-	}	*/	
 	
 	//rapport entre les dimensions X/Y du domaine Open GL et taille en pixels du widget glut //exo8 serie19
-
-	glutSwapBuffers();  //display
-}
-
-void reshape(int w, int h)
-{
-	//appel sim pour savoir centre de masse
+	
 	glViewport(0, 0, w, h);
 	aspect_ratio = (GLfloat) w / (GLfloat) h ;
 	glutPostRedisplay(); 
+}
+
+void load_cb(int control, const char* live_var)
+{
+	sim_graphic(live_var);
+	glutIdleFunc(NULL);
+}
+
+void save_cb(int control, const char* live_var)
+{
+	//glutIdleFunc(NULL);
+	//enregistre etat actuel de simulation dans ce fichier
+	FILE *file = NULL;
+	file = fopen(live_var,"w");
+	
+	fprintf(file, "%s", sim_write());
+
+	fclose(file);
 }
 
 void mouse(int button, int button_state, int x, int y )
@@ -323,20 +344,6 @@ void keyboard(unsigned char Key, int x, int y)
   glutPostRedisplay();
 }
 
-void idle(void)                                       
-{
-	if ( glutGetWindow() != main_window ) 
-		glutSetWindow(main_window);  
-		//switch
-			//rien
-			//main_next_step
-		//state ON sim_next_step
-
-  glutPostRedisplay();
-}
-
-	
-
 /*void timerCB(int value)                      //fonction du prof (pas sure si besoin pour STEP)
 {
 	// Set the timer to 100 milliseconds.
@@ -363,3 +370,5 @@ void idle(void)
 	}
 	glutPostRedisplay();
 }*/
+
+
