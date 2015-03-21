@@ -26,8 +26,11 @@ bool bckH_readData(const char *string);
 // return UNNASIGNED=-1 if create unssucceful
 // otherwise return id of black hole (starting at 0)
 int bckH_create(POINT center);
+
+//return total number of black hole
 int bckH_totalNB();
 
+//manages the display of black holes 
 void bckH_display(void);
 
 #endif

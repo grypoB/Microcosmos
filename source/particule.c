@@ -430,6 +430,7 @@ static PARTICULE* part_findPart(int partID) {
     return pPart;
 }
 
+//manages the display of particles
 void part_display(void)
 {
 	int i;
@@ -439,14 +440,14 @@ void part_display(void)
 	}
 }
 
-//dans particule ou graphic
+//draws the particle    //still issues with color : don't know how to put interpolation and set_color together
 void part_draw(double radius, POINT center, VECTOR speed)
 {	
+	graphic_circle(center, radius, CONTINUOUS);
+	
 	double red   = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 1  );
 	double green = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
 	double blue  = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
-	
 	graphic_set_color3f(red, green, blue);
-
-	graphic_draw_particule(center, radius);
+	//graphic_set_color(color)
 }

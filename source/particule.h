@@ -70,8 +70,11 @@ void particule_force_rendu1();
 bool part_nextTick(double delta_t);
 // return ID of closest part to a point
 int part_closestPart(POINT point);
+
+//return total number of particle
 int part_totalNB();
 
+//manages the display of particles
 void part_display(void);
 
 #endif

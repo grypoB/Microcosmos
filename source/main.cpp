@@ -42,6 +42,8 @@ int milliseconds = 0;
 enum Boutton {START, STEP, QUIT};
 int elementnb[ENTITY_NB];
 
+void next_step(void);
+
 //fonction pour GLUI
 void display(void);
 void reshape(int w, int h);
@@ -181,17 +183,6 @@ void initOpenGl()
 	glutMainLoop();
 }
 
-void next_step(void)
-{
-	//mettre a jour information
-	sim_nbEntities(elementnb);
-	
-	//met a jour simulation
-	
-	//met a jour affichage
-	display();
-}
-
 void idle()                                       
 {
 	enum State {ON, OFF};
@@ -211,6 +202,18 @@ void idle()
 		break;
 	}
   glutPostRedisplay();
+}
+
+void next_step(void)
+{
+	//met a jour information
+	sim_nbEntities(elementnb);
+	
+	//met a jour simulation
+	sim_next_step();
+	
+	//met a jour affichage
+	display();
 }
 
 void simulation_cb(int control)
@@ -302,12 +305,12 @@ void load_cb(int control, const char* live_var)
 
 void save_cb(int control, const char* live_var)
 {
-	//glutIdleFunc(NULL);
+	glutIdleFunc(NULL);
 	//enregistre etat actuel de simulation dans ce fichier
 	FILE *file = NULL;
 	file = fopen(live_var,"w");
 	
-	fprintf(file, "%s", sim_write());
+	//fprintf(file, "%s", sim_write());
 
 	fclose(file);
 }
