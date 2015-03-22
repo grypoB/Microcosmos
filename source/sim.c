@@ -348,40 +348,42 @@ POINT sim_centre_masse(void) 			//TODO
 //saves the current state ofthe simulation in a file which name is given
 void sim_save(char filename[])
 {
-	gen_save(filename);
-	bckH_save(filename);
-	part_save(filename);
+	int i;
+	FILE *file = NULL;
+
+    if((file = fopen(filename, "w"))!=NULL)
+    {
+		fprintf(file, "%d\n", gen_totalNB());
+		for(i=0; i<gen_totalNB(); i++)
+		{
+			//fprintf(file, "%d\n", rayon);
+			//fprintf(file, "%d\n", center);
+			//fprintf(file, "%d\n", vecteur);
+		}
+		fprintf(file, "FIN_LISTE\n");
+		
+		
+		fprintf(file, "%d\n", bckH_totalNB());
+		for(i=0; i<bckH_totalNB(); i++)
+		{
+			//fprintf(file, "%d\n", center);
+		}
+		fprintf(file, "FIN_LISTE\n");
+		
+		
+		fprintf(file, "%d\n", part_totalNB());
+		for(i=0; i<part_totalNB(); i++)
+		{
+			//fprintf(file, "%d\n", rayon);
+			//fprintf(file, "%d\n", center);
+			//fprintf(file, "%d\n", vecteur);
+		}
+		fprintf(file, "FIN_LISTE\n");
+			
+	}
+	
+	else printf("File didn't open in %s\n", __func__);
+	fclose(file);
 	
 	printf("sim_save\n");  //stub
 }
-
-
-/*	int i;
-	int file_size = sizeof(toutlestrucs);
-	char* file[file_size];
-	
-	*file[0] = gen_totalNB();
-	for(i=0, i<gen_totalNB(), i++);
-	{
-		//rayon POINT(center) VECTOR
-	}
-	*file[8] = "FIN_LISTE";
-	
-	*file[10] = bckH_totalNB();
-	for(i=0, i<bckH_totalNB(), i++);
-	{
-		//POINT(center)
-	}
-	*file[18] = "FIN_LISTE";
-	
-	*file[20] = part_totalNB();
-	for(i=0, i<part_totalNB(), i++);
-	{
-		//rayon POINT(center) VECTOR(speed)
-	}
-	*file[28] = "FIN_LISTE";
-	
-	printf("sim_write\n");  //stub
-	* 
-	return *file;
-}*/
