@@ -336,13 +336,48 @@ void sim_nbEntities(int elementnb[3])
 }
 
 //finds the middle of all particles
-POINT sim_centre_masse(void) 			//TODO
+POINT sim_centre_masse(void)
 {
-	POINT centre;
-	centre.x = 0;
-	centre.y = 0;
-	//le centre de toutes les particules, générateurs et trous noirs
-	return centre;
+	POINT center;
+	int i;
+	
+	int nb_entities = 0;
+	nb_entities+= gen_totalNB();
+	nb_entities+= bckH_totalNB();
+	nb_entities+= part_totalNB();
+	
+	center.x = 0;
+	for(i=0; i<gen_totalNB(); i++)
+	{
+		center.x += gen_get_center(i).x;
+	}
+	for(i=0; i<bckH_totalNB(); i++)
+	{
+		center.x += bckH_get_center(i).x;
+	}
+	for(i=0; i<part_totalNB(); i++)
+	{
+		center.x += part_get_center(i).x;
+	}
+	center.x /= nb_entities;
+	
+	
+	center.y = 0;
+	for(i=0; i<gen_totalNB(); i++)
+	{
+		center.y += gen_get_center(i).y;
+	}
+	for(i=0; i<bckH_totalNB(); i++)
+	{
+		center.y += bckH_get_center(i).y;
+	}
+	for(i=0; i<part_totalNB(); i++)
+	{
+		center.y += part_get_center(i).y;
+	}
+	center.y /= nb_entities;
+	
+	return center;
 }
 
 //saves the current state ofthe simulation in a file which name is given

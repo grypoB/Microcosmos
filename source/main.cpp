@@ -52,8 +52,6 @@ typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET} M
 // return MODE_UNSET if string wasn't valid
 static MODE read_mode(const char string[]);
 
-
-
 namespace
 {
     GLUI* glui;
@@ -73,7 +71,6 @@ namespace
 
     bool simulation_running = false;
 }
-
 
 
 int main (int argc, char *argv[])
@@ -267,7 +264,6 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glLoadIdentity();
 
-    //sim_display appelle chaque module qui gerent elles memes leur affichage
     sim_display();
 
     glutSwapBuffers();
@@ -276,7 +272,6 @@ void display(void)
 void reshape(int w, int h)
 {
     glViewport(0, 0, w, h);
-
 
     //appel sim pour savoir centre de masse
     POINT centre = sim_centre_masse();
