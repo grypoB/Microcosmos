@@ -20,6 +20,9 @@
 // size of the tab to store the black holes in
 #define BCKH_TAB_SIZE MAX_RENDU1
 
+#define RADIUS 10 //je ne sais pas encore quelle taille
+
+
 
 typedef struct Trou_noir {
 
@@ -29,8 +32,8 @@ typedef struct Trou_noir {
 
 } TROU_NOIR;
 
-void bckH_draw(POINT center);
 
+void bckH_draw(POINT center);
 // tab where all black holes are stored
 static TROU_NOIR bckHTab[BCKH_TAB_SIZE];
 // store the number of current black holes
@@ -87,6 +90,7 @@ int bckH_totalNB() {
     return bckHNB;
 }
 
+//manages the display of black holes
 void bckH_display(void)
 {
 	int i;
@@ -96,9 +100,9 @@ void bckH_display(void)
 	}
 }
 
+//draws black holes
 void bckh_draw(POINT center)
 {
-	//graphic_set_line_width(1.);
-	//graphic_set_color3f(0.2, 0.8,1.0);
-	graphic_draw_bckH(center);
+	graphic_circle(center, RADIUS, DASH_LINE);
+	graphic_draw_point(center);
 }

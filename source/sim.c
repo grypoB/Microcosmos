@@ -86,7 +86,7 @@ void sim_force(const char filename[]) {
 void sim_graphic(const char filename[])
 {
 	if (sim_lecture(filename)) {
-		//
+		sim_display();
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
@@ -309,11 +309,16 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     return returnVal;
 }
 
-void sim_display(void)				//pas void mais doit recevoir les infos
+void sim_display(void)
 {
 	part_display();
 	gen_display();
 	bckH_display();
+}
+
+void sim_next_step(void)
+{
+	part_nextTick(1.0);     //pas 1.0 mais delta_t
 }
 
 void sim_nbEntities(int elementnb[3])

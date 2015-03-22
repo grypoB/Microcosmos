@@ -30,8 +30,11 @@ bool gen_readData(const char *string);
 // otherwise return the id of the generator
 // See particle module for params validity domain
 int gen_create(double radius, POINT center, VECTOR speed);
+
+//return total number of generator
 int gen_totalNB(void);
 
+//manages the displayof the generators
 void gen_display(void);
 
 #endif

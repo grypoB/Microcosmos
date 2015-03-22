@@ -96,6 +96,7 @@ int gen_totalNB() {
     return genNB;
 }
 
+//manages the display of generators
 void gen_display(void)
 {
 	int i;
@@ -105,9 +106,11 @@ void gen_display(void)
 	}
 }
 
-void gen_draw(double radius, POINT center, VECTOR speed)    //PAS DU TOUT A JOUR
+//draws generators
+void gen_draw(double radius, POINT center, VECTOR speed)
 {
-	//graphic_set_line_width(1.);
-	//graphic_set_color3f(0.2, 0.8,1.0);
-	graphic_draw_generateur(center, radius, speed);
+	graphic_draw_point(center);
+	graphic_draw_vector(center, radius, speed);
+	graphic_set_line_width(1.);
+	graphic_set_color(BLUE);
 }
