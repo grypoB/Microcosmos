@@ -6,7 +6,7 @@ CC       = gcc
 CXX      = g++
 CFLAGS   = -Wall
 CXXFLAGS = $(CFLAGS)
-LIBS     = -lm -lstdc++ -lglui
+LIBS     = -lm -lstdc++ -lglut -lGL -lGLU -lglui -L/usr/X11R6/lib -lX11 -lXext
 CFILES   =  main.cpp error.c generateur.c trou_noir.c particule.c sim.c \
   geometry.c graphic.c
 
