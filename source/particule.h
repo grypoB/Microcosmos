@@ -77,7 +77,9 @@ int part_totalNB();
 //manages the display of particles
 void part_display(void);
 
-//saves the number of particles and their datas in filename 
-void part_save(char filename[]);
+//gets datas of particles
+double part_get_rayon(int partID);
+POINT part_get_center(int partID);
+VECTOR part_get_vecteur(int partID);
 
 #endif

@@ -115,3 +115,25 @@ void gen_draw(double radius, POINT center, VECTOR speed)
 	graphic_set_line_width(1.);
 	graphic_set_color(BLUE);
 }
+
+double gen_get_rayon(int partID)
+{
+	return genTab[partID].radius;
+}
+
+POINT gen_get_center(int partID)
+{
+	POINT centre;
+	centre.x = genTab[partID].center.x;
+	centre.y = genTab[partID].center.y;
+	return centre;
+}
+
+VECTOR gen_get_vecteur(int partID)
+{
+	VECTOR speed;
+	speed.x = genTab[partID].speed.x;
+	speed.y = genTab[partID].speed.x;
+	return speed;
+}
+

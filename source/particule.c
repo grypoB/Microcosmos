@@ -447,3 +447,26 @@ void part_draw(double radius, POINT center, VECTOR speed)
 	graphic_circle(center, radius, CONTINUOUS);
 	graphic_part_color(speed);
 }
+
+double part_get_rayon(int partID)
+{
+	return partTab[partID].radius;
+}
+
+POINT part_get_center(int partID)
+{
+	POINT centre;
+	centre.x = partTab[partID].center.x;
+	centre.y = partTab[partID].center.y;
+	return centre;
+}
+
+VECTOR part_get_vecteur(int partID)
+{
+	VECTOR speed;
+	speed.x = partTab[partID].speed.x;
+	speed.y = partTab[partID].speed.x;
+	return speed;
+}
+
+

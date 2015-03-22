@@ -21,6 +21,8 @@ Generator (of particles) defined by :
 - the speed vector of the particles it creates
 */
 
+
+
 // from an input string, creates a particle generator
 // Expected format (all in double): radius posx posy vx vy 
 // prints errors if it couldn't read string
@@ -37,7 +39,9 @@ int gen_totalNB(void);
 //manages the displayof the generators
 void gen_display(void);
 
-//saves the number of generators and their datas in filename 
-void gen_save(char filename[]);
+//gets datas of generators 
+double gen_get_rayon(int genID);
+POINT gen_get_center(int genID);
+VECTOR gen_get_vecteur(int genID);
 
 #endif

@@ -356,9 +356,8 @@ void sim_save(char filename[])
 		fprintf(file, "%d\n", gen_totalNB());
 		for(i=0; i<gen_totalNB(); i++)
 		{
-			//fprintf(file, "%d\n", rayon);
-			//fprintf(file, "%d\n", center);
-			//fprintf(file, "%d\n", vecteur);
+			fprintf(file, "%lf %lf %lf %lf %lf" , gen_get_rayon(i), gen_get_center(i).x,
+					gen_get_center(i).y, gen_get_vecteur(i).x, gen_get_vecteur(i).y);
 		}
 		fprintf(file, "FIN_LISTE\n");
 		
@@ -366,7 +365,7 @@ void sim_save(char filename[])
 		fprintf(file, "%d\n", bckH_totalNB());
 		for(i=0; i<bckH_totalNB(); i++)
 		{
-			//fprintf(file, "%d\n", center);
+			fprintf(file, "%lf %lf\n", bckH_get_center(i).x,bckH_get_center(i).y);
 		}
 		fprintf(file, "FIN_LISTE\n");
 		
@@ -374,9 +373,8 @@ void sim_save(char filename[])
 		fprintf(file, "%d\n", part_totalNB());
 		for(i=0; i<part_totalNB(); i++)
 		{
-			//fprintf(file, "%d\n", rayon);
-			//fprintf(file, "%d\n", center);
-			//fprintf(file, "%d\n", vecteur);
+			fprintf(file, "%lf %lf %lf %lf %lf" , part_get_rayon(i), part_get_center(i).x,
+					part_get_center(i).y, part_get_vecteur(i).x, part_get_vecteur(i).y);
 		}
 		fprintf(file, "FIN_LISTE\n");
 			

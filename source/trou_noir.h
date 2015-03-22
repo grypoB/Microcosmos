@@ -33,7 +33,7 @@ int bckH_totalNB();
 //manages the display of black holes 
 void bckH_display(void);
 
-//saves the number of black holes and their position in filename 
-void bckH_save(char filename[]);
+//gets datas of black holes
+POINT bckH_get_center(int bckHID);
 
 #endif

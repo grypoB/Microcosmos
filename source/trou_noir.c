@@ -107,3 +107,12 @@ void bckH_draw(POINT center)
 	graphic_circle(center, RADIUS, DASH_LINE);
 	graphic_draw_point(center);
 }
+
+POINT bckH_get_center(int partID)
+{
+	POINT centre;
+	centre.x = bckHTab[partID].center.x;
+	centre.y = bckHTab[partID].center.y;
+	return centre;
+}
+
