@@ -86,10 +86,13 @@ void sim_force(const char filename[]) {
 void sim_graphic(const char filename[])
 {
 	if (sim_lecture(filename)) {
+		//printf("sim_graphic 1\n");                                ///////////////
 		sim_display();
+		//printf("sim_graphic 2\n");                                ///////////////
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
+		//printf("sim_graphic 3\n");                                ///////////////
 	printf("sim_graphic\n");  //stub
 }
 
@@ -312,8 +315,11 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
 void sim_display(void)
 {
 	part_display();
+	//printf("sim_display 1\n");                                ///////////////
 	gen_display();
+	//printf("sim_display 2\n");                                ///////////////
 	bckH_display();
+	//printf("sim_display 3\n");                                ///////////////
 }
 
 void sim_next_step(void)

@@ -438,6 +438,7 @@ void part_display(void)
 	{
 		part_draw(partTab[i].radius, partTab[i].center, partTab[i].speed);
 	}
+	//printf("part_display 1\n");                                ///////////////
 }
 
 //draws the particle    //still issues with color : don't know how to put interpolation and set_color together

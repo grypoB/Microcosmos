@@ -104,6 +104,7 @@ void gen_display(void)
 	{
 		gen_draw(genTab[i].radius, genTab[i].center, genTab[i].speed);
 	}
+	//printf("gen_display 1\n");                                ///////////////
 }
 
 //draws generators

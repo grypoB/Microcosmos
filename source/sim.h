@@ -17,15 +17,20 @@
 #define GEN_SLOT 1
 #define BCKH_SLOT 2
 
+
+
 bool sim_save(char filename[]);
+
 void sim_display(void);
 void sim_next_step(void);
+
 
 // Different mode supported by the simulation
 // for more details see the specs of the projects
 void sim_error(const char filename[]);
 void sim_force(const char filename[]);
 void sim_graphic(const char filename[]);
+void sim_simulation(char filename[]);
 
 void sim_nbEntities(int elementnb[3]);
 POINT sim_centre_masse(void);

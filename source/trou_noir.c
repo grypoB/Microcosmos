@@ -96,8 +96,9 @@ void bckH_display(void)
 	int i;
 	for (i=0; i<bckHNB; i++)
 	{
-		bckH_draw(bckHTab[i].center);
+		//bckH_draw(bckHTab[i].center);                     //cette ligne fait beuguer r2/G2 (en commentaire pour le moment)
 	}
+	//printf("bckh_display 1\n");                                ///////////////
 }
 
 //draws black holes

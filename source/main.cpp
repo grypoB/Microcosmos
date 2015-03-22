@@ -63,7 +63,9 @@ namespace
     GLUI_Panel *information;
 
     GLUI_EditText *saveFile;
+    char *file_to_save;
     GLUI_EditText *loadFile;
+    char *file_to_load;
 
     GLUI_EditText *nb_trou_noir;
     GLUI_EditText *nb_generateur;
@@ -77,6 +79,8 @@ namespace
 int main (int argc, char *argv[])
 {
     MODE mode = MODE_UNSET;  
+    
+    //printf("initmain\n");                       		         ///////////////
 
     if(argc==3) {
         mode = read_mode(argv[1]);
@@ -90,9 +94,13 @@ int main (int argc, char *argv[])
         case INTEGRATION: //sim_integration(argv[2]);
         break;
         case GRAPHIC: 
+			//printf("initmain 0\n");                                ///////////////
             sim_graphic(argv[2]);
+            //printf("initmain 1\n");                                ///////////////
             glutInit(&argc, argv);
+           // printf("initmain 2\n");                                ///////////////
             initOpenGl();
+            //printf("initmain 3\n");                                ///////////////
             glutMainLoop();
         break;
         case SIMULATION: 
@@ -140,6 +148,8 @@ static void initOpenGl()
     main_window = glutCreateWindow("Microcosmos");
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
+    
+    printf("initOpengl\n");                   			            ///////////////
 
     /* Fonctions callback*/
     GLUI_Master.set_glutDisplayFunc(display);
@@ -147,7 +157,7 @@ static void initOpenGl()
     //GLUI_Master.set_glutMouseFunc(mouse);
     //glutMotionFunc(move_entity);
     //GLUI_Master.set_glutKeyboardFunc(keyboard);
-    //GLUI_Master.set_glutIdleFunc(idle);
+    GLUI_Master.set_glutIdleFunc(idle);
 
     initGlui();
 }
@@ -158,10 +168,11 @@ static void initGlui() {
 
     //File
     file = glui->add_panel("File" );
-    loadFile = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT);
+    loadFile = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, file_to_load);
     glui-> add_button_to_panel(file,"Load", LOAD, file_cb);
-    saveFile = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT);
+    saveFile = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, file_to_save);
     glui-> add_button_to_panel(file,"Save", SAVE, file_cb);
+
 
     //Simulation
     simulation = glui->add_panel("Simulation");
@@ -177,7 +188,10 @@ static void initGlui() {
     glui->add_button( "Quit", -1, (GLUI_Update_CB) quit);
 
     glui->set_main_gfx_window( main_window );
-    glutMainLoop();
+    
+    printf("initGlui1\n");                     				           ///////////////
+    //glutMainLoop();            //dans main 
+    printf("initOpengl2\n");                    			            ///////////////
 }
 
 void update_nbEntities() {
@@ -206,6 +220,9 @@ void next_step(void)
 {
     //met a jour simulation
     sim_next_step();
+    
+    //met à jour nb éléments
+    update_nbEntities();
 
     //met a jour affichage
     glutPostRedisplay();
@@ -217,8 +234,10 @@ void simulation_cb(int id)
     {
         case START:
             if (simulation_running) {
+				glutIdleFunc(NULL);
                 simulation_running = false;
             } else {
+				glutIdleFunc(idle);
                 simulation_running = true;
             }
             // TODO change name of button
@@ -239,8 +258,7 @@ void simulation_cb(int id)
 
 void display(void)
 {
-
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     glLoadIdentity();
 
     //sim_display appelle chaque module qui gerent elles memes leur affichage
@@ -285,14 +303,16 @@ void quit(int id) {
 void file_cb(int id) {
     switch(id) {
         case SAVE:
+			glutIdleFunc(NULL);
             // get filename from widget
-            //sim_save(...)
+            sim_save(file_to_save);
         break;
         case LOAD:
+			glutIdleFunc(NULL);
             //stuff 
             sim_clean();
             // get filename from widget
-            //sim_simulation(...);
+            sim_simulation(file_to_load);
             simulation_running = false;
 
             reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
