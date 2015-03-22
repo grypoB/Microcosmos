@@ -1,6 +1,6 @@
 /* Nom: sim.c
  * Description: module qui lit le fichier en entrée
- * Date: 08.02.2014
+ * Date: 22.03.2014
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -96,7 +96,7 @@ void sim_graphic(const char filename[])
 	printf("sim_graphic\n");  //stub
 }
 
-// Free memory from all modules accross the simultion
+// Free memory from all modules accross the simulation
 void sim_clean() {
     #ifdef DEBUG
     printf("Freeing memory from entities\n");
@@ -112,7 +112,7 @@ void sim_clean() {
 // read a file and store all entities read into the appropriate module
 // return false, if an error occured
 // (ex : file formated wrong, param not in validity domain, etc.)
-// print the error in the terminal 
+// prints the error in the terminal 
 static bool sim_lecture(const char filename[])
 {
     char line[BUFFER_SIZE] = {0};
@@ -176,7 +176,7 @@ static bool sim_lecture(const char filename[])
 // Centralised way of reading the number of entities in the input file 
 // return the nb_entities read
 // modify the state appropriatly after that
-// print any error detected (then set state=error)
+// prints any error detected (then sets state=error)
 static int read_nbEntities(enum Read_state *state, const char *line) {
     int nb_entities = 0;
     bool success = false;
@@ -330,22 +330,35 @@ void sim_next_step(void)
 void sim_nbEntities(int elementnb[3])
 {
 	elementnb[PART_SLOT] = part_totalNB();
-	elementnb[GEN_SLOT] = gen_totalNB();
+	elementnb[GEN_SLOT]  = gen_totalNB();
 	elementnb[BCKH_SLOT] = bckH_totalNB();
 	printf("sim_element\n");  //stub
 }
 
-POINT sim_centre_masse(void) //TODO
+//finds the middle of all particles
+POINT sim_centre_masse(void) 			//TODO
 {
-	return point_null();
+	POINT centre;
+	centre.x = 0;
+	centre.y = 0;
+	//le centre de toutes les particules, générateurs et trous noirs
+	return centre;
 }
 
-/*char* sim_write(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)
+//saves the current state ofthe simulation in a file which name is given
+void sim_save(char filename[])
 {
-	//appeler chaque module pour mettre info
-	* //fprintf
-	int i;
-	char* file[200];
+	gen_save(filename);
+	bckH_save(filename);
+	part_save(filename);
+	
+	printf("sim_save\n");  //stub
+}
+
+
+/*	int i;
+	int file_size = sizeof(toutlestrucs);
+	char* file[file_size];
 	
 	*file[0] = gen_totalNB();
 	for(i=0, i<gen_totalNB(), i++);
@@ -371,6 +384,4 @@ POINT sim_centre_masse(void) //TODO
 	printf("sim_write\n");  //stub
 	* 
 	return *file;
-}
-* */
-
+}*/

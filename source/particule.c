@@ -1,6 +1,6 @@
 /* Nom: particule.c
  * Description: module qui gère les particules
- * Date: 08.02.2014
+ * Date: 22.03.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -441,14 +441,9 @@ void part_display(void)
 	//printf("part_display 1\n");                                ///////////////
 }
 
-//draws the particle    //still issues with color : don't know how to put interpolation and set_color together
+//draws the particle
 void part_draw(double radius, POINT center, VECTOR speed)
 {	
 	graphic_circle(center, radius, CONTINUOUS);
-	
-	double red   = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 1  );
-	double green = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
-	double blue  = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
-	graphic_set_color3f(red, green, blue);
-	//graphic_set_color(color)
+	graphic_part_color(speed);
 }

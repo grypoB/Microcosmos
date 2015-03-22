@@ -1,6 +1,6 @@
 /* Nom: sim.h
  * Description: module qui lit le fichier en entrée
- * Date: 08.02.2014
+ * Date: 22.03.2014
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -12,17 +12,11 @@
 #include <stdbool.h>
 #include "geometry.h"
 
+//Defines tab, in which the number of each entity is stored
 #define ENTITY_NB 3
 #define PART_SLOT 0
 #define GEN_SLOT 1
 #define BCKH_SLOT 2
-
-
-
-bool sim_save(char filename[]);
-
-void sim_display(void);
-void sim_next_step(void);
 
 
 // Different mode supported by the simulation
@@ -32,8 +26,21 @@ void sim_force(const char filename[]);
 void sim_graphic(const char filename[]);
 void sim_simulation(char filename[]);
 
-void sim_nbEntities(int elementnb[3]);
+//updates the number of entities
+void sim_nbEntities(int elementnb[ENTITY_NB]);
+
+//finds the middle of all particles
 POINT sim_centre_masse(void);
+
+//saves the current state of simulation in filename
+void sim_save(char filename[]);
+
+//displays entities
+void sim_display(void);
+
+//handles calculation for the next step of the simulation
+void sim_next_step(void);
+
 // Free memory from all modules accross the simultion
 void sim_clean();
 

@@ -1,7 +1,7 @@
 /* Nom: main.cpp
  * Description: module sous-système de contrôle: gestion du dialogue 
  avec l'utilisateur et interface graphique
- * Date: 08.02.2014
+ * Date: 22.03.2014
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -167,23 +167,28 @@ static void initGlui() {
     GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 
     //File
-    file = glui->add_panel("File" );
-    loadFile = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, file_to_load);
+    file     = glui->add_panel("File" );
+    loadFile = glui-> add_edittext_to_panel(file, "Filename", 
+											GLUI_EDITTEXT_TEXT, file_to_load);
     glui-> add_button_to_panel(file,"Load", LOAD, file_cb);
-    saveFile = glui-> add_edittext_to_panel(file, "Filename", GLUI_EDITTEXT_TEXT, file_to_save);
+    saveFile = glui-> add_edittext_to_panel(file, "Filename", 
+											GLUI_EDITTEXT_TEXT, file_to_save);
     glui-> add_button_to_panel(file,"Save", SAVE, file_cb);
 
 
     //Simulation
     simulation = glui->add_panel("Simulation");
     glui->add_button_to_panel(simulation ,"Start", START, simulation_cb);
-    glui->add_button_to_panel(simulation ,"Step", STEP, simulation_cb);
+    glui->add_button_to_panel(simulation ,"Step",  STEP,  simulation_cb);
 
     //Information
-    information = glui->add_panel("Information" );
-    nb_particule = glui-> add_edittext_to_panel(information, "Nb Particule", GLUI_EDITTEXT_INT); 
-    nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", GLUI_EDITTEXT_INT);
-    nb_trou_noir = glui-> add_edittext_to_panel(information, "Nb Trou noir", GLUI_EDITTEXT_INT);
+    information   = glui->add_panel("Information" );
+    nb_particule  = glui-> add_edittext_to_panel(information, "Nb Particule", 
+												 GLUI_EDITTEXT_INT); 
+    nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", 
+												 GLUI_EDITTEXT_INT);
+    nb_trou_noir  = glui-> add_edittext_to_panel(information, "Nb Trou noir", 
+												 GLUI_EDITTEXT_INT);
 
     glui->add_button( "Quit", -1, (GLUI_Update_CB) quit);
 
@@ -228,6 +233,7 @@ void next_step(void)
     glutPostRedisplay();
 }
 
+//Réponse à l'interface utilisateur partie simulation
 void simulation_cb(int id)
 {
     switch(id)
@@ -300,18 +306,16 @@ void quit(int id) {
     exit(EXIT_SUCCESS);
 }
 
+//Réponse à l'interface utilisateur partie fichier
 void file_cb(int id) {
     switch(id) {
         case SAVE:
 			glutIdleFunc(NULL);
-            // get filename from widget
             sim_save(file_to_save);
         break;
         case LOAD:
 			glutIdleFunc(NULL);
-            //stuff 
             sim_clean();
-            // get filename from widget
             sim_simulation(file_to_load);
             simulation_running = false;
 

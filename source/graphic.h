@@ -31,9 +31,12 @@ void graphic_draw_point(POINT center);
 //draws a vector
 void graphic_draw_vector(POINT center, double radius, VECTOR vector);
 
-//sets the the color
-void graphic_set_color(GRAPHIC_COLOR color);          //soit l'un
-void graphic_set_color3f(float r,  float g, float b); //soit l'autre
+//sets the the color of generators and black holes
+void graphic_set_color(GRAPHIC_COLOR color);
+
+//sets the color of particles
+void graphic_part_color(VECTOR speed);
+void graphic_set_color3f(float r,  float g, float b);
 
 //set the width of the line
 void graphic_set_line_width(float width);

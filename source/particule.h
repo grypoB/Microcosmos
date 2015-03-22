@@ -1,6 +1,6 @@
 /* Nom: particule.h
  * Description: module qui gère les particules
- * Date: 08.02.2014
+ * Date: 22.03.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -76,5 +76,8 @@ int part_totalNB();
 
 //manages the display of particles
 void part_display(void);
+
+//saves the number of particles and their datas in filename 
+void part_save(char filename[]);
 
 #endif

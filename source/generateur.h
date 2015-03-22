@@ -1,6 +1,6 @@
 /* Nom: generateur.h
  * Description: module qui gère les générateurs
- * Date: 08.02.2014
+ * Date: 22.03.2015
  * version : 1.1
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -36,5 +36,8 @@ int gen_totalNB(void);
 
 //manages the displayof the generators
 void gen_display(void);
+
+//saves the number of generators and their datas in filename 
+void gen_save(char filename[]);
 
 #endif

@@ -22,7 +22,7 @@ OFILES = $(TEMP:.cpp=.o)
 all : $(EXEC)
 
 debug: CFLAGS   += $(DEBUGFLAGS)
-#debug: CXXFLAGS += $(DEBUGFLAGS) # seems that is already appended
+#debug: CXXFLAGS += $(DEBUGFLAGS) # seems that has already happended
 debug: $(EXEC)
 
 depend:

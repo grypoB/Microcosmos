@@ -1,6 +1,6 @@
 /* Nom: trou_noir.h
  * Description: module qui gère les trous noirs
- * Date: 08.02.2014
+ * Date: 22.03.2015
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -32,5 +32,8 @@ int bckH_totalNB();
 
 //manages the display of black holes 
 void bckH_display(void);
+
+//saves the number of black holes and their position in filename 
+void bckH_save(char filename[]);
 
 #endif

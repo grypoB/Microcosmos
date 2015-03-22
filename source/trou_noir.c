@@ -1,6 +1,6 @@
 /* Nom: trou_noir.c
  * Description: module qui gère les trous noirs
- * Date: 08.02.2014
+ * Date: 22.03.2015
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -96,7 +96,7 @@ void bckH_display(void)
 	int i;
 	for (i=0; i<bckHNB; i++)
 	{
-		//bckH_draw(bckHTab[i].center);                     //cette ligne fait beuguer r2/G2 (en commentaire pour le moment)
+		//bckH_draw(bckHTab[i].center);                     //cette ligne fait beuguer r2/G2 
 	}
 	//printf("bckh_display 1\n");                                ///////////////
 }

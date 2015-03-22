@@ -108,8 +108,13 @@ void graphic_set_color(GRAPHIC_COLOR color)
      }
 }
 
-void graphic_set_color3f(float r, float g, float b) {
-    glColor3f(r, g, b);
+void graphic_part_color(VECTOR speed) {
+	
+	double red   = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 1  );
+	double green = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
+	double blue  = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
+	
+	graphic_set_color3f(red, green, blue);
 }
 
 void graphic_set_line_width(float width)
