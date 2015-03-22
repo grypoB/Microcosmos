@@ -101,7 +101,7 @@ void bckH_display(void)
 }
 
 //draws black holes
-void bckh_draw(POINT center)
+void bckH_draw(POINT center)
 {
 	graphic_circle(center, RADIUS, DASH_LINE);
 	graphic_draw_point(center);

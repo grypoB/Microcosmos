@@ -329,10 +329,9 @@ void sim_nbEntities(int elementnb[3])
 	printf("sim_element\n");  //stub
 }
 
-double sim_centre_masse(void)                       //TODO
+POINT sim_centre_masse(void) //TODO
 {
-	double cm = 0;
-	return cm;
+	return point_null();
 }
 
 /*char* sim_write(void)						//A CHANGER SUREMENT AVEC ALLOCATION DYNAMIQUE (VALEURS ALÉATOIRES)

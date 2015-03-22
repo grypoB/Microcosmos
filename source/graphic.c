@@ -98,7 +98,7 @@ void graphic_set_color(GRAPHIC_COLOR color)
         case MAROON :	glColor3f(0.5, 0, 0);	 	break;
         case NAVY :		glColor3f(0, 0, 0.5); 		break;
         case OLIVE :	glColor3f(0.5, 0.5, 0); 	break;
-        case ORANGE :	glColor3f(0, 0.65, 0);	 	break;
+        case ORANGE :	glColor3f(1, 0.65, 0);	 	break;
         case PURPLE :	glColor3f(0.5, 0, 0.5); 	break;
         case RED :		glColor3f(1, 0, 0); 		break;
         case SILVER :	glColor3f(0.75, 0.75, 0.75);break;
@@ -106,6 +106,10 @@ void graphic_set_color(GRAPHIC_COLOR color)
         case WHITE :	glColor3f(1, 1, 1);			break;
         case YELLOW :	glColor3f(1, 1, 0);			break;
      }
+}
+
+void graphic_set_color3f(float r, float g, float b) {
+    glColor3f(r, g, b);
 }
 
 void graphic_set_line_width(float width)
