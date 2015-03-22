@@ -86,7 +86,6 @@ void sim_force(const char filename[]) {
 void sim_graphic(const char filename[])
 {
 	if (sim_lecture(filename)) {
-		sim_display();
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
