@@ -13,7 +13,6 @@
 
 #include <GL/glui.h>
 #include <GL/glut.h>
-#include <GL/gl.h>
 
 extern "C"
 {
@@ -39,7 +38,6 @@ void reshape(int w, int h);
 void file_cb(int id);
 void simulation_cb(int id);
 void idle(void);
-void quit(int id);
 
 //fonction pour le mode GRAPHIC
 static void initOpenGl(void);
@@ -187,7 +185,7 @@ static void initGlui() {
     nb_trou_noir  = glui-> add_edittext_to_panel(information, "Nb Trou noir", 
 												 GLUI_EDITTEXT_INT);
 
-    glui->add_button( "Quit", -1, (GLUI_Update_CB) quit);
+    glui->add_button( "Quit", EXIT_SUCCESS, (GLUI_Update_CB) exit);
 
     glui->set_main_gfx_window( main_window );
     
@@ -292,14 +290,6 @@ void reshape(int w, int h)
     glutPostRedisplay(); 
 }
 
-void quit(int id) {
-    GLUI_Master.close_all();
-    glutDestroyWindow(main_window);
-
-    sim_clean();
-
-    exit(EXIT_SUCCESS);
-}
 
 //Réponse à l'interface utilisateur partie fichier
 void file_cb(int id) {
