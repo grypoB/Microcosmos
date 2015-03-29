@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "linked_list.h"
 
 
@@ -154,49 +155,37 @@ void list_deleteAll(LIST_HEAD *head) {
 
 // de maniere croissant
 void list_sort(LIST_HEAD *head) {
+    bool sorted = false;
     int i=0;
+    LIST_ELEMENT *tmpLast = NULL;
     
     if (head!=NULL && head->sortData!=NULL) {
 
-        for (i=0 ; i<head->nbElements ; i++) {
-            (void) list_goToFirst(head);
+        tmpLast = head->last;
 
-            while (head->current->next!=NULL) {
+        for (i=0 ; i<head->nbElements && !sorted ; i++) {
+
+            (void) list_goToFirst(head);
+            sorted = true;
+
+            while (head->current != tmpLast) {
                 if ((*(head->sortData))(head->current->data,
                                         head->current->next->data) == 1) {
                     swap_data(head->current, head->current->next);
+                    sorted = false;
                 }
                 list_goToNext(head);
             }
 
+            tmpLast = tmpLast->prev;
+
         }
+
+        #ifdef DEBUG
+        printf("List sorted in %d/%d cycles\n", i, head->nbElements);
+        #endif
     }
 }
-
-/* buggy
-// act as if after nth  go the n first are sorted, but should be the n Last
-static void sort_left(LIST_HEAD *head) {
-    LIST_ELEMENT *newFirst = NULL;
-
-    if (head!=NULL && head->current->next!=NULL) {
-        newFirst = head->current->next;
-        
-        do { // 1 if current>next : for "sort croissant"
-            if ((*(head->sortData))(head->current->data,
-                                    head->current->next->data) == 1) {
-                swap_data(head->current, head->current->next);
-            }
-
-            //list_goToNext(head);
-            head->current = head->current->next;
-
-        } while (head->current->next!=NULL);
-        head->current = newFirst;
-
-        sort_left(head);
-    }
-}
-*/
 
 static void swap_data(LIST_ELEMENT *p_a, LIST_ELEMENT *p_b) {
     if (p_a!=NULL && p_b!=NULL) {
