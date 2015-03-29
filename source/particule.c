@@ -438,7 +438,9 @@ void part_display(void)
 	{
 		part_draw(partTab[i].radius, partTab[i].center, partTab[i].speed);
 	}
-	//printf("part_display 1\n");                                ///////////////
+	#ifdef DEBUG
+	printf("part_display 1\n");
+	#endif
 }
 
 //draws the particle

@@ -86,14 +86,30 @@ void sim_force(const char filename[]) {
 void sim_graphic(const char filename[])
 {
 	if (sim_lecture(filename)) {
-		//printf("sim_graphic 1\n");                                ///////////////
+		 #ifdef DEBUG
+		printf("sim_graphic 1\n");
+		 #endif
+		
 		sim_display();
-		//printf("sim_graphic 2\n");                                ///////////////
+		 #ifdef DEBUG
+		printf("sim_graphic 2\n");  
+		 #endif
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
-		//printf("sim_graphic 3\n");                                ///////////////
+		 #ifdef DEBUG
+		printf("sim_graphic 3\n");        
+		 #endif
 	printf("sim_graphic\n");  //stub
+}
+
+void sim_simulation(char filename[])
+{
+	if (sim_lecture(filename)) {
+		sim_display();
+		 } else {
+        error_msg("Couldn't open simulation, input file has errors");
+    }
 }
 
 // Free memory from all modules accross the simulation
@@ -315,11 +331,17 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
 void sim_display(void)
 {
 	part_display();
-	//printf("sim_display 1\n");                                ///////////////
+	#ifdef DEBUG
+	printf("sim_display 1\n");
+	#endif
+	#ifdef DEBUG
 	gen_display();
-	//printf("sim_display 2\n");                                ///////////////
+	printf("sim_display 2\n");  
+	#endif
 	bckH_display();
-	//printf("sim_display 3\n");                                ///////////////
+	#ifdef DEBUG
+	printf("sim_display 3\n");
+	#endif
 }
 
 void sim_next_step(void)
