@@ -1,5 +1,5 @@
 /* Nom: linked_list.h
- * Description: module qui gère les liste chaine
+ * Description: module qui gère des listes chaines
  * Date: 22.03.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
@@ -32,18 +32,15 @@ struct List_head {
     //fct to delete data
     void (*deleteData) (void *data);
 
-    // fct to compare
+    // fct to sort (comparing two data
     // must return -1 if a<b
     //              0 if a==b
     //              1 if a>b
     int (*sortData) (void *a, void *b);
-
-    // fct used to search
-
 };
 
 
-
+// TODO change head to pHead whenever it is a pointer + check if pointer needed
 
 LIST_HEAD list_create(void (*deleteData) (void *data), int (*sortData) (void *a, void *b));
 
@@ -59,5 +56,9 @@ LIST_ELEMENT* list_add(LIST_HEAD *head, void *data);
 
 LIST_ELEMENT* list_deleteCurrent(LIST_HEAD *head); 
 void list_deleteAll(LIST_HEAD *head); 
+
+// some getters
+int   list_getNbElements(LIST_HEAD head);
+void* list_getCurrentData(LIST_HEAD head);
 
 #endif

@@ -12,7 +12,6 @@
 #include "linked_list.h"
 
 
-//static void sort_left(LIST_HEAD *head);
 static void swap_data(LIST_ELEMENT *p_a, LIST_ELEMENT *p_b);
 
 
@@ -43,6 +42,8 @@ LIST_ELEMENT* list_goToFirst(LIST_HEAD *head) {
     return p;
 }
 
+
+// if current == NULL, keed it at NULL
 LIST_ELEMENT* list_goToNext (LIST_HEAD *head) {
     LIST_ELEMENT *p = NULL;
 
@@ -62,20 +63,30 @@ LIST_ELEMENT* list_goToNext (LIST_HEAD *head) {
 
 void list_fctToAllNext(LIST_HEAD *head, void (*func) (void *data)) {
     if (head!=NULL && head->current!=NULL && func!=NULL) {
+        LIST_ELEMENT *originalCurrent = head->current;
+
         do {
             (*func)(head->current->data);
         } while (list_goToNext(head) != NULL);
+
+        head->current = originalCurrent;
     }
 }
 
 void list_fctToAllElements(LIST_HEAD *head, void (*func) (void *data)) {
     if (head != NULL) {
+        LIST_ELEMENT *originalCurrent = head->current;
+
         list_goToFirst(head);
         list_fctToAllNext(head, func);
+
+        head->current = originalCurrent;
     }
 }
 
 
+// adds it at the end of the list
+// return the pointer to the node
 LIST_ELEMENT* list_add(LIST_HEAD *head, void *data) {
     LIST_ELEMENT *p = NULL;
 
@@ -108,9 +119,10 @@ LIST_ELEMENT* list_add(LIST_HEAD *head, void *data) {
 
 
 // return new current
+// i.e : the one after the deleted one
 LIST_ELEMENT* list_deleteCurrent(LIST_HEAD *head) {
-    LIST_ELEMENT *prev;
-    LIST_ELEMENT *next;
+    LIST_ELEMENT *prev = NULL;
+    LIST_ELEMENT *next = NULL;
 
     if (head!=NULL && head->current!=NULL) {
         prev = head->current->prev;
@@ -145,6 +157,7 @@ LIST_ELEMENT* list_deleteCurrent(LIST_HEAD *head) {
 }
 
 
+// after : first,current,last = NULL
 void list_deleteAll(LIST_HEAD *head) {
     if (head != NULL) {
         (void) list_goToFirst(head);
@@ -153,7 +166,26 @@ void list_deleteAll(LIST_HEAD *head) {
     }
 }
 
+
+int   list_getNbElements(LIST_HEAD head) {
+    return head.nbElements;
+}
+
+
+// TODO : check, maybe useless (too long to write)
+void* list_getCurrentData(LIST_HEAD head) {
+    void *returnPointer = NULL;
+
+    if (head.current!=NULL) {
+        returnPointer = head.current->data;
+    }
+
+    return returnPointer;
+}
+
+
 // de maniere croissant
+// the current then points to the first node
 void list_sort(LIST_HEAD *head) {
     bool sorted = false;
     int i=0;
@@ -180,6 +212,9 @@ void list_sort(LIST_HEAD *head) {
             tmpLast = tmpLast->prev;
 
         }
+
+        // to ensure the current node is the first one
+        (void) list_goToFirst(head);
 
         #ifdef DEBUG
         printf("List sorted in %d/%d cycles\n", i, head->nbElements);
