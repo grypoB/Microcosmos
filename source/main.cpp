@@ -89,17 +89,25 @@ int main (int argc, char *argv[])
         case INTEGRATION: //sim_integration(argv[2]);
         break;
         case GRAPHIC: 
-			//printf("initmain 0\n");                                ///////////////
+			#ifdef DEBUG
+			printf("initmain 0\n"); 
+			#endif
             sim_graphic(argv[2]);
-            //printf("initmain 1\n");                                ///////////////
+            #ifdef DEBUG
+            printf("initmain 1\n");
+            #endif
             glutInit(&argc, argv);
-           // printf("initmain 2\n");                                ///////////////
+            #ifdef DEBUG
+            printf("initmain 2\n");
+            #endif
             initOpenGl();
-            //printf("initmain 3\n");                                ///////////////
+            #ifdef DEBUG
+            printf("initmain 3\n"); 
+            #endif
             glutMainLoop();
         break;
         case SIMULATION: 
-            //sim_simulation(argv[2]);
+            sim_simulation(argv[2]);
         break;
 
         case MODE_UNSET:
@@ -144,7 +152,9 @@ static void initOpenGl()
 
     glClearColor(1.0, 1.0, 1.0, 0.0);
     
-    printf("initOpengl\n");                   			            ///////////////
+    #ifdef DEBUG
+    printf("initOpengl\n");
+    #endif
 
     /* Fonctions callback*/
     GLUI_Master.set_glutDisplayFunc(display);
@@ -189,9 +199,14 @@ static void initGlui() {
 
     glui->set_main_gfx_window( main_window );
     
-    printf("initGlui1\n");                     				           ///////////////
+    #ifdef DEBUG
+    printf("initGlui1\n");
+    #endif
     //glutMainLoop();            //dans main 
-    printf("initOpengl2\n");                    			            ///////////////
+   
+    #ifdef DEBUG
+    printf("initOpengl2\n");
+    #endif
 }
 
 void update_nbEntities() {
