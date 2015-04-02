@@ -13,7 +13,13 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <GL/glu.h>
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#elif
+#include <GL/glut.h>
+#endif
+
 #include "graphic.h"
 #include "geometry.h"
 #include "constantes.h"

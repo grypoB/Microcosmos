@@ -21,6 +21,10 @@ OFILES = $(TEMP:.cpp=.o)
 # Definitions des cibles
 all : $(EXEC)
 
+apple : CPPFLAGS += -I./ -I./include
+apple : LIBS   = -framework OpenGl -lm -framework GLUT -L/usr/X11R6/lib -lstdc++ -Llib -L./lib -lglui
+apple : $(EXEC)
+
 debug: CFLAGS   += $(DEBUGFLAGS)
 #debug: CXXFLAGS += $(DEBUGFLAGS) # seems that has already happended
 debug: $(EXEC)

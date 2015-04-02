@@ -12,7 +12,12 @@
 #include <string.h>
 
 #include <GL/glui.h>
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#elif
 #include <GL/glut.h>
+#endif
 
 extern "C"
 {
