@@ -6,7 +6,6 @@
  * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 
-#define _USE_MATH_DEFINES
 #define NB_COTES 50
 #define ARROW 2 //arbitraire
 #define POINTILLE 3
@@ -58,13 +57,14 @@ void graphic_circle(POINT center, double radius, DETAIL detail)
 		
 							i+=POINTILLE;
 					}
-		glEnd ();
 	}
+
+	glEnd ();
 }
 
 void graphic_draw_point(POINT center)
 {
-	glBegin (GL_POINT);
+	glBegin (GL_POINTS);
 	  glVertex2f (center.x, center.y);
 	glEnd (); 
 }
