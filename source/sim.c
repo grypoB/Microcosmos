@@ -65,7 +65,6 @@ void sim_error(const char filename[]) {
     if (sim_lecture(filename)) {
         error_success();
     }
-	printf("sim_error\n");  //stub
     sim_clean();
 }
 
@@ -77,7 +76,6 @@ void sim_force(const char filename[]) {
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
-	printf("sim_force\n");  //stub
     sim_clean();
 }
 
@@ -86,28 +84,17 @@ void sim_force(const char filename[]) {
 void sim_graphic(const char filename[])
 {
 	if (sim_lecture(filename)) {
-		 #ifdef DEBUG
-		printf("sim_graphic 1\n");
-		 #endif
-		
-		sim_display();
-		 #ifdef DEBUG
-		printf("sim_graphic 2\n");  
-		 #endif
+        // successful read
     } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
-		 #ifdef DEBUG
-		printf("sim_graphic 3\n");        
-		 #endif
-	printf("sim_graphic\n");  //stub
 }
 
 void sim_simulation(char filename[])
 {
 	if (sim_lecture(filename)) {
 		sim_display();
-		 } else {
+    } else {
         error_msg("Couldn't open simulation, input file has errors");
     }
 }
@@ -185,7 +172,6 @@ static bool sim_lecture(const char filename[])
         error_fichier_inexistant();
         return false;
 	}
-	printf("sim_lecture\n");  //stub
 }
 
 
@@ -354,7 +340,6 @@ void sim_nbEntities(int elementnb[3])
 	elementnb[PART_SLOT] = part_totalNB();
 	elementnb[GEN_SLOT]  = gen_totalNB();
 	elementnb[BCKH_SLOT] = bckH_totalNB();
-	printf("sim_element\n");  //stub
 }
 
 //finds the middle of all particles
