@@ -12,7 +12,12 @@
 #include <string.h>
 
 #include <GL/glui.h>
+
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#elif
 #include <GL/glut.h>
+#endif
 
 extern "C"
 {
@@ -52,7 +57,7 @@ static MODE read_mode(const char string[]);
 
 namespace
 {
-    GLUI* glui;
+    //GLUI* glui;
     int main_window;
     GLUI_Panel *file;
     GLUI_Panel *simulation;
@@ -68,6 +73,12 @@ namespace
     GLUI_EditText *nb_particule;
 
     bool simulation_running = false;
+
+    GLfloat left = -50, 
+            right= 50, 
+            down = -50, 
+            up   = 50;
+    double aspect_ratio;
 }
 
 
@@ -75,7 +86,6 @@ int main (int argc, char *argv[])
 {
     MODE mode = MODE_UNSET;  
     
-    //printf("initmain\n");                       		         ///////////////
 
     if(argc==3) {
         mode = read_mode(argv[1]);
@@ -89,21 +99,9 @@ int main (int argc, char *argv[])
         case INTEGRATION: //sim_integration(argv[2]);
         break;
         case GRAPHIC: 
-			#ifdef DEBUG
-			printf("initmain 0\n"); 
-			#endif
             sim_graphic(argv[2]);
-            #ifdef DEBUG
-            printf("initmain 1\n");
-            #endif
             glutInit(&argc, argv);
-            #ifdef DEBUG
-            printf("initmain 2\n");
-            #endif
             initOpenGl();
-            #ifdef DEBUG
-            printf("initmain 3\n"); 
-            #endif
             glutMainLoop();
         break;
         case SIMULATION: 
@@ -198,15 +196,6 @@ static void initGlui() {
     glui->add_button( "Quit", EXIT_SUCCESS, (GLUI_Update_CB) exit);
 
     glui->set_main_gfx_window( main_window );
-    
-    #ifdef DEBUG
-    printf("initGlui1\n");
-    #endif
-    //glutMainLoop();            //dans main 
-   
-    #ifdef DEBUG
-    printf("initOpengl2\n");
-    #endif
 }
 
 void update_nbEntities() {
@@ -236,8 +225,6 @@ void next_step(void)
     //met a jour simulation
     sim_next_step();
     
-    //met à jour nb éléments
-    update_nbEntities();
 
     //met a jour affichage
     glutPostRedisplay();
@@ -274,10 +261,23 @@ void simulation_cb(int id)
 
 void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glClearColor ( 1., 1., 1., 0. );       // specifie la couleur 
+    glClear(GL_COLOR_BUFFER_BIT);
+
     glLoadIdentity();
 
+    // update glOrtho
+    if (aspect_ratio <= 1.)
+        glOrtho(left, right, down/aspect_ratio, up/aspect_ratio, -1.0, 1.0);
+
+    else
+        glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
+
     sim_display();
+
+    //met à jour nb éléments
+    update_nbEntities();
+
 
     glutSwapBuffers();
 }
@@ -287,20 +287,10 @@ void reshape(int w, int h)
     glViewport(0, 0, w, h);
 
     //appel sim pour savoir centre de masse
-    POINT centre = sim_centre_masse();
+    //POINT centre = sim_centre_masse();
+    //TODO update left, right, up, down accordingly
 
-    GLfloat left = centre.x - RMAX, 
-            right= centre.x + RMAX, 
-            down = centre.y - RMAX, 
-            up   = centre.y + RMAX;
-
-    float aspect_ratio = (float) w/h;
-
-    if (aspect_ratio <= 1.)
-        glOrtho(left, right, down/aspect_ratio, up/aspect_ratio, -1.0, 1.0);
-
-    else
-        glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
+    aspect_ratio = (float) w/h;
 
     glutPostRedisplay(); 
 }

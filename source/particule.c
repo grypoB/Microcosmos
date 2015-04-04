@@ -446,8 +446,8 @@ void part_display(void)
 //draws the particle
 void part_draw(double radius, POINT center, VECTOR speed)
 {	
-	graphic_circle(center, radius, CONTINUOUS);
 	graphic_part_color(speed);
+	graphic_circle(center, radius, CONTINUOUS);
 }
 
 double part_get_rayon(int partID)
