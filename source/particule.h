@@ -11,6 +11,7 @@
 
 #include "geometry.h"
 #include "error.h"
+#include "linked_list.h"
 #include <stdbool.h>
 
 // all particles are stored with a static in .c
@@ -57,6 +58,7 @@ bool part_setLock  (int partID, bool lock);
 // Expected format (all in double): radius posx posy vx vy 
 // prints errors if it couldn't read string
 bool part_readData(const char *string);
+void part_saveAllData(FILE *file);
 
 // ------------
 // force/simultaion related
@@ -78,6 +80,6 @@ int part_totalNB();
 void part_display(void);
 
 //gets datas of particles
-//POINT part_get_center(int partID);
+void part_getAllCenters(LIST_HEAD *pHead);
 
 #endif

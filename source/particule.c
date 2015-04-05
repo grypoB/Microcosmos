@@ -37,11 +37,7 @@ typedef struct Particule {
 static void part_initMass(PARTICULE *part);
 
 static void part_updateForce();
-/*
-static void part_updateAcc();
-static void part_updateSpeed(double delta_t);
-static void part_updatePos(double delta_t);
-*/
+static void updateKinematic(PARTICULE *part, double delta_t);
 
 static double part_calcForce (PARTICULE *p1, PARTICULE *p2, double distance);
 static void   part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
@@ -245,13 +241,23 @@ int part_closestPart(POINT point) {
 // delta_t is the amount of time the "tick" lasts 
 // return false if data structure of particle isn't set or if delta_t<0
 bool part_nextTick(double delta_t) {
+    PARTICULE *part = NULL;
 
     if (delta_t>=0.) {
+
         //part_collisionBlackHole();
         part_updateForce();
-        //part_updateAcc();
-        //part_updateSpeed(delta_t);
-        //part_updatePos(delta_t);
+
+        (void) list_goToFirst(&particles);
+
+        // update kinematic for every particles
+        do {
+            part = list_getData(particles, LIST_CURRENT);
+
+            updateKinematic(part, delta_t);
+            
+        } while (list_goToNext(&particles));
+
         return true;
     } else {
         return false;
@@ -281,6 +287,7 @@ static void part_interact(void *dataA, void *dataB) {
         part_applyForce(a, b, distance, force_norm);
     }
 }
+
 
 static void part_updateForce() {
 
@@ -312,58 +319,51 @@ static double part_calcForce(PARTICULE *p1, PARTICULE *p2, double distance) {
     return force_norm;
 }
 
+
 static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
                                                           double force_norm) {
+    VECTOR force = vector_null();
 
     if (distance < EPSILON_ZERO) {
-        p1->force = vector_create(0, force_norm);
+        force = vector_create(0, force_norm);
     } else { // general case
-        p1->force = vector_create(force_norm/distance * 
-								 (p2->center.x-p1->center.x), 
-								 (force_norm/distance) * 
-								 (p2->center.y-p1->center.y));
+        force = vector_create(force_norm/distance *
+                             (p2->center.x-p1->center.x), 
+                             (force_norm/distance) * 
+                             (p2->center.y-p1->center.y));
     }
-    p2->force = vector_multiply(p1->force, -1);
+
+
+    p1->force = vector_sum(p1->force, force);
+    p2->force = vector_sum(p1->force, vector_multiply(p1->force, -1));
 }
 
-/*
-static void part_updateAcc() {
-    int i=0;
 
-    for (i=0 ; i<partNB ; i++) {
-        partTab[i].acceleration = vector_multiply(partTab[i].force, 
-												  1/partTab[i].mass);
-    }
-}
+static void updateKinematic(PARTICULE* part, double delta_t) {
+    double speed_norm = 0;
 
-static void part_updateSpeed(double delta_t) {
-    int i=0;
-    double speed_norm=0;
+    if (part != NULL) {
+        // update acceleration
+        part->acceleration = vector_multiply(part->force, 1/part->mass);
 
-    for (i=0 ; i<partNB ; i++) {
-        if (!partTab[i].locked) { // a locked particle doesn't build up speed
-            partTab[i].speed = vector_sum(partTab[i].speed,
-                               vector_multiply(partTab[i].speed, delta_t));
-            speed_norm = vector_norm(partTab[i].speed);
+        if (!part->locked) { // a locked particule doesn't build up speed
+            // update speed
+            part->speed = vector_sum(part->speed,
+                                     vector_multiply(part->acceleration, delta_t));
+            speed_norm  = vector_norm(part->speed);
+    
             if (speed_norm > MAX_VITESSE) { // scale down the vector
-                partTab[i].speed = vector_multiply(partTab[i].speed,
-                                                   MAX_VITESSE/speed_norm);
+                part->speed = vector_multiply(part->speed,
+                                              MAX_VITESSE/speed_norm);
             }
-        }
+    
+            // update position
+            part->center = point_translate(part->center,
+                                           vector_multiply(part->speed, delta_t));
+        } 
     }
 }
 
-static void part_updatePos(double delta_t) {
-    int i=0;
-
-    for (i=0 ; i<partNB ; i++) {
-        if (!partTab[i].locked) {
-            partTab[i].center = point_translate(partTab[i].center,
-                                vector_multiply(partTab[i].speed, delta_t));
-        }
-    }
-}
-*/
 
 
 // -----------
@@ -460,10 +460,27 @@ void part_draw(void *pData)
 }
 
 
-POINT part_get_center(int partNB)
+void part_getAllCenters(LIST_HEAD *pHead)
 {
-	POINT centre;
-	centre.x = partTab[partID].center.x;
-	centre.y = partTab[partID].center.y;
-	return centre;
+    PARTICULE *part = NULL;
+
+    list_goToLast(&particles);
+
+    while (list_goToNext(&particles) != NULL) {
+        part = list_getData(particles, LIST_CURRENT);
+        list_add(pHead, &(part->center));
+    }
+}
+
+void part_saveAllData(FILE *file) {
+    PARTICULE *part = NULL;
+
+    list_goToLast(&particles);
+
+    while (list_goToNext(&particles) != NULL) {
+        part = list_getData(particles, LIST_CURRENT);
+        fprintf(file, "%f %f %f %f %f\n" , part->radius,
+                                         part->center.x, part->center.y,
+                                         part->speed.x,  part->speed.y);
+    }
 }
