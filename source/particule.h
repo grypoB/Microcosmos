@@ -78,8 +78,6 @@ int part_totalNB();
 void part_display(void);
 
 //gets datas of particles
-double part_get_rayon(int partID);
-POINT part_get_center(int partID);
-VECTOR part_get_vecteur(int partID);
+//POINT part_get_center(int partID);
 
 #endif
