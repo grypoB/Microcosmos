@@ -29,8 +29,8 @@ void sim_simulation(char filename[]);
 //updates the number of entities
 void sim_nbEntities(int elementnb[ENTITY_NB]);
 
-//finds the middle of all particles
-POINT sim_centre_masse(void);
+//TODO, documentation
+void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax);
 
 //saves the current state of simulation in filename
 void sim_save(char filename[]);

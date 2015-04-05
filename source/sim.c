@@ -106,8 +106,8 @@ void sim_clean() {
     #endif
 
     part_deleteAll();
-    //gen_deleteAll();
-    //bckH_deleteAll();
+    gen_deleteAll();
+    bckH_deleteAll();
 }
 
 
@@ -332,7 +332,7 @@ void sim_display(void)
 
 void sim_next_step(void)
 {
-	part_nextTick(1.0);     //pas 1.0 mais delta_t
+	part_nextTick(DELTA_T);     //pas 1.0 mais delta_t
 }
 
 void sim_nbEntities(int elementnb[3])
@@ -343,87 +343,55 @@ void sim_nbEntities(int elementnb[3])
 }
 
 //finds the middle of all particles
-POINT sim_centre_masse(void)
+// TODO maybe change func name
+void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
 {
-	POINT center;
-	int i;
-	
-	int nb_entities = 0;
-	nb_entities+= gen_totalNB();
-	nb_entities+= bckH_totalNB();
-	nb_entities+= part_totalNB();
-	
-	center.x = 0;
-	for(i=0; i<gen_totalNB(); i++)
-	{
-		center.x += gen_get_center(i).x;
-	}
-	for(i=0; i<bckH_totalNB(); i++)
-	{
-		center.x += bckH_get_center(i).x;
-	}
-	for(i=0; i<part_totalNB(); i++)
-	{
-		center.x += part_get_center(i).x;
-	}
-	center.x /= nb_entities;
-	
-	
-	center.y = 0;
-	for(i=0; i<gen_totalNB(); i++)
-	{
-		center.y += gen_get_center(i).y;
-	}
-	for(i=0; i<bckH_totalNB(); i++)
-	{
-		center.y += bckH_get_center(i).y;
-	}
-	for(i=0; i<part_totalNB(); i++)
-	{
-		center.y += part_get_center(i).y;
-	}
-	center.y /= nb_entities;
-	
-	return center;
+	POINT *point = NULL;
+    LIST_HEAD centers = list_create(NULL, NULL, NULL);
+
+    // retrieve all center point from all entities
+    part_getAllCenters(&centers);
+     gen_getAllCenters(&centers);
+    bckH_getAllCenters(&centers);
+    
+
+    // find extremum points traversing the linked list
+    // TODO initialize x/y-min/max to value from the list
+
+    list_goToLast(&centers);
+    while (list_goToNext(&centers) != NULL) {
+        point = list_getData(centers, LIST_CURRENT);
+
+        //TODO compare point to topLeft and bottomRight
+    }
+
+    list_deleteAll(&centers);
 }
 
 //saves the current state ofthe simulation in a file which name is given
 void sim_save(char filename[])
 {
-	int i;
 	FILE *file = NULL;
 
     if((file = fopen(filename, "w"))!=NULL)
     {
-		fprintf(file, "%d\n", gen_totalNB());
-		for(i=0; i<gen_totalNB(); i++)
-		{
-			fprintf(file, "%lf %lf %lf %lf %lf" , gen_get_rayon(i), gen_get_center(i).x,
-					gen_get_center(i).y, gen_get_vecteur(i).x, gen_get_vecteur(i).y);
-		}
-		fprintf(file, "FIN_LISTE\n");
-		
-		
-		fprintf(file, "%d\n", bckH_totalNB());
-		for(i=0; i<bckH_totalNB(); i++)
-		{
-			fprintf(file, "%lf %lf\n", bckH_get_center(i).x,bckH_get_center(i).y);
-		}
-		fprintf(file, "FIN_LISTE\n");
-		
-		
-		fprintf(file, "%d\n", part_totalNB());
-		for(i=0; i<part_totalNB(); i++)
-		{
-			fprintf(file, "%lf %lf %lf %lf %lf" , part_get_rayon(i), part_get_center(i).x,
-					part_get_center(i).y, part_get_vecteur(i).x, part_get_vecteur(i).y);
-		}
-		fprintf(file, "FIN_LISTE\n");
+        // deleguate to all module
+        
+        // gen
+        fprintf(file, "%d\n", gen_totalNB());
+        gen_saveAllData(file);
+		fprintf(file, "%s\n",DATA_SEPARATOR);
+        // bckH
+        fprintf(file, "%d\n", bckH_totalNB());
+        bckH_saveAllData(file);
+		fprintf(file, "%s\n",DATA_SEPARATOR);
+        // part
+        fprintf(file, "%d\n", part_totalNB());
+        part_saveAllData(file);
+		fprintf(file, "%s\n",DATA_SEPARATOR);
 			
 	}
-	
 	else printf("File didn't open in %s\n", __func__);
+
 	fclose(file);
-	
-	printf("sim_save\n");  //stub
 }
