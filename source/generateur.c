@@ -18,7 +18,6 @@
 #include "generateur.h"
 #include "particule.h"
 
-#define GEN_TAB_SIZE MAX_RENDU1
 
 typedef struct Generateur {
 
@@ -33,13 +32,14 @@ typedef struct Generateur {
 } GENERATEUR;
 
 
-// tab where all generators are stored
-static GENERATEUR genTab[GEN_TAB_SIZE];
-// store the number of current generators
-static int genNB = 0;
+static void gen_draw(void *data);
 
-void gen_draw(double radius, POINT center, VECTOR speed);
-void gen_display(void);
+static void deleteGen(void *toDelete);
+static GENERATEUR* newGen();
+
+// list where all generators are stored
+static bool genList_initialized = false;
+static LIST_HEAD generators = {0};
 
 // from an input string, creates a particle generator
 // Expected format (all in double): radius posx posy vx vy 
@@ -68,22 +68,28 @@ bool gen_readData(const char *string) {
 int gen_create(double radius, POINT center, VECTOR speed) {
     static int id = 0;
     int returnID = UNASSIGNED;
+    GENERATEUR *gen = NULL;
+
+    if (!genList_initialized) {
+        // TODO add support the other fct
+        generators = list_create(deleteGen, NULL, NULL);
+        genList_initialized = true;
+    }
 
     if (part_validParams(radius, center, speed, true, ERR_GENERAT, id)) {
-        if (genNB < GEN_TAB_SIZE) {
-            genTab[genNB].radius = radius;
-            genTab[genNB].center = center;
-            genTab[genNB].speed = speed;
+        gen = newGen();
 
-            returnID = id;
-            genNB++;
+        gen->id = id;
 
-            #ifdef DEBUG
-            printf("Gen id no %d created\n", id);
-            #endif
-        } else {
-            error_msg("Error creating generator : not enough memory");
-        }
+        gen->radius = radius;
+        gen->center = center;
+        gen->speed = speed;
+
+        returnID = id;
+
+        #ifdef DEBUG
+        printf("Gen id no %d created\n", id);
+        #endif
     }
 
     id++;
@@ -93,49 +99,85 @@ int gen_create(double radius, POINT center, VECTOR speed) {
 
 // return the total number of current generator
 int gen_totalNB() {
-    return genNB;
+    return list_getNbElements(generators);
+}
+
+void gen_getAllCenters(LIST_HEAD *pHead)
+{
+    GENERATEUR *gen = NULL;
+
+    list_goToLast(&generators);
+
+    while (list_goToNext(&generators) != NULL) {
+        gen = list_getData(generators, LIST_CURRENT);
+        list_add(pHead, &(gen->center));
+    }
 }
 
 //manages the display of generators
 void gen_display(void)
 {
-	int i;
-	for (i=0; i<genNB; i++)
-	{
-		gen_draw(genTab[i].radius, genTab[i].center, genTab[i].speed);
-	}
+    list_fctToAllElements(generators, gen_draw);
 	#ifdef DEBUG
 	printf("gen_display 1\n");
 	#endif
 }
 
+void gen_deleteAll() {
+    list_deleteAll(&generators);
+}
+
 //draws generators
-void gen_draw(double radius, POINT center, VECTOR speed)
+static void gen_draw(void *data)
 {
-	graphic_draw_point(center);
-	graphic_draw_vector(center, radius, speed);
-	graphic_set_line_width(1.);
-	graphic_set_color(BLUE);
+    GENERATEUR *gen = data;
+
+    if (gen != NULL) {
+        graphic_draw_point(gen->center);
+        graphic_draw_vector(gen->center, gen->radius, gen->speed);
+        graphic_set_line_width(1.);
+        graphic_set_color(BLUE);
+    }
 }
 
-double gen_get_rayon(int partID)
-{
-	return genTab[partID].radius;
+
+
+static GENERATEUR* newGen() {
+    GENERATEUR* newGen = malloc(sizeof(GENERATEUR));
+
+    if (newGen == NULL) {
+        error_msg("Allocation failure in Generateur module\n");
+    }
+
+    (void) list_add(&generators, newGen);
+
+    return newGen;
 }
 
-POINT gen_get_center(int partID)
-{
-	POINT centre;
-	centre.x = genTab[partID].center.x;
-	centre.y = genTab[partID].center.y;
-	return centre;
+static void deleteGen(void *toDelete) {
+    GENERATEUR *gen = (GENERATEUR*) toDelete;
+
+    if (gen != NULL) {
+        #if DEBUG
+        printf("Freing generator no %d : %f %f %f %f %f\n", 
+                gen->id, gen->radius,
+                gen->center.x, gen->center.y,
+                gen->speed.x, gen->speed.y);
+        #endif
+
+        free(gen);
+    }
 }
 
-VECTOR gen_get_vecteur(int partID)
-{
-	VECTOR speed;
-	speed.x = genTab[partID].speed.x;
-	speed.y = genTab[partID].speed.x;
-	return speed;
-}
+void gen_saveAllData(FILE *file) {
+    GENERATEUR *gen = NULL;
+    
+    list_goToLast(&generators);
 
+    while (list_goToNext(&generators) != NULL) {
+        gen = list_getData(generators, LIST_CURRENT);
+        fprintf(file, "%f %f %f %f %f\n" , gen->radius,
+                                         gen->center.x, gen->center.y,
+                                         gen->speed.x,  gen->speed.y);
+    }
+}

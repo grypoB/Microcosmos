@@ -11,6 +11,7 @@
 #define GENERATEUR_H
 
 #include "geometry.h"
+#include "linked_list.h"
 #include <stdbool.h>
 
 /*
@@ -27,6 +28,7 @@ Generator (of particles) defined by :
 // Expected format (all in double): radius posx posy vx vy 
 // prints errors if it couldn't read string
 bool gen_readData(const char *string);
+void gen_saveAllData(FILE *file);
 
 // return UNNASIGNED=-1 if create unssucceful
 // otherwise return the id of the generator
@@ -35,13 +37,12 @@ int gen_create(double radius, POINT center, VECTOR speed);
 
 //return total number of generator
 int gen_totalNB(void);
+void gen_getAllCenters(LIST_HEAD *pHead);
 
 //manages the displayof the generators
 void gen_display(void);
 
 //gets datas of generators 
-double gen_get_rayon(int genID);
-POINT gen_get_center(int genID);
-VECTOR gen_get_vecteur(int genID);
+void gen_deleteAll();
 
 #endif

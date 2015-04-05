@@ -10,6 +10,7 @@
 #define TROU_NOIR_H
 
 #include "geometry.h"
+#include "linked_list.h"
 #include <stdbool.h>
 
 /*
@@ -22,10 +23,12 @@ Black hole defined by :
 // Expected format (all in double): posx posy
 // prints errors if it couldn't read string
 bool bckH_readData(const char *string);
+void bckH_saveAllData(FILE *file);
 
 // return UNNASIGNED=-1 if create unssucceful
 // otherwise return id of black hole (starting at 0)
 int bckH_create(POINT center);
+void bckH_deleteAll();
 
 //return total number of black hole
 int bckH_totalNB();
@@ -34,6 +37,5 @@ int bckH_totalNB();
 void bckH_display(void);
 
 //gets datas of black holes
-POINT bckH_get_center(int bckHID);
-
+void bckH_getAllCenters(LIST_HEAD *pHead);
 #endif
