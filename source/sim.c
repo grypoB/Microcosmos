@@ -354,11 +354,11 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
      gen_getAllCenters(&centers);
     bckH_getAllCenters(&centers);
     
-
     // find extremum points traversing the linked list
     // TODO initialize x/y-min/max to value from the list
 
     list_goToLast(&centers);
+    list_goToNext(&centers);
     while (list_goToNext(&centers) != NULL) {
         point = list_getData(centers, LIST_CURRENT);
 
@@ -371,11 +371,11 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
 //saves the current state ofthe simulation in a file which name is given
 void sim_save(char filename[])
 {
-	FILE *file = NULL;
+	FILE *file = fopen("save", "w");
 
-    if((file = fopen(filename, "w"))!=NULL)
+    if(file != NULL)
     {
-        // deleguate to all module
+        // deleguate to all module;
         
         // gen
         fprintf(file, "%d\n", gen_totalNB());
@@ -389,9 +389,8 @@ void sim_save(char filename[])
         fprintf(file, "%d\n", part_totalNB());
         part_saveAllData(file);
 		fprintf(file, "%s\n",DATA_SEPARATOR);
-			
+
+	    fclose(file);
 	}
 	else printf("File didn't open in %s\n", __func__);
-
-	fclose(file);
 }

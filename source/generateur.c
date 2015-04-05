@@ -107,6 +107,7 @@ void gen_getAllCenters(LIST_HEAD *pHead)
     GENERATEUR *gen = NULL;
 
     list_goToLast(&generators);
+    list_goToNext(&generators);
 
     while (list_goToNext(&generators) != NULL) {
         gen = list_getData(generators, LIST_CURRENT);
@@ -173,6 +174,7 @@ void gen_saveAllData(FILE *file) {
     GENERATEUR *gen = NULL;
     
     list_goToLast(&generators);
+    list_goToNext(&generators);
 
     while (list_goToNext(&generators) != NULL) {
         gen = list_getData(generators, LIST_CURRENT);

@@ -111,6 +111,7 @@ void bckH_getAllCenters(LIST_HEAD *pHead)
     TROU_NOIR *bckH = NULL;
 
     list_goToLast(&blackHoles);
+    list_goToNext(&blackHoles);
 
     while (list_goToNext(&blackHoles) != NULL) {
         bckH = list_getData(blackHoles, LIST_CURRENT);
@@ -153,6 +154,7 @@ void bckH_saveAllData(FILE *file) {
     TROU_NOIR *bckH = NULL;
     
     list_goToLast(&blackHoles);
+    list_goToNext(&blackHoles);
 
     while (list_goToNext(&blackHoles) != NULL) {
         bckH = list_getData(blackHoles, LIST_CURRENT);

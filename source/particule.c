@@ -465,6 +465,7 @@ void part_getAllCenters(LIST_HEAD *pHead)
     PARTICULE *part = NULL;
 
     list_goToLast(&particles);
+    list_goToNext(&particles);
 
     while (list_goToNext(&particles) != NULL) {
         part = list_getData(particles, LIST_CURRENT);
@@ -476,6 +477,7 @@ void part_saveAllData(FILE *file) {
     PARTICULE *part = NULL;
 
     list_goToLast(&particles);
+    list_goToNext(&particles);
 
     while (list_goToNext(&particles) != NULL) {
         part = list_getData(particles, LIST_CURRENT);
