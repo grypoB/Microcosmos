@@ -46,7 +46,6 @@ LIST_ELEMENT* list_goToFirst(LIST_HEAD *pHead) {
     return p;
 }
 
-
 // if current == NULL, go basck at first
 LIST_ELEMENT* list_goToNext (LIST_HEAD *pHead) {
     LIST_ELEMENT *p = NULL;
@@ -59,6 +58,17 @@ LIST_ELEMENT* list_goToNext (LIST_HEAD *pHead) {
             pHead->current = pHead->first;
         }
 
+        p = pHead->current;
+    }
+
+    return p;
+}
+
+LIST_ELEMENT* list_goToLast(LIST_HEAD *pHead) {
+    LIST_ELEMENT *p = NULL;
+
+    if (pHead != NULL) {
+        pHead->current = pHead->last;
         p = pHead->current;
     }
 

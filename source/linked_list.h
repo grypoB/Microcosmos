@@ -52,6 +52,7 @@ LIST_HEAD list_create(void (*deleteData) (void *data),
 
 LIST_ELEMENT* list_goToFirst(LIST_HEAD *pHead);
 LIST_ELEMENT* list_goToNext (LIST_HEAD *pHead);
+LIST_ELEMENT* list_goToLast (LIST_HEAD *pHead);
 
 void list_sort(LIST_HEAD *pHead);
 
