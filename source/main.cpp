@@ -15,7 +15,7 @@
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
-#elif
+#else
 #include <GL/glut.h>
 #endif
 
