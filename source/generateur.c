@@ -70,11 +70,6 @@ int gen_create(double radius, POINT center, VECTOR speed) {
     int returnID = UNASSIGNED;
     GENERATEUR *gen = NULL;
 
-    if (!genList_initialized) {
-        // TODO add support the other fct
-        generators = list_create(deleteGen, NULL, NULL);
-        genList_initialized = true;
-    }
 
     if (part_validParams(radius, center, speed, true, ERR_GENERAT, id)) {
         gen = newGen();
@@ -106,12 +101,11 @@ void gen_getAllCenters(LIST_HEAD *pHead)
 {
     GENERATEUR *gen = NULL;
 
-    list_goToLast(&generators);
-    list_goToNext(&generators);
-
-    while (list_goToNext(&generators) != NULL) {
-        gen = list_getData(generators, LIST_CURRENT);
-        list_add(pHead, &(gen->center));
+    if (list_goToFirst(&generators) != NULL) {
+        do {
+            gen = list_getData(generators, LIST_CURRENT);
+            (void) list_add(pHead, &(gen->center));
+        } while (list_goToNext(&generators) != NULL);
     }
 }
 
@@ -146,6 +140,12 @@ static void gen_draw(void *data)
 static GENERATEUR* newGen() {
     GENERATEUR* newGen = malloc(sizeof(GENERATEUR));
 
+    if (!genList_initialized) {
+        // TODO add support the other fct
+        generators = list_create(deleteGen, NULL, NULL);
+        genList_initialized = true;
+    }
+
     if (newGen == NULL) {
         error_msg("Allocation failure in Generateur module\n");
     }
@@ -172,14 +172,13 @@ static void deleteGen(void *toDelete) {
 
 void gen_saveAllData(FILE *file) {
     GENERATEUR *gen = NULL;
-    
-    list_goToLast(&generators);
-    list_goToNext(&generators);
 
-    while (list_goToNext(&generators) != NULL) {
-        gen = list_getData(generators, LIST_CURRENT);
-        fprintf(file, "%f %f %f %f %f\n" , gen->radius,
-                                         gen->center.x, gen->center.y,
-                                         gen->speed.x,  gen->speed.y);
+    if (list_goToFirst(&generators) != NULL) {
+        do {
+            gen = list_getData(generators, LIST_CURRENT);
+            fprintf(file, "%f %f %f %f %f\n" , gen->radius,
+                    gen->center.x, gen->center.y,
+                    gen->speed.x,  gen->speed.y);
+        } while (list_goToNext(&generators) != NULL);
     }
 }

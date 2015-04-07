@@ -114,11 +114,6 @@ int part_create(double radius, POINT center, VECTOR speed) {
     int returnID = UNASSIGNED;
     PARTICULE *pPart = NULL;
 
-    if (!partList_initialized) {
-        particles = list_create(deletePart, sortPart, idPart);
-        partList_initialized = true;
-    }
-
     if (part_validParams(radius, center, speed, true, ERR_PARTIC, id)) {
         pPart = newPart();
 
@@ -212,7 +207,7 @@ int part_closestPart(POINT point) {
     PARTICULE* current = NULL;
 
     if (list_getNbElements(particles)>0) {
-        list_goToFirst(&particles);
+        (void) list_goToFirst(&particles);
 
         current = list_getData(particles, LIST_CURRENT);
         dist = point_distance(current->center, point);
@@ -245,18 +240,16 @@ bool part_nextTick(double delta_t) {
 
     if (delta_t>=0.) {
 
-        //part_collisionBlackHole();
+        //TODO part_collisionBlackHole();
         part_updateForce();
 
-        (void) list_goToFirst(&particles);
-
         // update kinematic for every particles
-        do {
-            part = list_getData(particles, LIST_CURRENT);
-
-            updateKinematic(part, delta_t);
-            
-        } while (list_goToNext(&particles));
+        if (list_goToFirst(&particles) != NULL) {
+            do {
+                part = list_getData(particles, LIST_CURRENT);
+                updateKinematic(part, delta_t);
+            } while (list_goToNext(&particles));
+        }
 
         return true;
     } else {
@@ -360,7 +353,7 @@ static void updateKinematic(PARTICULE* part, double delta_t) {
             // update position
             part->center = point_translate(part->center,
                                            vector_multiply(part->speed, delta_t));
-        } 
+        }
     }
 }
 
@@ -379,6 +372,11 @@ static void part_initMass(PARTICULE *part) {
 // if not enough space, creates some
 static PARTICULE* newPart() {
     PARTICULE* newPart = malloc(sizeof(PARTICULE));
+
+    if (!partList_initialized) {
+        particles = list_create(deletePart, sortPart, idPart);
+        partList_initialized = true;
+    }
 
     if (newPart==NULL) {
         error_msg("Allocation failure in Particule module\n");
@@ -464,25 +462,23 @@ void part_getAllCenters(LIST_HEAD *pHead)
 {
     PARTICULE *part = NULL;
 
-    list_goToLast(&particles);
-    list_goToNext(&particles);
-
-    while (list_goToNext(&particles) != NULL) {
-        part = list_getData(particles, LIST_CURRENT);
-        list_add(pHead, &(part->center));
+    if (list_goToFirst(&particles) != NULL) {
+        do {
+            part = list_getData(particles, LIST_CURRENT);
+            (void) list_add(pHead, &(part->center));
+        } while (list_goToNext(&particles) != NULL);
     }
 }
 
 void part_saveAllData(FILE *file) {
     PARTICULE *part = NULL;
 
-    list_goToLast(&particles);
-    list_goToNext(&particles);
-
-    while (list_goToNext(&particles) != NULL) {
-        part = list_getData(particles, LIST_CURRENT);
-        fprintf(file, "%f %f %f %f %f\n" , part->radius,
-                                         part->center.x, part->center.y,
-                                         part->speed.x,  part->speed.y);
+    if (list_goToFirst(&particles) != NULL) {
+        do {
+            part = list_getData(particles, LIST_CURRENT);
+            fprintf(file, "%f %f %f %f %f\n" , part->radius,
+                    part->center.x, part->center.y,
+                    part->speed.x,  part->speed.y);
+        } while (list_goToNext(&particles) != NULL);
     }
 }

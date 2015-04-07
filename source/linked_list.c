@@ -11,6 +11,8 @@
 #include <stdbool.h>
 #include "linked_list.h"
 
+// for complete details on how these funcs behaves, see linked_list.h
+
 
 static void swap_data(LIST_ELEMENT *p_a, LIST_ELEMENT *p_b);
 
@@ -64,16 +66,6 @@ LIST_ELEMENT* list_goToNext (LIST_HEAD *pHead) {
     return p;
 }
 
-LIST_ELEMENT* list_goToLast(LIST_HEAD *pHead) {
-    LIST_ELEMENT *p = NULL;
-
-    if (pHead != NULL) {
-        pHead->current = pHead->last;
-        p = pHead->current;
-    }
-
-    return p;
-}
 
 // doesn't change the position in the list (cause it's not a pointer)
 // don't apply the func to current
@@ -89,8 +81,11 @@ void list_fctToAllNext(LIST_HEAD head, void (*func) (void *data)) {
 // doesn't change the position in the list (cause it's not a pointer)
 void list_fctToAllElements(LIST_HEAD head, void (*func) (void *data)) {
 
-        list_goToFirst(&head);
-        list_fctToAllNext(head, func);
+        if (list_goToFirst(&head) != NULL) {
+            do {
+                (*func)(head.current->data);
+            } while (list_goToNext(&head) != NULL);
+        }
 }
 
 void list_fctToAll2combinations(LIST_HEAD head, void (*func) (void *a, void *b)) {
@@ -192,7 +187,7 @@ void list_deleteAll(LIST_HEAD *pHead) {
 }
 
 
-int   list_getNbElements(LIST_HEAD head) {
+int list_getNbElements(LIST_HEAD head) {
     return head.nbElements;
 }
 
@@ -233,7 +228,7 @@ void* list_getDataFromId(LIST_HEAD *pHead, int id) {
         startingEl = pHead->current;
         
         do {
-            list_goToNext(pHead);
+            (void) list_goToNext(pHead);
             if ((*(pHead->idOfData))(pHead->current->data) == id) {
                 found = true;
             }
@@ -266,7 +261,7 @@ void list_sort(LIST_HEAD *pHead) {
                     swap_data(pHead->current, pHead->current->next);
                     sorted = false;
                 }
-                list_goToNext(pHead);
+                (void) list_goToNext(pHead);
             }
 
             tmpLast = tmpLast->prev;

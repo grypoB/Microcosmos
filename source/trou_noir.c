@@ -61,15 +61,12 @@ int bckH_create(POINT center) {
     static int id = 0;
     TROU_NOIR *bckH = newBckH();
 
-     
-
     bckH->id = id;
     bckH->center = center;
 
     #ifdef DEBUG
     printf("BlackHole id no %d created\n", id);
     #endif
-
 
     id++;
 
@@ -110,12 +107,11 @@ void bckH_getAllCenters(LIST_HEAD *pHead)
 {
     TROU_NOIR *bckH = NULL;
 
-    list_goToLast(&blackHoles);
-    list_goToNext(&blackHoles);
-
-    while (list_goToNext(&blackHoles) != NULL) {
-        bckH = list_getData(blackHoles, LIST_CURRENT);
-        list_add(pHead, &(bckH->center));
+    if (list_goToFirst(&blackHoles) != NULL) {
+        do {
+            bckH = list_getData(blackHoles, LIST_CURRENT);
+            (void) list_add(pHead, &(bckH->center));
+        } while (list_goToNext(&blackHoles) != NULL);
     }
 }
 
@@ -153,11 +149,10 @@ static void deleteBckH(void *toDelete) {
 void bckH_saveAllData(FILE *file) {
     TROU_NOIR *bckH = NULL;
     
-    list_goToLast(&blackHoles);
-    list_goToNext(&blackHoles);
-
-    while (list_goToNext(&blackHoles) != NULL) {
-        bckH = list_getData(blackHoles, LIST_CURRENT);
-        fprintf(file, "%f %f\n" , bckH->center.x, bckH->center.y);
+    if (list_goToFirst(&blackHoles) != NULL) {
+        do {
+            bckH = list_getData(blackHoles, LIST_CURRENT);
+            fprintf(file, "%f %f\n" , bckH->center.x, bckH->center.y);
+        } while (list_goToNext(&blackHoles) != NULL);
     }
 }

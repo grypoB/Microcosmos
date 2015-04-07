@@ -357,12 +357,12 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
     // find extremum points traversing the linked list
     // TODO initialize x/y-min/max to value from the list
 
-    list_goToLast(&centers);
-    list_goToNext(&centers);
-    while (list_goToNext(&centers) != NULL) {
-        point = list_getData(centers, LIST_CURRENT);
+    if (list_goToFirst(&centers) != NULL) {
+        do {
+            point = list_getData(centers, LIST_CURRENT);
 
-        //TODO compare point to topLeft and bottomRight
+            //TODO compare point to topLeft and bottomRight
+        } while (list_goToNext(&centers) != NULL);
     }
 
     list_deleteAll(&centers);
