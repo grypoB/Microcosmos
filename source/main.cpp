@@ -223,7 +223,6 @@ void next_step(void)
     //met a jour simulation
     sim_next_step();
     
-
     //met a jour affichage
     glutPostRedisplay();
 }

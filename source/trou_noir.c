@@ -88,8 +88,10 @@ static void bckH_draw(void *data)
     TROU_NOIR *bckH = data;
 
     if (bckH != NULL) {
-        //graphic_circle(bckH->center, RBLACK, DASH_LINE);
-        graphic_draw_star(bckH->center);
+       graphic_set_line_width(1.);
+       graphic_set_color(GREEN);
+       graphic_draw_star(bckH->center);
+       graphic_draw_circle(bckH->center, RBLACK, DASH_LINE);
     }
 }
 

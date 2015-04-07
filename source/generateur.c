@@ -126,10 +126,10 @@ static void gen_draw(void *data)
     GENERATEUR *gen = data;
 
     if (gen != NULL) {
+        graphic_set_line_width(2.);
+        graphic_set_color(BLUE);
         graphic_draw_disc(gen->center, gen->radius);
         graphic_draw_vector(gen->center, gen->speed);
-        graphic_set_line_width(1.);
-        graphic_set_color(BLUE);
     }
 }
 

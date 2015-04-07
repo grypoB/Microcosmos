@@ -454,8 +454,9 @@ void part_draw(void *pData)
     PARTICULE *part = pData;
 
     if (part != NULL) {
+        graphic_set_line_width(2.);
         graphic_part_color(part->speed);
-        graphic_circle(part->center, part->radius, CONTINUOUS);
+        graphic_draw_circle(part->center, part->radius, CONTINUOUS);
     }
 }
 
