@@ -20,7 +20,7 @@
 #include "particule.h"
 
 #define BUFFER_SIZE 100 // size of reading buffer
-// separator in input file between enity declarations
+// separator in input file between entities declarations
 #define DATA_SEPARATOR "FIN_LISTE"
 
 // enum to store state of reading automate
@@ -332,7 +332,7 @@ void sim_display(void)
 
 void sim_next_step(void)
 {
-	part_nextTick(DELTA_T);     //pas 1.0 mais delta_t
+	part_nextTick(DELTA_T);
 }
 
 void sim_nbEntities(int elementnb[3])
@@ -342,31 +342,58 @@ void sim_nbEntities(int elementnb[3])
 	elementnb[BCKH_SLOT] = bckH_totalNB();
 }
 
-//finds the middle of all particles
-// TODO maybe change func name
-void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
+//finds two extreme points at bottom-left and up-right
+
+POINT sim_bottom_left(void)
 {
 	POINT *point = NULL;
-    LIST_HEAD centers = list_create(NULL, NULL, NULL);
+	POINT bottom_left;
+	bottom_left.x = 0;
+	bottom_left.y = 0;
 	
+    LIST_HEAD centers = list_create(NULL, NULL, NULL);
 	
     // retrieve all center point from all entities
     part_getAllCenters(&centers);
      gen_getAllCenters(&centers);
     bckH_getAllCenters(&centers);
-    
 
     list_goToLast(&centers);
     list_goToNext(&centers);
     while (list_goToNext(&centers) != NULL) {
         point = list_getData(centers, LIST_CURRENT);
-		if(*xmin < point->x) *xmin = point->x;
-		if(*ymin < point->y) *ymin = point->y;
-		if(*xmax < point->x) *xmax = point->x;
-		if(*ymax < point->x) *ymax = point->y;
+		if(bottom_left.x > point->x) bottom_left.x = point->x;
+		if(bottom_left.y > point->y) bottom_left.y = point->y;
     }
-
+	
     list_deleteAll(&centers);
+    return bottom_left;
+}
+
+POINT sim_up_right(void)
+{
+	POINT *point = NULL;
+	POINT up_right;
+	up_right.x = 0;
+	up_right.y = 0;
+	
+    LIST_HEAD centers = list_create(NULL, NULL, NULL);
+	
+    // retrieve all center point from all entities
+    part_getAllCenters(&centers);
+     gen_getAllCenters(&centers);
+    bckH_getAllCenters(&centers);
+
+    list_goToLast(&centers);
+    list_goToNext(&centers);
+    while (list_goToNext(&centers) != NULL) {
+        point = list_getData(centers, LIST_CURRENT);
+		if(up_right.x < point->x) up_right.x = point->x;
+		if(up_right.y < point->y) up_right.y = point->y;
+    }
+	
+    list_deleteAll(&centers);
+    return up_right;
 }
 
 //saves the current state ofthe simulation in a file which name is given

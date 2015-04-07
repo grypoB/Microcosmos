@@ -259,18 +259,29 @@ void simulation_cb(int id)
 
 void display(void)
 {
+    POINT bottom_left;
+    POINT up_right;
+    
     glClearColor ( 1., 1., 1., 0. );       // specifie la couleur 
     glClear(GL_COLOR_BUFFER_BIT);
 
     glLoadIdentity();
-
+    
+    bottom_left = sim_bottom_left();
+    up_right = sim_up_right();
+    
+    left  = bottom_left.x - RMAX;
+    right = up_right.x + RMAX;
+    down  = bottom_left.y - RMAX;
+    up    = up_right.y + RMAX;
+    
     // update glOrtho
     if (aspect_ratio <= 1.)
         glOrtho(left, right, down/aspect_ratio, up/aspect_ratio, -1.0, 1.0);
 
     else
         glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
-
+	
     sim_display();
 
     //met à jour nb éléments
@@ -283,12 +294,7 @@ void display(void)
 void reshape(int w, int h)
 {
     glViewport(0, 0, w, h);
-	/*
-    left  = *xmin - RMAX;
-    right = *xmax + RMAX;
-    down  = *ymin - RMAX;
-    up    = *ymax + RMAX;
-    */
+
     aspect_ratio = (float) w/h;
 
     glutPostRedisplay(); 
