@@ -390,7 +390,7 @@ POINT sim_up_right(void)
 //saves the current state ofthe simulation in a file which name is given
 void sim_save(const char filename[])
 {
-	FILE *file = fopen("filename", "w");
+	FILE *file = fopen(filename, "w");
 
     if(file != NULL)
     {
