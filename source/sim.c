@@ -90,7 +90,7 @@ void sim_graphic(const char filename[])
     }
 }
 
-void sim_simulation(char filename[])
+void sim_simulation(const char filename[])
 {
 	if (sim_lecture(filename)) {
 		sim_display();
@@ -348,30 +348,31 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
 {
 	POINT *point = NULL;
     LIST_HEAD centers = list_create(NULL, NULL, NULL);
-
+	
+	
     // retrieve all center point from all entities
     part_getAllCenters(&centers);
      gen_getAllCenters(&centers);
     bckH_getAllCenters(&centers);
     
-    // find extremum points traversing the linked list
-    // TODO initialize x/y-min/max to value from the list
 
     list_goToLast(&centers);
     list_goToNext(&centers);
     while (list_goToNext(&centers) != NULL) {
         point = list_getData(centers, LIST_CURRENT);
-
-        //TODO compare point to topLeft and bottomRight
+		if(*xmin < point->x) *xmin = point->x;
+		if(*ymin < point->y) *ymin = point->y;
+		if(*xmax < point->x) *xmax = point->x;
+		if(*ymax < point->x) *ymax = point->y;
     }
 
     list_deleteAll(&centers);
 }
 
 //saves the current state ofthe simulation in a file which name is given
-void sim_save(char filename[])
+void sim_save(const char filename[])
 {
-	FILE *file = fopen("save", "w");
+	FILE *file = fopen("filename", "w");
 
     if(file != NULL)
     {

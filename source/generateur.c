@@ -115,14 +115,6 @@ void gen_getAllCenters(LIST_HEAD *pHead)
     }
 }
 
-//manages the display of generators
-void gen_display(void)
-{
-    list_fctToAllElements(generators, gen_draw);
-	#ifdef DEBUG
-	printf("gen_display 1\n");
-	#endif
-}
 
 void gen_deleteAll() {
     list_deleteAll(&generators);
@@ -141,7 +133,14 @@ static void gen_draw(void *data)
     }
 }
 
-
+//manages the display of generators
+void gen_display(void)
+{
+    list_fctToAllElements(generators, gen_draw);
+	#ifdef DEBUG
+	printf("gen_display 1\n");
+	#endif
+}
 
 static GENERATEUR* newGen() {
     GENERATEUR* newGen = malloc(sizeof(GENERATEUR));
