@@ -275,7 +275,6 @@ void display(void)
     //met à jour nb éléments
     update_nbEntities();
 
-
     glutSwapBuffers();
 }
 

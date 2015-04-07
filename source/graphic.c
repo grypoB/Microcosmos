@@ -28,7 +28,7 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 	int i;
 	//int j = 0;
 	//int k = 0;
-	const int SIDES = 50;
+	const int SIDES = 100;
 
 	glBegin (GL_LINE_LOOP);
 	
@@ -57,67 +57,6 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 					}
 					break;
 					
-					/*for (i=0; i < SIDES; i++)
-					{
-						while(j<2)
-						{
-							graphic_set_color(GREEN);   
-							float alpha = i * 2. * M_PI / SIDES;
-							float x = center.x + radius * cos (alpha);
-							float y = center.y + radius * sin (alpha);
-							glVertex2f(x,y);
-							i++;
-							j++;
-						}
-						while(k<2)
-						{
-							graphic_set_color(WHITE);    //couleur du fond d'écran
-							float alpha = i * 2. * M_PI / SIDES;
-							float x = center.x + radius * cos (alpha);
-							float y = center.y + radius * sin (alpha);
-							glVertex2f(x,y);
-							i++;
-							k++;
-						}
-						j=0;
-						k=0;
-					}	*/				
-					
-					
-					/*2
-					 * for (i=0; i < SIDES; i++)
-					{
-						float alpha = i * 2. * M_PI / SIDES;
-						float x = center.x + radius * cos (alpha);
-						float y = center.y + radius * sin (alpha);
-						glVertex2f(x,y);
-					}
-					
-					graphic_set_color(WHITE);    //couleur du fond d'écran
-					for (j=3; j < SIDES; j+=3)
-					{
-						float alpha = j * 2. * M_PI / SIDES;
-						float x = center.x + radius * cos (alpha);
-						float y = center.y + radius * sin (alpha);
-						glVertex2f(x,y);
-					}
-					break;			*/
-					
-					
-					/*3
-					 * for (j=0; j < SIDES; j++)
-					{
-						for (i=0; i < POINTILLE; i++)
-						{
-							float alpha = i * 2. * M_PI / SIDES;
-							float x = center.x + RBLACK * cos (alpha);
-							float y = center.y + RBLACK * sin (alpha);
-							glVertex2f(x,y);
-						}
-						j+=POINTILLE;
-					}*/
-					break;
-					
 		default : printf("Wrong details in %s\n",__func__);
 					break;
 	}
@@ -127,7 +66,7 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 
 void graphic_draw_disc(POINT center, double radius)
 {
-	const int SIDES = 50;
+	const int SIDES = 20;
 	int i;
 	
 	glBegin (GL_POLYGON);
