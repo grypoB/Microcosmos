@@ -24,16 +24,17 @@
 void sim_error(const char filename[]);
 void sim_force(const char filename[]);
 void sim_graphic(const char filename[]);
-void sim_simulation(char filename[]);
+void sim_simulation(const char filename[]);
 
 //updates the number of entities
 void sim_nbEntities(int elementnb[ENTITY_NB]);
 
-//TODO, documentation
-void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax);
+//return extreme points
+POINT sim_bottom_left(void);
+POINT sim_up_right(void);
 
 //saves the current state of simulation in filename
-void sim_save(char filename[]);
+void sim_save(const char filename[]);
 
 //displays entities
 void sim_display(void);

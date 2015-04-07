@@ -2,7 +2,7 @@
  * Description: module qui gère les trous noirs
  * Date: 22.03.2015
  * version : 1.0
- * responsable du module : Pauline Maury Laribière
+ * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 
@@ -78,14 +78,6 @@ int bckH_totalNB() {
     return list_getNbElements(blackHoles);
 }
 
-//manages the display of black holes
-void bckH_display(void)
-{
-    list_fctToAllElements(blackHoles, bckH_draw);
-	#ifdef DEBUG
-	printf("bckh_display 1\n");
-	#endif
-}
 
 //draws black holes
 static void bckH_draw(void *data)
@@ -93,9 +85,21 @@ static void bckH_draw(void *data)
     TROU_NOIR *bckH = data;
 
     if (bckH != NULL) {
-        //graphic_circle(bckH->center, RBLACK, DASH_LINE);
-        graphic_draw_point(bckH->center);
+       graphic_set_line_width(1.);
+       graphic_set_color(GREEN);
+       graphic_draw_star(bckH->center);
+       graphic_draw_circle(bckH->center, RBLACK, DASH_LINE);
     }
+}
+
+
+//manages the display of black holes
+void bckH_display(void)
+{
+    list_fctToAllElements(blackHoles, bckH_draw);
+	#ifdef DEBUG
+	printf("bckh_display 1\n");
+	#endif
 }
 
 

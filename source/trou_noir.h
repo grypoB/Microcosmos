@@ -2,7 +2,7 @@
  * Description: module qui gère les trous noirs
  * Date: 22.03.2015
  * version : 1.0
- * responsable du module : Pauline Maury Laribière
+ * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 

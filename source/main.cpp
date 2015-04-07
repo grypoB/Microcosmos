@@ -15,7 +15,7 @@
 
 #ifdef __APPLE__
 #include <GLUT/glut.h>
-#elif
+#else
 #include <GL/glut.h>
 #endif
 
@@ -64,9 +64,7 @@ namespace
     GLUI_Panel *information;
 
     GLUI_EditText *saveFile;
-    char *file_to_save;
     GLUI_EditText *loadFile;
-    char *file_to_load;
 
     GLUI_EditText *nb_trou_noir;
     GLUI_EditText *nb_generateur;
@@ -172,10 +170,10 @@ static void initGlui() {
     //File
     file     = glui->add_panel("File" );
     loadFile = glui-> add_edittext_to_panel(file, "Filename", 
-											GLUI_EDITTEXT_TEXT, file_to_load);
+											GLUI_EDITTEXT_TEXT);
     glui-> add_button_to_panel(file,"Load", LOAD, file_cb);
     saveFile = glui-> add_edittext_to_panel(file, "Filename", 
-											GLUI_EDITTEXT_TEXT, file_to_save);
+											GLUI_EDITTEXT_TEXT);
     glui-> add_button_to_panel(file,"Save", SAVE, file_cb);
 
 
@@ -225,7 +223,6 @@ void next_step(void)
     //met a jour simulation
     sim_next_step();
     
-
     //met a jour affichage
     glutPostRedisplay();
 }
@@ -265,19 +262,18 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     glLoadIdentity();
-
+    
     // update glOrtho
     if (aspect_ratio <= 1.)
         glOrtho(left, right, down/aspect_ratio, up/aspect_ratio, -1.0, 1.0);
 
     else
         glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
-
+	
     sim_display();
 
     //met à jour nb éléments
     update_nbEntities();
-
 
     glutSwapBuffers();
 }
@@ -285,11 +281,18 @@ void display(void)
 void reshape(int w, int h)
 {
     glViewport(0, 0, w, h);
-
-    //appel sim pour savoir centre de masse
-    //POINT centre = sim_centre_masse();
-    //TODO update left, right, up, down accordingly
-
+	
+	POINT bottom_left;
+    POINT up_right;
+    
+    bottom_left = sim_bottom_left();
+    up_right = sim_up_right();
+    
+    left  = bottom_left.x - RMAX;
+    right = up_right.x + RMAX;
+    down  = bottom_left.y - RMAX;
+    up    = up_right.y + RMAX;
+    
     aspect_ratio = (float) w/h;
 
     glutPostRedisplay(); 
@@ -301,12 +304,12 @@ void file_cb(int id) {
     switch(id) {
         case SAVE:
 			glutIdleFunc(NULL);
-            sim_save(file_to_save);
+            sim_save(saveFile->get_text());
         break;
         case LOAD:
 			glutIdleFunc(NULL);
             sim_clean();
-            sim_simulation(file_to_load);
+            sim_simulation(loadFile->get_text());
             simulation_running = false;
 
             reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));

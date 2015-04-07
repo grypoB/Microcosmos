@@ -92,7 +92,7 @@ bool part_validParams(double radius, POINT center, VECTOR speed,
         if (verbose) {
             error_vitesse_partic(origin, id);
         }
-    } else if (radius>=RMAX || radius<=RMIN) {
+    } else if (radius>RMAX || radius<RMIN) {
         if (verbose) {
             error_rayon_partic(origin, id);
         }
@@ -452,8 +452,9 @@ void part_draw(void *pData)
     PARTICULE *part = pData;
 
     if (part != NULL) {
+        graphic_set_line_width(2.);
         graphic_part_color(part->speed);
-        graphic_circle(part->center, part->radius, CONTINUOUS);
+        graphic_draw_circle(part->center, part->radius, CONTINUOUS);
     }
 }
 
