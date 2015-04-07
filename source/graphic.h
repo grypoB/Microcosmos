@@ -25,11 +25,14 @@ CONTINUOUS, DASH_LINE
 //draws a circle : dashed lines or continuous lines can be chosen
 void graphic_circle(POINT center, double radius, DETAIL detail);
 
-//draws a point
-void graphic_draw_point(POINT center);
+//draws an heptagram
+void graphic_draw_star(POINT center);
+
+//draws a disc
+void graphic_draw_disc(POINT center, double radius);
 
 //draws a vector
-void graphic_draw_vector(POINT center, double radius, VECTOR vector);
+void graphic_draw_vector(POINT center, VECTOR vector);
 
 //sets the the color of generators and black holes
 void graphic_set_color(GRAPHIC_COLOR color);

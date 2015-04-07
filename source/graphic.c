@@ -7,7 +7,6 @@
  */
 
 #define NB_COTES 50
-#define ARROW 2 //arbitraire
 #define POINTILLE 3
 
 #include <stdio.h>
@@ -30,7 +29,7 @@ void graphic_circle(POINT center, double radius, DETAIL detail)
 	int i;
 	const int SIDES = 50;
 
-	glBegin (GL_POLYGON);
+	glBegin (GL_LINE_LOOP);
 	
 	switch(detail)
 	{
@@ -53,39 +52,65 @@ void graphic_circle(POINT center, double radius, DETAIL detail)
 							float x = center.x + RBLACK * cos (alpha);
 							float y = center.y + RBLACK * sin (alpha);
 							glVertex2f(x,y);
+							i++;
 						}
-		
-							i+=POINTILLE;
+						i+=POINTILLE;
 					}
 	}
 
 	glEnd ();
 }
 
-void graphic_draw_point(POINT center)
+void graphic_draw_disc(POINT center, double radius)
 {
-	glBegin (GL_POINTS);
-	  glVertex2f (center.x, center.y);
+	const int SIDES = 50;
+	int i;
+	
+	glBegin (GL_POLYGON);
+	for (i=0; i < SIDES; i++)
+		{
+			float alpha = i * 2. * M_PI / SIDES;
+			float x = center.x + radius * cos (alpha);
+			float y = center.y + radius * sin (alpha);
+			glVertex2f(x,y);
+		}
 	glEnd (); 
 }
 
 
 //draws a vector
-void graphic_draw_vector(POINT center, double radius, VECTOR vector)
+void graphic_draw_vector(POINT center, VECTOR vector)  //a revoir (magic numbers ??)
 {
-	glBegin (GL_LINES);                            //barre de la flèche
+	glBegin (GL_LINES);
 	  glVertex2f (center.x, center.y);
       glVertex2f (center.x + vector.x, center.y +vector.y);
 	glEnd ();
 	
-	glBegin (GL_LINES);                           //pour pointe de la flèche
-	  glVertex2f (center.x + vector.x, center.y + vector.y);
-      glVertex2f (center.x + vector.x - ARROW, center.y + vector.y - ARROW);
+	glBegin (GL_TRIANGLES);
+	  glVertex2f(center.x + vector.x - 2, center.y +vector.y);
+	  glVertex2f(center.x + vector.x, center.y +vector.y + 2);
+	  glVertex2f(center.x + vector.x + 2, center.y +vector.y);
 	glEnd ();
-  
-	glBegin (GL_LINES);                           //pour pointe de la flèche
-      glVertex2f (center.x + vector.x, center.y + vector.y);
-      glVertex2f (center.x + vector.x + ARROW, center.y + vector.y + ARROW);
+
+}
+
+void graphic_draw_star(POINT center) //surement taille a adapter (magic numbers ??)
+{
+	glBegin (GL_LINE_LOOP);
+	  glVertex2f(center.x , center.y + 5 );  		//1
+	  glVertex2f(center.x + 0.8, center.y + 1.7); 	//2
+	  glVertex2f(center.x + 4, center.y + 3);    	//3
+	  glVertex2f(center.x + 1.8, center.y + 0.5);   //4
+	  glVertex2f(center.x + 5, center.y - 1);   	//5
+	  glVertex2f(center.x + 1.5, center.y -1);  	//6
+	  glVertex2f(center.x + 2.2, center.y -5);  	//7
+	  glVertex2f(center.x , center.y - 2);  		//8 
+	  glVertex2f(center.x - 2.2, center.y - 5);     //9
+	  glVertex2f(center.x -1.5, center.y - 1); 		//10
+	  glVertex2f(center.x - 5, center.y - 1);   	//11
+	  glVertex2f(center.x - 1.8, center.y -0.5);    //12
+	  glVertex2f(center.x - 4, center.y + 3);   	//13
+	  glVertex2f(center.x -0.8, center.y + 1.7); 	//14
 	glEnd ();
 }
 

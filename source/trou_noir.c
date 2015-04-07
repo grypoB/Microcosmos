@@ -89,7 +89,7 @@ static void bckH_draw(void *data)
 
     if (bckH != NULL) {
         //graphic_circle(bckH->center, RBLACK, DASH_LINE);
-        graphic_draw_point(bckH->center);
+        graphic_draw_star(bckH->center);
     }
 }
 
