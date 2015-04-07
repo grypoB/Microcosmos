@@ -18,6 +18,7 @@
 #include "generateur.h"
 #include "particule.h"
 
+#define GEN_RAYON 3
 
 typedef struct Generateur {
 
@@ -126,10 +127,10 @@ static void gen_draw(void *data)
     GENERATEUR *gen = data;
 
     if (gen != NULL) {
-        graphic_draw_disc(gen->center, gen->radius);
-        graphic_draw_vector(gen->center, gen->speed);
-        graphic_set_line_width(1.);
+        graphic_set_line_width(2.);
         graphic_set_color(BLUE);
+        graphic_draw_disc(gen->center, GEN_RAYON);
+        graphic_draw_vector(gen->center, gen->speed);
     }
 }
 
@@ -137,9 +138,6 @@ static void gen_draw(void *data)
 void gen_display(void)
 {
     list_fctToAllElements(generators, gen_draw);
-	#ifdef DEBUG
-	printf("gen_display 1\n");
-	#endif
 }
 
 static GENERATEUR* newGen() {

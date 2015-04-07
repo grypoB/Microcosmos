@@ -317,17 +317,8 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
 void sim_display(void)
 {
 	part_display();
-	#ifdef DEBUG
-	printf("sim_display 1\n");
-	#endif
-	#ifdef DEBUG
 	gen_display();
-	printf("sim_display 2\n");  
-	#endif
 	bckH_display();
-	#ifdef DEBUG
-	printf("sim_display 3\n");
-	#endif
 }
 
 void sim_next_step(void)

@@ -223,7 +223,6 @@ void next_step(void)
     //met a jour simulation
     sim_next_step();
     
-
     //met a jour affichage
     glutPostRedisplay();
 }
@@ -275,7 +274,6 @@ void display(void)
 
     //met à jour nb éléments
     update_nbEntities();
-
 
     glutSwapBuffers();
 }

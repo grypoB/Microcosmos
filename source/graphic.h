@@ -23,7 +23,7 @@ CONTINUOUS, DASH_LINE
 } DETAIL;
 
 //draws a circle : dashed lines or continuous lines can be chosen
-void graphic_circle(POINT center, double radius, DETAIL detail);
+void graphic_draw_circle(POINT center, double radius, DETAIL detail);
 
 //draws an heptagram
 void graphic_draw_star(POINT center);
