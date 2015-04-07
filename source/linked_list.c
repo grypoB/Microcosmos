@@ -66,6 +66,17 @@ LIST_ELEMENT* list_goToNext (LIST_HEAD *pHead) {
     return p;
 }
 
+LIST_ELEMENT* list_goToLast(LIST_HEAD *pHead) {
+    LIST_ELEMENT *p = NULL;
+
+    if (pHead != NULL) {
+        pHead->current = pHead->last;
+        p = pHead->current;
+    }
+
+    return p;
+}
+
 
 // doesn't change the position in the list (cause it's not a pointer)
 // don't apply the func to current

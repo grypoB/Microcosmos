@@ -115,6 +115,7 @@ LIST_HEAD list_create(void (*deleteData) (void *data),
 // move cursor to first data
 // return a pointer to new current position (NULL, if empty list)
 LIST_ELEMENT* list_goToFirst(LIST_HEAD *pHead);
+LIST_ELEMENT* list_goToLast(LIST_HEAD *pHead);
 // move cursor to the next data
 // if current is the last one, current is set to NULL
 // if current == NULL, go back to the first one
