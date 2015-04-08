@@ -333,59 +333,51 @@ void sim_nbEntities(int elementnb[3])
 	elementnb[BCKH_SLOT] = bckH_totalNB();
 }
 
+
 //finds two extreme points at bottom-left and up-right
-
-POINT sim_bottom_left(void)
+void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
 {
-	POINT *point = NULL;
-	POINT bottom_left;
-	bottom_left.x = 0;
-	bottom_left.y = 0;
-	
     LIST_HEAD centers = list_create(NULL, NULL, NULL);
-	
+    POINT *point = NULL;
+
+    // init with default values
+    *xmin = 0;
+    *xmax = 0;
+    *ymin = 0;
+    *ymax = 0;
+
     // retrieve all center point from all entities
     part_getAllCenters(&centers);
-     gen_getAllCenters(&centers);
+    gen_getAllCenters(&centers);
     bckH_getAllCenters(&centers);
 
-    list_goToLast(&centers);
-    list_goToNext(&centers);
-    while (list_goToNext(&centers) != NULL) {
+    if (list_goToFirst(&centers) != NULL) {
+
+        // initialize with values from points
         point = list_getData(centers, LIST_CURRENT);
-		if(bottom_left.x > point->x) bottom_left.x = point->x;
-		if(bottom_left.y > point->y) bottom_left.y = point->y;
+        *xmin = point->x;
+        *xmax = point->x;
+        *ymin = point->y;
+        *ymax = point->y;
+
+        while (list_goToNext(&centers) != NULL) {
+            point = list_getData(centers, LIST_CURRENT);
+
+            if(point->x < *xmin) *xmin = point->x;
+            if(point->x > *xmax) *xmax = point->x;
+            if(point->y < *ymin) *ymin = point->y;
+            if(point->y > *ymax) *ymax = point->y;
+        }
     }
-	
+
+    #ifdef DEBUG
+    printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",*xmin, *xmax, *ymin, *ymax);
+    #endif
+
+    // free memory
     list_deleteAll(&centers);
-    return bottom_left;
 }
 
-POINT sim_up_right(void)
-{
-	POINT *point = NULL;
-	POINT up_right;
-	up_right.x = 0;
-	up_right.y = 0;
-	
-    LIST_HEAD centers = list_create(NULL, NULL, NULL);
-	
-    // retrieve all center point from all entities
-    part_getAllCenters(&centers);
-     gen_getAllCenters(&centers);
-    bckH_getAllCenters(&centers);
-
-    list_goToLast(&centers);
-    list_goToNext(&centers);
-    while (list_goToNext(&centers) != NULL) {
-        point = list_getData(centers, LIST_CURRENT);
-		if(up_right.x < point->x) up_right.x = point->x;
-		if(up_right.y < point->y) up_right.y = point->y;
-    }
-	
-    list_deleteAll(&centers);
-    return up_right;
-}
 
 //saves the current state ofthe simulation in a file which name is given
 void sim_save(const char filename[])

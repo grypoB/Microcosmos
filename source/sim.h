@@ -10,7 +10,6 @@
 #define SIM_H
 
 #include <stdbool.h>
-#include "geometry.h"
 
 //Defines tab, in which the number of each entity is stored
 #define ENTITY_NB 3
@@ -30,8 +29,7 @@ void sim_simulation(const char filename[]);
 void sim_nbEntities(int elementnb[ENTITY_NB]);
 
 //return extreme points
-POINT sim_bottom_left(void);
-POINT sim_up_right(void);
+void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax);
 
 //saves the current state of simulation in filename
 void sim_save(const char filename[]);
