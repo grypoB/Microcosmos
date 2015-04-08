@@ -192,6 +192,23 @@ void particule_force_rendu1() {
     }
 }
 
+void particule_integration_rendu2() {
+    PARTICULE *part = NULL;
+
+    part_nextTick(DELTA_T);
+
+    // get the first particule created (id = 0)
+    part = list_getDataFromId(&particles, 0);
+
+    if (part!=NULL) {
+        printf("%8.3f %8.3f\n", part->force.x, part->force.y);
+        printf("%7.3f %7.3f %9.4f %9.4f\n", part->speed.x,  part->speed.y,
+                                            part->center.x, part->center.y);
+    } else {
+        error_msg("No particule found. There must be at leat one particule\n");
+    }
+}
+
 // return the total number of current particles
 int part_totalNB() {
     return list_getNbElements(particles);
@@ -200,29 +217,22 @@ int part_totalNB() {
 // return the id of the closest particle form a given point
 // UNNASSIGNED if no particle exists
 // TODO using sort
-int part_closestPart(POINT point) {
+int part_closestPartOn(POINT point) {
     int partID = UNASSIGNED;
-    double dist = 0;
+    double dist = RMAX+1; // init a maximum dist
     double newDist = 0;
     PARTICULE* current = NULL;
 
-    if (list_getNbElements(particles)>0) {
-        (void) list_goToFirst(&particles);
-
-        current = list_getData(particles, LIST_CURRENT);
-        dist = point_distance(current->center, point);
-        partID = current->id;
-
-        while (list_goToNext(&particles) != NULL) {
-
+    if (list_goToFirst(&particles) != NULL) {
+        do {
             current = list_getData(particles, LIST_CURRENT);
             newDist = point_distance(current->center, point);
 
-            if (newDist < dist) {
+            if (newDist < dist && newDist<current->radius) {
                 dist = newDist;
                 partID = current->id;
             }
-        }
+        } while (list_goToNext(&particles) != NULL);
     }
 
     return partID;
@@ -328,7 +338,7 @@ static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
 
 
     p1->force = vector_sum(p1->force, force);
-    p2->force = vector_sum(p1->force, vector_multiply(p1->force, -1));
+    p2->force = vector_sum(p2->force, vector_multiply(force, -1));
 }
 
 
@@ -432,6 +442,7 @@ static int idPart(void *p_a) {
     if (p_a != NULL) {
         val = ((PARTICULE*)p_a)->id;
     }
+
     return val;
 }
 

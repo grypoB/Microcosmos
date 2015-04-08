@@ -95,7 +95,7 @@ int main (int argc, char *argv[])
         break;
         case FORCE: sim_force(argv[2]);
         break;
-        case INTEGRATION: //sim_integration(argv[2]);
+        case INTEGRATION: sim_integration(argv[2]);
         break;
         case GRAPHIC: 
             sim_graphic(argv[2]);
