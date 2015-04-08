@@ -65,6 +65,8 @@ namespace
 
     GLUI_EditText *saveFile;
     GLUI_EditText *loadFile;
+	
+	GLUI_Button *start;
 
     GLUI_EditText *nb_trou_noir;
     GLUI_EditText *nb_generateur;
@@ -77,7 +79,7 @@ namespace
             down = -50, 
             up   = 50;
     double aspect_ratio;
-    const char* start_stop = "Start";
+    
 }
 
 
@@ -180,7 +182,7 @@ static void initGlui() {
 
     //Simulation
     simulation = glui->add_panel("Simulation");
-    glui->add_button_to_panel(simulation , start_stop, START, simulation_cb);
+    start = glui->add_button_to_panel(simulation , "Start", START, simulation_cb);
     glui->add_button_to_panel(simulation ,"Step",  STEP,  simulation_cb);
 
     //Information
@@ -231,15 +233,15 @@ void next_step(void)
 //Réponse à l'interface utilisateur partie simulation
 void simulation_cb(int id)
 {
-    switch(id)
+	switch(id)
     {
         case START:
             if (simulation_running) {
-				start_stop = "Stop";            //fonctionne pas (devrait alterner avec "start")
+				start -> set_name("Stop");            //fonctionne pas (devrait alterner avec "start")
 				glutIdleFunc(NULL);
                 simulation_running = false;
             } else {
-				start_stop = "Start";            //fonctionne pas
+				start -> set_name("Start");           //fonctionne pas
 				glutIdleFunc(idle);
                 simulation_running = true;
             }
