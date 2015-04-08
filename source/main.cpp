@@ -77,6 +77,7 @@ namespace
             down = -50, 
             up   = 50;
     double aspect_ratio;
+    const char* start_stop;
 }
 
 
@@ -179,7 +180,7 @@ static void initGlui() {
 
     //Simulation
     simulation = glui->add_panel("Simulation");
-    glui->add_button_to_panel(simulation ,"Start", START, simulation_cb);
+    //glui->add_button_to_panel(simulation , start_stop, START, simulation_cb);
     glui->add_button_to_panel(simulation ,"Step",  STEP,  simulation_cb);
 
     //Information
@@ -234,9 +235,11 @@ void simulation_cb(int id)
     {
         case START:
             if (simulation_running) {
+				start_stop = "Stop";
 				glutIdleFunc(NULL);
                 simulation_running = false;
             } else {
+				start_stop = "Start";
 				glutIdleFunc(idle);
                 simulation_running = true;
             }
@@ -253,6 +256,7 @@ void simulation_cb(int id)
         default:
             printf("Wrong ID in %s\n", __func__);
     }
+    
 }
 
 

@@ -19,17 +19,14 @@ AQUA, BLACK, BLUE, FUCHSIA, GRAY, GREEN, LIME, MAROON, NAVY, OLIVE, ORANGE, PURP
 } GRAPHIC_COLOR;
 
 typedef enum  {
-CONTINUOUS, DASH_LINE
+CONTINUOUS, DASH_LINE, DISC
 } DETAIL;
 
-//draws a circle : dashed lines or continuous lines can be chosen
+//draws a disk or a circle : dashed lines or continuous lines can be chosen
 void graphic_draw_circle(POINT center, double radius, DETAIL detail);
 
 //draws an heptagram
 void graphic_draw_star(POINT center);
-
-//draws a disc
-void graphic_draw_disc(POINT center, double radius);
 
 //draws a vector
 void graphic_draw_vector(POINT center, VECTOR vector);

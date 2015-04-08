@@ -123,7 +123,7 @@ static void gen_draw(void *data)
     if (gen != NULL) {
         graphic_set_line_width(2.);
         graphic_set_color(BLUE);
-        graphic_draw_disc(gen->center, GEN_RAYON);
+        graphic_draw_circle(gen->center, GEN_RAYON, DISC);
         graphic_draw_vector(gen->center, gen->speed);
     }
 }

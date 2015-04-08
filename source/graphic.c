@@ -26,18 +26,15 @@
 void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 {
 	int i;
-	//int j = 0;
-	//int k = 0;
-	const int SIDES = 100;
-
-	glBegin (GL_LINE_LOOP);
 	
 	switch(detail)
 	{
 		case CONTINUOUS :
-					for (i=0; i < SIDES; i++)
+					glBegin (GL_LINE_LOOP);
+					
+					for (i=0; i < NB_COTES; i++)
 					{
-						float alpha = i * 2. * M_PI / SIDES;
+						float alpha = i * 2. * M_PI / NB_COTES;
 						float x = center.x + radius * cos (alpha);
 						float y = center.y + radius * sin (alpha);
 						glVertex2f(x,y);
@@ -45,12 +42,25 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 					break;
 					
 		case DASH_LINE :
-					for (i=0; i < SIDES; i++)
+					glBegin (GL_LINE_LOOP);
+					
+					for (i=0; i < NB_COTES; i++)
 					{
 						if(i%2==0) graphic_set_color(GREEN);
 						else graphic_set_color(WHITE); 
 						 
-						float alpha = i * 2. * M_PI / SIDES;
+						float alpha = i * 2. * M_PI / NB_COTES;
+						float x = center.x + radius * cos (alpha);
+						float y = center.y + radius * sin (alpha);
+						glVertex2f(x,y);
+					}
+					break;
+		case DISC :
+					glBegin (GL_POLYGON);
+					
+					for (i=0; i < NB_COTES; i++)
+					{
+						float alpha = i * 2. * M_PI / NB_COTES;
 						float x = center.x + radius * cos (alpha);
 						float y = center.y + radius * sin (alpha);
 						glVertex2f(x,y);
@@ -64,23 +74,6 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 	glEnd ();
 }
 
-void graphic_draw_disc(POINT center, double radius)
-{
-	const int SIDES = 20;
-	int i;
-	
-	glBegin (GL_POLYGON);
-	for (i=0; i < SIDES; i++)
-		{
-			float alpha = i * 2. * M_PI / SIDES;
-			float x = center.x + radius * cos (alpha);
-			float y = center.y + radius * sin (alpha);
-			glVertex2f(x,y);
-		}
-	glEnd (); 
-}
-
-
 //draws a vector
 void graphic_draw_vector(POINT center, VECTOR vector)  //a revoir (magic numbers ??)
 {
@@ -90,16 +83,16 @@ void graphic_draw_vector(POINT center, VECTOR vector)  //a revoir (magic numbers
 	glEnd ();
 	
 	glBegin (GL_TRIANGLES);
-	  glVertex2f(center.x + vector.x - 2, center.y +vector.y);
-	  glVertex2f(center.x + vector.x, center.y +vector.y + 2);
-	  glVertex2f(center.x + vector.x + 2, center.y +vector.y);
+	  glVertex2f(center.x + vector.x - 2, center.y + vector.y);
+	  glVertex2f(center.x + vector.x, center.y + vector.y + 2);
+	  glVertex2f(center.x + vector.x + 2, center.y + vector.y);
 	glEnd ();
 
 }
 
 void graphic_draw_star(POINT center) //surement taille a adapter (magic numbers ??)
 {
-	glBegin (GL_LINE_LOOP);
+	glBegin (GL_POLYGON);
 	  glVertex2f(center.x , center.y + 5 );  		//1
 	  glVertex2f(center.x + 0.6, center.y + 1.5); 	//2
 	  glVertex2f(center.x + 4, center.y + 3);    	//3
