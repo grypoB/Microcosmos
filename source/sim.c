@@ -333,37 +333,50 @@ void sim_nbEntities(int elementnb[3])
 	elementnb[BCKH_SLOT] = bckH_totalNB();
 }
 
+
+//finds two extreme points at bottom-left and up-right
 void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
 {
-	//POINT *point = NULL;
-	LIST_HEAD centers = list_create(NULL, NULL, NULL);
-	
-	// retrieve all center point from all entities
-	part_getAllCenters(&centers);
-	 gen_getAllCenters(&centers);
-	bckH_getAllCenters(&centers);
-	
-	/*point = list_getData(centers, LIST_CURRENT);
-	*xmin = point->x;
-	*xmax = point->x;
-	*ymin = point->y;
-	*ymax = point->y;*/
-	
-	// find extremum points traversing the linked list
-	// TODO initialize x/y-min/max to value from the list
-	list_goToLast(&centers);
-	list_goToNext(&centers);	
+    LIST_HEAD centers = list_create(NULL, NULL, NULL);
+    POINT *point = NULL;
 
-	/*while (list_goToNext(&centers) != NULL) {
-		point = list_getData(centers, LIST_CURRENT);
-		if(*xmin > point->x) *xmin = point->x;
-		if(*xmax < point->x) *xmax = point->x;
-		if(*ymin > point->y) *ymin = point->y;
-		if(*ymin < point->y) *ymin = point->y;
-	}*/
-	list_deleteAll(&centers);
+    // init with default values
+    *xmin = 0;
+    *xmax = 0;
+    *ymin = 0;
+    *ymax = 0;
+
+    // retrieve all center point from all entities
+    part_getAllCenters(&centers);
+    gen_getAllCenters(&centers);
+    bckH_getAllCenters(&centers);
+
+    if (list_goToFirst(&centers) != NULL) {
+
+        // initialize with values from points
+        point = list_getData(centers, LIST_CURRENT);
+        *xmin = point->x;
+        *xmax = point->x;
+        *ymin = point->y;
+        *ymax = point->y;
+
+        while (list_goToNext(&centers) != NULL) {
+            point = list_getData(centers, LIST_CURRENT);
+
+            if(point->x < *xmin) *xmin = point->x;
+            if(point->x > *xmax) *xmax = point->x;
+            if(point->y < *ymin) *ymin = point->y;
+            if(point->y > *ymax) *ymax = point->y;
+        }
+    }
+
+    #ifdef DEBUG
+    printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",*xmin, *xmax, *ymin, *ymax);
+    #endif
+
+    // free memory
+    list_deleteAll(&centers);
 }
-
 
 //saves the current state ofthe simulation in a file which name is given
 void sim_save(const char filename[])

@@ -10,7 +10,6 @@
 #define SIM_H
 
 #include <stdbool.h>
-#include "geometry.h"
 
 //Defines tab, in which the number of each entity is stored
 #define ENTITY_NB 3

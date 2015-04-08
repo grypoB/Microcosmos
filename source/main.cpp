@@ -284,20 +284,21 @@ void display(void)
 
 void reshape(int w, int h)
 {
-    double *xmin = NULL;
-    double *xmax = NULL;
-    double *ymin = NULL;
-    double *ymax = NULL;
- 
+    double xmin, xmax, ymin, ymax;
+
     glViewport(0, 0, w, h);
 	
-	sim_extremPoints(xmin, xmax, ymin, ymax);
-	
-    /*left  = *xmin - RMAX;
-    right = *xmax + RMAX;
-    down  = *ymin - RMAX;
-    up    = *ymax + RMAX;*/
- 
+    sim_extremPoints(&xmin, &xmax, &ymin, &ymax);
+    
+    left  = xmin - RMAX;
+    right = xmax + RMAX;
+    down  = ymin - RMAX;
+    up    = ymax + RMAX;
+    
+    #ifdef DEBUG
+    printf("reshape\n");
+    #endif
+
     aspect_ratio = (float) w/h;
 
     glutPostRedisplay(); 
