@@ -64,6 +64,8 @@ void part_saveAllData(FILE *file);
 // force/simultaion related
 // prints force norm between the two first particles
 void particule_force_rendu1();
+void particule_integration_rendu2();
+
 // update simulation (calc all forces, acceleration, speed and pos) 
 // for all particles (don't make locked particles move)
 // delta_t is the amount of time the "tick" lasts 
@@ -71,7 +73,7 @@ void particule_force_rendu1();
 // (try creating a particle first), or delta_t<0
 bool part_nextTick(double delta_t);
 // return ID of closest part to a point
-int part_closestPart(POINT point);
+int part_closestPartOn(POINT point);
 
 //return total number of particle
 int part_totalNB();

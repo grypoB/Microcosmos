@@ -23,6 +23,7 @@
 void sim_error(const char filename[]);
 void sim_force(const char filename[]);
 void sim_graphic(const char filename[]);
+void sim_integration(const char filename[]);
 void sim_simulation(const char filename[]);
 
 //updates the number of entities

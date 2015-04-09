@@ -63,6 +63,8 @@ namespace
     GLUI_Panel *simulation;
     GLUI_Panel *information;
 
+    GLUI_Button *startButton;
+
     GLUI_EditText *saveFile;
     GLUI_EditText *loadFile;
 	
@@ -97,7 +99,7 @@ int main (int argc, char *argv[])
         break;
         case FORCE: sim_force(argv[2]);
         break;
-        case INTEGRATION: //sim_integration(argv[2]);
+        case INTEGRATION: sim_integration(argv[2]);
         break;
         case GRAPHIC: 
             sim_graphic(argv[2]);
@@ -182,7 +184,7 @@ static void initGlui() {
 
     //Simulation
     simulation = glui->add_panel("Simulation");
-    start = glui->add_button_to_panel(simulation , "Start", START, simulation_cb);
+    startButton = glui->add_button_to_panel(simulation , "Start", START, simulation_cb);
     glui->add_button_to_panel(simulation ,"Step",  STEP,  simulation_cb);
 
     //Information
@@ -237,12 +239,12 @@ void simulation_cb(int id)
     {
         case START:
             if (simulation_running) {
-				start -> set_name("Stop");            //fonctionne pas (devrait alterner avec "start")
-				glutIdleFunc(NULL);
+					startButton->set_name("Start");
+					glutIdleFunc(NULL);
                 simulation_running = false;
             } else {
-				start -> set_name("Start");           //fonctionne pas
-				glutIdleFunc(idle);
+					startButton->set_name("Stop");
+					glutIdleFunc(idle);
                 simulation_running = true;
             }
         break;

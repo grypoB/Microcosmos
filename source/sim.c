@@ -79,6 +79,14 @@ void sim_force(const char filename[]) {
     sim_clean();
 }
 
+void sim_integration(const char filename[]) {
+	if (sim_lecture(filename)) {
+        particule_integration_rendu2();
+    } else {
+        error_msg("Couldn't open simulation, input file has errors");
+    }
+}
+
 //Mode Graphic, called from main.
 // Input : the file to read the entities form
 void sim_graphic(const char filename[])

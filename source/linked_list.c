@@ -242,6 +242,7 @@ void* list_getDataFromId(LIST_HEAD *pHead, int id) {
             (void) list_goToNext(pHead);
             if ((*(pHead->idOfData))(pHead->current->data) == id) {
                 found = true;
+                returnedData = pHead->current->data;
             }
         } while (!found && startingEl!=pHead->current);
     }
