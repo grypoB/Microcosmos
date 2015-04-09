@@ -55,7 +55,7 @@ $(EXEC): $(OFILES)
 # -- Regles de dependances generees automatiquement
 #
 # DO NOT DELETE THIS LINE
-main.o: main.cpp sim.h geometry.h constantes.h tolerance.h
+main.o: main.cpp sim.h constantes.h tolerance.h
 error.o: error.c error.h
 generateur.o: generateur.c constantes.h tolerance.h graphic.h geometry.h \
  error.h generateur.h linked_list.h particule.h
@@ -63,8 +63,8 @@ trou_noir.o: trou_noir.c constantes.h tolerance.h graphic.h geometry.h \
  error.h trou_noir.h linked_list.h
 particule.o: particule.c constantes.h tolerance.h graphic.h geometry.h \
  particule.h error.h linked_list.h
-sim.o: sim.c error.h constantes.h tolerance.h sim.h geometry.h \
- generateur.h linked_list.h trou_noir.h particule.h
+sim.o: sim.c error.h constantes.h tolerance.h sim.h generateur.h \
+ geometry.h linked_list.h trou_noir.h particule.h
 geometry.o: geometry.c geometry.h constantes.h tolerance.h
 graphic.o: graphic.c graphic.h geometry.h constantes.h tolerance.h
 linked_list.o: linked_list.c linked_list.h

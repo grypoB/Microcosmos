@@ -9,7 +9,7 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
-/* A quick guide to use this module which imlements double linked list:
+/* A quick guide to use this module which imlpements double linked list:
    - creation : see list_create
    - adding data : see list_add
    - delete data : see list_deleteCurrent and list_deleteAll
@@ -20,19 +20,19 @@
 
 
    - moving through the data :
-   -- Core principle : like when reading a file, the LIST_HEAD remember where it's last position was
+   -- Core principle : like when reading a file, the LIST_HEAD remembers where its last position was
    -- if a pointer on LIST_HEAD is required for a function call, you can expect the current position to change,
-   -- if it isn't a pointer, no data in the list will be added/removed/moved and the current position is maintened
+   -- if it isn't a pointer, no data in the list will be added/removed/moved and the current position doesn't change
    -- Go to the first data : see list_goToFirst
    -- Go to next data : see list_goToNext
    -- Go to a specific data (i.e : search) : see list_getDataFormId
-   -- Exemple :
+   -- Example :
    --- cycling through all the data :
             if (list_goToFirst(&myList) != NULL) {
                 do {
                     myData = list_getData(myList, LIST_CURRENT);
                     ...
-                    do whatever if your pointer myData
+                    do whatever with your pointer myData
                     ...
                 } while (list_goToNext(&myList));
             }
@@ -40,7 +40,7 @@
                                                                      list_fctToAllElements
                                                                      list_fctToAll2Combinations
 
-   --- You can also sort the datas (see list_sort to move through the data more efficiently
+   --- You can also sort datas (see list_sort to move through the data more efficiently
 
  Warning : even if you could modify the field in the various structure, don't do it 
     Even to retrieve the fields of the LIST_HEAD structre the recommended way is to use the various getters
@@ -76,7 +76,7 @@ struct List_head {
     // number of elements in the list
     int nbElements;
 
-    //fct called whenever a element is deleted
+    //fct called whenever an element is deleted
     //Do an action on delete of the data associated to the element (ex : free(data))
     void (*deleteData) (void *data);
 
@@ -132,8 +132,8 @@ void* list_getData(LIST_HEAD head, int elementNB);
 // return the data which id is the sent id parameter (as asked to idOfData (see list_create))
 // Begin it's search form current pos, when end is reach, restart at top
 // if found, current now is this node
-// if not found return NULL, and current position maintained
-// if idOfData not set at list_create (i.e == NULL), doen't do anything
+// if not found return NULL, and current position kept
+// if idOfData not set at list_create (i.e == NULL), doesn't do anything
 void* list_getDataFromId(LIST_HEAD *pHead, int id); 
 
 // ----------
@@ -143,7 +143,7 @@ int   list_getNbElements(LIST_HEAD head);
 // ----------
 // sort in an ascending way the list (see sortData in LIST_HEAD structure)
 // set current to first element
-// if sortData not set at list_create (i.e == NULL), doen't do anything
+// if sortData not set at list_create (i.e == NULL), doesn't do anything
 void list_sort(LIST_HEAD *pHead);
 
 // ----------
@@ -151,11 +151,11 @@ void list_sort(LIST_HEAD *pHead);
 // doesn't modify the current element
 
 // call func wih parameter the data of all the elements of the list after the current one.
-// do not do it for the current one, hence if currrent==last, doesn't do anything
+// do not do it for the current one, hence if current==last, doesn't do anything
 // if current == NULL, doesn't do anything
 void list_fctToAllNext    (LIST_HEAD head, void (*func) (void *data));
 
-//  call func with paramenter the data of all the list's element
+//  call func with parameter the data of all the list's element
 // hence func is called nbElements time
 void list_fctToAllElements(LIST_HEAD head, void (*func) (void *data));
 
@@ -165,9 +165,9 @@ void list_fctToAllElements(LIST_HEAD head, void (*func) (void *data));
 void list_fctToAll2combinations(LIST_HEAD head, void (*func) (void *a, void *b));
 
 // -----------
-// add an element to the end of list, set it's data to data
-// return the new current position : the new element added
-// exit if malloc failes
+// adds an element to the end of list, set its data to data
+// returns the new current position : the new element added
+// exits if malloc fails
 LIST_ELEMENT* list_add(LIST_HEAD *pHead, void *data);
 
 // -----------

@@ -48,7 +48,7 @@ LIST_ELEMENT* list_goToFirst(LIST_HEAD *pHead) {
     return p;
 }
 
-// if current == NULL, go basck at first
+// if current == NULL, go back to first
 LIST_ELEMENT* list_goToNext (LIST_HEAD *pHead) {
     LIST_ELEMENT *p = NULL;
 
@@ -79,7 +79,7 @@ LIST_ELEMENT* list_goToLast(LIST_HEAD *pHead) {
 
 
 // doesn't change the position in the list (cause it's not a pointer)
-// don't apply the func to current
+// doesn't apply the func to current
 void list_fctToAllNext(LIST_HEAD head, void (*func) (void *data)) {
     if (head.current!=NULL && func!=NULL) {
 
@@ -89,7 +89,7 @@ void list_fctToAllNext(LIST_HEAD head, void (*func) (void *data)) {
     }
 }
 
-// doesn't change the position in the list (cause it's not a pointer)
+// doesn't change the position in the list (because it's not a pointer)
 void list_fctToAllElements(LIST_HEAD head, void (*func) (void *data)) {
 
         if (list_goToFirst(&head) != NULL) {
@@ -192,7 +192,7 @@ void list_deleteAll(LIST_HEAD *pHead) {
     if (pHead != NULL) {
         (void) list_goToFirst(pHead);
 
-        // cycle through all nodes to delete them one by one
+        // cycles through all modes to delete them one by one
         while (list_deleteCurrent(pHead) != NULL);
     }
 }
