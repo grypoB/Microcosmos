@@ -34,10 +34,10 @@ void graphic_draw_vector(POINT center, VECTOR vector);
 //sets the the color of generators and black holes
 void graphic_set_color(GRAPHIC_COLOR color);
 
-//sets the color of particles
+//sets the color
 void graphic_set_color_3f(float red, float green, float blue);
 
-//set the width of the line
+//sets the width of the line
 void graphic_set_line_width(float width);
 
 

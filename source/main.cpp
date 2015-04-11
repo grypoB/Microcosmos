@@ -186,6 +186,7 @@ static void initGlui(char* filename) {
     glui-> add_button_to_panel(file,"Load", LOAD, file_cb);
     saveFile = glui-> add_edittext_to_panel(file, "Filename", 
 											GLUI_EDITTEXT_TEXT);
+	saveFile->set_text("save.txt");
     glui-> add_button_to_panel(file,"Save", SAVE, file_cb);
 
 
