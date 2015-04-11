@@ -46,7 +46,7 @@ void idle(void);
 
 //fonction pour le mode GRAPHIC
 static void initOpenGl(void);
-static void initGlui();
+static void initGlui(char* filename);
 
 // Mode of the simulation to be ran on, see specs sheet for details
 typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET} MODE;
@@ -88,30 +88,32 @@ namespace
 int main (int argc, char *argv[])
 {
     MODE mode = MODE_UNSET;  
-    
+	char* filename = NULL;
 
     if(argc==3) {
         mode = read_mode(argv[1]);
+        filename = argv[2];
     }
     else if(argc==1) {
 		mode = SIMULATION;
 	}
 
     switch(mode) {
-        case ERROR: sim_error(argv[2]);
+        case ERROR: sim_error(filename);
         break;
-        case FORCE: sim_force(argv[2]);
+        case FORCE: sim_force(filename);
         break;
-        case INTEGRATION: sim_integration(argv[2]);
+        case INTEGRATION: sim_integration(filename);
         break;
         case GRAPHIC: 
-            sim_graphic(argv[2]);
+            sim_graphic(filename);
             glutInit(&argc, argv);
             initOpenGl();
+            initGlui(filename);
             glutMainLoop();
         break;
         case SIMULATION: 
-            sim_simulation(argv[2]);
+            sim_simulation(filename);
         break;
 
         case MODE_UNSET:
@@ -167,11 +169,9 @@ static void initOpenGl()
     //glutMotionFunc(move_entity);
     //GLUI_Master.set_glutKeyboardFunc(keyboard);
     GLUI_Master.set_glutIdleFunc(idle);
-
-    initGlui();
 }
 
-static void initGlui() {
+static void initGlui(char* filename) {
     /*Code GLUI pour l'interface*/
     GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
 
@@ -179,6 +179,7 @@ static void initGlui() {
     file     = glui->add_panel("File" );
     loadFile = glui-> add_edittext_to_panel(file, "Filename", 
 											GLUI_EDITTEXT_TEXT);
+	loadFile->set_text(filename);
     glui-> add_button_to_panel(file,"Load", LOAD, file_cb);
     saveFile = glui-> add_edittext_to_panel(file, "Filename", 
 											GLUI_EDITTEXT_TEXT);
