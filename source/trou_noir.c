@@ -86,7 +86,7 @@ static void bckH_draw(void *data)
     TROU_NOIR *bckH = data;
 
     if (bckH != NULL) {
-       graphic_set_line_width(1.);
+       graphic_set_line_width(1.5);
        graphic_set_color(GREEN);
        graphic_draw_polygon(NB_COTES, bckH->center);
        graphic_draw_circle(bckH->center, RBLACK, DASH_LINE);

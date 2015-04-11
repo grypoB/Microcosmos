@@ -68,8 +68,6 @@ namespace
     GLUI_EditText *saveFile;
     GLUI_EditText *loadFile;
 	
-	GLUI_Button *start;
-
     GLUI_EditText *nb_trou_noir;
     GLUI_EditText *nb_generateur;
     GLUI_EditText *nb_particule;
