@@ -18,7 +18,7 @@
 #include "generateur.h"
 #include "particule.h"
 
-#define GEN_RAYON 3
+#define GEN_RAYON 2
 
 typedef struct Generateur {
 

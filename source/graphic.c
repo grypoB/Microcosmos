@@ -23,6 +23,7 @@
 #include "geometry.h"
 #include "constantes.h"
 
+#define SIZE 2
 
 //draws a circle : dashed lines or continuous lines can be chosen
 void graphic_draw_circle(POINT center, double radius, DETAIL detail)
@@ -81,7 +82,7 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 }
 
 //draws a vector
-void graphic_draw_vector(POINT center, VECTOR vector)  //a revoir (magic numbers ??)
+void graphic_draw_vector(POINT center, VECTOR vector)
 {
 	glBegin (GL_LINES);
 	  glVertex2f (center.x, center.y);
@@ -96,23 +97,20 @@ void graphic_draw_vector(POINT center, VECTOR vector)  //a revoir (magic numbers
 
 }
 
-void graphic_draw_star(POINT center) //surement taille a adapter (magic numbers ??)
+void graphic_draw_polygon(int nb_sides, POINT center)
 {
+	int i;
+	float alpha = 0;
+	
 	glBegin (GL_POLYGON);
-	  glVertex2f(center.x , center.y + 5 );  		//1
-	  glVertex2f(center.x + 0.6, center.y + 1.5); 	//2
-	  glVertex2f(center.x + 4, center.y + 3);    	//3
-	  glVertex2f(center.x + 1.6, center.y + 0.3);   //4
-	  glVertex2f(center.x + 5, center.y - 1);   	//5
-	  glVertex2f(center.x + 1.3, center.y -0.8);  	//6
-	  glVertex2f(center.x + 2.2, center.y -5);  	//7
-	  glVertex2f(center.x , center.y - 1.8);  		//8 
-	  glVertex2f(center.x - 2.2, center.y - 5);     //9
-	  glVertex2f(center.x -1.3, center.y - 0.8); 	//10
-	  glVertex2f(center.x - 5, center.y - 1);   	//11
-	  glVertex2f(center.x - 1.6, center.y + 0.3);   //12
-	  glVertex2f(center.x - 4, center.y + 3);   	//13
-	  glVertex2f(center.x -0.6, center.y + 1.5); 	//14
+	
+	for(i=0; i<nb_sides; i++)
+	{
+		  alpha = i * 2. * M_PI / nb_sides;
+		  glVertex2f (center.x + SIZE * cos (alpha), 
+					  center.y + SIZE * sin (alpha));
+	}
+	  
 	glEnd ();
 }
 
@@ -140,12 +138,7 @@ void graphic_set_color(GRAPHIC_COLOR color)
         case YELLOW :	glColor3f(1, 1, 0);			break;
      }
 }
-
-void graphic_part_color(VECTOR speed) {
-	
-	float red   = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 1  );
-	float green = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
-	float blue  = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
+void graphic_set_color_3f(float red, float green, float blue) {
 	
 	glColor3f(red, green, blue);
 }

@@ -51,7 +51,7 @@ static int sortPart(void *p_a, void *p_b);
 static int idPart(void *p_a);
 void part_draw(void *pData);
 
-
+void part_color(VECTOR speed);
 
 // list to store all the particle in (needs to be initialized)
 static bool partList_initialized = false;
@@ -463,8 +463,8 @@ void part_draw(void *pData)
     PARTICULE *part = pData;
 
     if (part != NULL) {
-        graphic_set_line_width(2.);
-        graphic_part_color(part->speed);
+        graphic_set_line_width(3.);
+        part_color(part->speed);
         graphic_draw_circle(part->center, part->radius, CONTINUOUS);
     }
 }
@@ -493,4 +493,13 @@ void part_saveAllData(FILE *file) {
                     part->speed.x,  part->speed.y);
         } while (list_goToNext(&particles) != NULL);
     }
+}
+
+void part_color(VECTOR speed) {
+	
+	float red   = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 1  );
+	float green = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
+	float blue  = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
+	
+	graphic_set_color_3f(red, green, blue);
 }

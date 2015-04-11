@@ -1,6 +1,6 @@
 # Definitions de macros
 
-EXEC   = rendu1.x
+EXEC   = rendu2.x
 
 CC       = gcc
 CXX      = g++
