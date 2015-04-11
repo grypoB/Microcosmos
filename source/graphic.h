@@ -25,8 +25,8 @@ CONTINUOUS, DASH_LINE, DISC
 //draws a disk or a circle : dashed lines or continuous lines can be chosen
 void graphic_draw_circle(POINT center, double radius, DETAIL detail);
 
-//draws an heptagram
-void graphic_draw_star(POINT center);
+//draws a polygon
+void graphic_draw_polygon(int nb_sides, POINT center);
 
 //draws a vector
 void graphic_draw_vector(POINT center, VECTOR vector);
@@ -35,7 +35,7 @@ void graphic_draw_vector(POINT center, VECTOR vector);
 void graphic_set_color(GRAPHIC_COLOR color);
 
 //sets the color of particles
-void graphic_part_color(VECTOR speed);
+void graphic_set_color_3f(float red, float green, float blue);
 
 //set the width of the line
 void graphic_set_line_width(float width);

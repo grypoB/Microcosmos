@@ -17,6 +17,7 @@
 #include "error.h"
 #include "trou_noir.h"
 
+#define NB_COTES 4
 
 typedef struct Trou_noir {
 
@@ -87,7 +88,7 @@ static void bckH_draw(void *data)
     if (bckH != NULL) {
        graphic_set_line_width(1.);
        graphic_set_color(GREEN);
-       graphic_draw_star(bckH->center);
+       graphic_draw_polygon(NB_COTES, bckH->center);
        graphic_draw_circle(bckH->center, RBLACK, DASH_LINE);
     }
 }

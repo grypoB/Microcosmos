@@ -93,6 +93,9 @@ int main (int argc, char *argv[])
     if(argc==3) {
         mode = read_mode(argv[1]);
     }
+    else if(argc==1) {
+		mode = SIMULATION;
+	}
 
     switch(mode) {
         case ERROR: sim_error(argv[2]);
