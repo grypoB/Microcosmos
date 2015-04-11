@@ -75,18 +75,19 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 	glEnd ();
 }
 
+#define VECTOR_RATIO 0.3
 //draws a vector
 void graphic_draw_vector(POINT center, VECTOR vector)
 {
 	glBegin (GL_LINES);
 	  glVertex2f (center.x, center.y);
-      glVertex2f (center.x + vector.x, center.y +vector.y);
+      glVertex2f (center.x + vector.x*(1+VECTOR_RATIO), center.y +vector.y*(1+VECTOR_RATIO));
 	glEnd ();
 	
-	glBegin (GL_TRIANGLES);
-	  glVertex2f(center.x + vector.x - 2, center.y + vector.y);
-	  glVertex2f(center.x + vector.x, center.y + vector.y + 2);
-	  glVertex2f(center.x + vector.x + 2, center.y + vector.y);
+	glBegin (GL_POLYGON);
+	  glVertex2f(center.x + vector.x * (1+VECTOR_RATIO), center.y + vector.y * (1+VECTOR_RATIO));
+	  glVertex2f(center.x + vector.x - vector.y * VECTOR_RATIO, center.y + vector.y + vector.x * VECTOR_RATIO);
+	  glVertex2f(center.x + vector.x + vector.y * VECTOR_RATIO, center.y + vector.y - vector.x * VECTOR_RATIO);
 	glEnd ();
 
 }
