@@ -6,7 +6,9 @@
  * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 
-#define NB_COTES 50
+#define NB_COTES 150
+
+#define DASH_SIZE 2
 
 #include <stdio.h>
 #include <math.h>
@@ -25,7 +27,7 @@
 //draws a circle : dashed lines or continuous lines can be chosen
 void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 {
-	int i;
+	int i,j;
 	
 	switch(detail)
 	{
@@ -39,20 +41,24 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 						float y = center.y + radius * sin (alpha);
 						glVertex2f(x,y);
 					}
+	                glEnd ();
 					break;
 					
 		case DASH_LINE :
-					glBegin (GL_LINE_LOOP);
 					
-					for (i=0; i < NB_COTES; i++)
+					for (i=0; i<NB_COTES; i++)
 					{
-						if(i%2==0) graphic_set_color(GREEN);
-						else graphic_set_color(WHITE); 
-						 
-						float alpha = i * 2. * M_PI / NB_COTES;
-						float x = center.x + radius * cos (alpha);
-						float y = center.y + radius * sin (alpha);
-						glVertex2f(x,y);
+                        if ((i/DASH_SIZE)%2 == 0) {
+                            glBegin(GL_LINE_STRIP);
+                            for (j=0; j<DASH_SIZE+1 ; j++) {
+                                float alpha = (i+j) * 2. * M_PI / NB_COTES;
+                                float x = center.x + radius * cos (alpha);
+                                float y = center.y + radius * sin (alpha);
+                                glVertex2f(x,y);
+                            }
+                            i+= j;
+                            glEnd();
+                        }
 					}
 					break;
 		case DISC :
@@ -65,13 +71,13 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 						float y = center.y + radius * sin (alpha);
 						glVertex2f(x,y);
 					}
+	                glEnd ();
 					break;
 					
 		default : printf("Wrong details in %s\n",__func__);
 					break;
 	}
 
-	glEnd ();
 }
 
 //draws a vector
