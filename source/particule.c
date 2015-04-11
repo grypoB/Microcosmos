@@ -463,7 +463,7 @@ void part_draw(void *pData)
     PARTICULE *part = pData;
 
     if (part != NULL) {
-        graphic_set_line_width(3.);
+        graphic_set_line_width(2.);
         part_color(part->speed);
         graphic_draw_circle(part->center, part->radius, CONTINUOUS);
     }
