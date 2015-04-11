@@ -49,7 +49,7 @@ static void initOpenGl(void);
 static void initGlui(char* filename);
 
 // Mode of the simulation to be ran on, see specs sheet for details
-typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, MODE_UNSET} MODE;
+typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, DEFAULT, MODE_UNSET} MODE;
 
 // Return the mode read from a string (argv[1])
 // return MODE_UNSET if string wasn't valid
@@ -86,33 +86,36 @@ namespace
 int main (int argc, char *argv[])
 {
     MODE mode = MODE_UNSET;  
-	char* filename = NULL;
 
     if(argc==3) {
         mode = read_mode(argv[1]);
-        filename = argv[2];
     }
     else if(argc==1) {
-		mode = SIMULATION;
+		mode = DEFAULT;
 	}
 
     switch(mode) {
-        case ERROR: sim_error(filename);
+        case ERROR: sim_error(argv[2]);
         break;
-        case FORCE: sim_force(filename);
+        case FORCE: sim_force(argv[2]);
         break;
-        case INTEGRATION: sim_integration(filename);
+        case INTEGRATION: sim_integration(argv[2]);
         break;
         case GRAPHIC: 
-            sim_graphic(filename);
+            sim_graphic(argv[2]);
             glutInit(&argc, argv);
             initOpenGl();
-            initGlui(filename);
+            initGlui(argv[2]);
             glutMainLoop();
         break;
         case SIMULATION: 
-            sim_simulation(filename);
-        break;
+            sim_simulation(argv[2]);
+            // no break because same command afterwards for sim mode
+        case DEFAULT :
+            glutInit(&argc, argv);
+            initOpenGl();
+            initGlui(NULL);
+            glutMainLoop();
 
         case MODE_UNSET:
         default :
@@ -164,11 +167,11 @@ static void initOpenGl()
     GLUI_Master.set_glutDisplayFunc(display);
     GLUI_Master.set_glutReshapeFunc(reshape);
     //GLUI_Master.set_glutMouseFunc(mouse);
-    //glutMotionFunc(move_entity);
     //GLUI_Master.set_glutKeyboardFunc(keyboard);
     GLUI_Master.set_glutIdleFunc(idle);
 }
 
+// send null if no file for the openfile field
 static void initGlui(char* filename) {
     /*Code GLUI pour l'interface*/
     GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
@@ -177,7 +180,9 @@ static void initGlui(char* filename) {
     file     = glui->add_panel("File" );
     loadFile = glui-> add_edittext_to_panel(file, "Filename", 
 											GLUI_EDITTEXT_TEXT);
-	loadFile->set_text(filename);
+    if (filename != NULL) {
+        loadFile->set_text(filename);
+    }
     glui-> add_button_to_panel(file,"Load", LOAD, file_cb);
     saveFile = glui-> add_edittext_to_panel(file, "Filename", 
 											GLUI_EDITTEXT_TEXT);
