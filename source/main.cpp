@@ -35,14 +35,14 @@ extern "C"
 #define STEP  1
 
 
-void next_step(void);
+static void next_step(void);
 
 //fonction pour GLUI
-void display(void);
-void reshape(int w, int h);
-void file_cb(int id);
-void simulation_cb(int id);
-void idle(void);
+static void display(void);
+static void reshape(int w, int h);
+static void file_cb(int id);
+static void simulation_cb(int id);
+static void idle(void);
 
 //fonction pour le mode GRAPHIC
 static void initOpenGl(void);
@@ -209,7 +209,7 @@ static void initGlui(char* filename) {
     glui->set_main_gfx_window( main_window );
 }
 
-void update_nbEntities() {
+static void update_nbEntities() {
     int nbEntities[ENTITY_NB] = {0};
     
     sim_nbEntities(nbEntities);
@@ -219,7 +219,7 @@ void update_nbEntities() {
     nb_particule ->set_int_val(nbEntities[PART_SLOT]);
 }
 
-void idle()
+static void idle()
 {
     if ( glutGetWindow() != main_window ) 
         glutSetWindow(main_window);  
@@ -231,7 +231,7 @@ void idle()
     glutPostRedisplay();
 }
 
-void next_step(void)
+static void next_step(void)
 {
     //met a jour simulation
     sim_next_step();
@@ -241,7 +241,7 @@ void next_step(void)
 }
 
 //Réponse à l'interface utilisateur partie simulation
-void simulation_cb(int id)
+static void simulation_cb(int id)
 {
 	switch(id)
     {
@@ -270,7 +270,7 @@ void simulation_cb(int id)
 }
 
 
-void display(void)
+static void display(void)
 {
     glClearColor ( 1., 1., 1., 0. );       // specifie la couleur 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -292,7 +292,7 @@ void display(void)
     glutSwapBuffers();
 }
 
-void reshape(int w, int h)
+static void reshape(int w, int h)
 {
     double xmin, xmax, ymin, ymax;
 
@@ -316,7 +316,7 @@ void reshape(int w, int h)
 
 
 //Réponse à l'interface utilisateur partie fichier
-void file_cb(int id) {
+static void file_cb(int id) {
     switch(id) {
         case SAVE:
 			glutIdleFunc(NULL);
