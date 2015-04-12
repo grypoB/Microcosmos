@@ -379,7 +379,8 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
     }
 
     #ifdef DEBUG
-    printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",*xmin, *xmax, *ymin, *ymax);
+    printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",
+		   *xmin, *xmax, *ymin, *ymax);
     #endif
 
     // free memory

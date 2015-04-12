@@ -49,7 +49,8 @@ static void initOpenGl(void);
 static void initGlui(char* filename);
 
 // Mode of the simulation to be ran on, see specs sheet for details
-typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, DEFAULT, MODE_UNSET} MODE;
+typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, 
+				   DEFAULT, MODE_UNSET} MODE;
 
 // Return the mode read from a string (argv[1])
 // return MODE_UNSET if string wasn't valid
@@ -192,7 +193,8 @@ static void initGlui(char* filename) {
 
     //Simulation
     simulation = glui->add_panel("Simulation");
-    startButton = glui->add_button_to_panel(simulation , "Start", START, simulation_cb);
+    startButton = glui->add_button_to_panel(simulation , "Start", 
+											START, simulation_cb);
     glui->add_button_to_panel(simulation ,"Step",  STEP,  simulation_cb);
 
     //Information

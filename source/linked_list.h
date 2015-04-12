@@ -20,9 +20,12 @@
 
 
    - moving through the data :
-   -- Core principle : like when reading a file, the LIST_HEAD remembers where its last position was
-   -- if a pointer on LIST_HEAD is required for a function call, you can expect the current position to change,
-   -- if it isn't a pointer, no data in the list will be added/removed/moved and the current position doesn't change
+   -- Core principle : like when reading a file, the LIST_HEAD remembers where
+      its last position was
+   -- if a pointer on LIST_HEAD is required for a function call, you can expect
+      the current position to change,
+   -- if it isn't a pointer, no data in the list will be added/removed/moved and
+      the current position doesn't change
    -- Go to the first data : see list_goToFirst
    -- Go to next data : see list_goToNext
    -- Go to a specific data (i.e : search) : see list_getDataFormId
@@ -36,15 +39,16 @@
                     ...
                 } while (list_goToNext(&myList));
             }
-   --- To ease the work to call a function for all data elements see list_fctToAllNext
-                                                                     list_fctToAllElements
-                                                                     list_fctToAll2Combinations
+   --- To ease the work to call a function for all data elements see 
+			list_fctToAllNext
+            list_fctToAllElements
+            list_fctToAll2Combinations
 
    --- You can also sort datas (see list_sort to move through the data more efficiently
 
  Warning : even if you could modify the field in the various structure, don't do it 
-    Even to retrieve the fields of the LIST_HEAD structre the recommended way is to use the various getters
-    Otherwise don't expect any function to work properly
+    Even to retrieve the fields of the LIST_HEAD structre the recommended way is to
+    use the various getters. Otherwise don't expect any function to work properly.
     Also, you shouldn't have to use the LIST_ELEMENT structure
 */
 
@@ -91,14 +95,16 @@ struct List_head {
 };
 
 
-//  return a empty LIST_HEAD with functionality built in (see LIST_HEAD structure for how these func should behave):
-/*
+//  return a empty LIST_HEAD with functionality built in 
+/*	(see LIST_HEAD structure for how these func should behave):
+
    - deleteData : func called whenever a data is removed
    - sortData : func used to sort the data (see list_sort and the LIST_HEAD structure)
    - idOfData : func used to move quickly to a particular data (see list_getDataFromId)
 */
 // if you don't intend to use this functionallity, you can just send the NULL value
-// note the two following lines are equivalent (useful to declare initialized static variables)
+// note the two following lines are equivalent 
+// (useful to declare initialized static variables)
 /*
   LIST_HEAD head = {0};
   LIST_HEAD head = list_create(NULL, NULL, NULL);
@@ -122,40 +128,44 @@ LIST_ELEMENT* list_goToLast(LIST_HEAD *pHead);
 // return the new current position (NULL if reached end of list)
 LIST_ELEMENT* list_goToNext (LIST_HEAD *pHead);
 
-// retrieve the data from a specific position in the list (elementNB)
-// elementNB design which position in the list counts from 1 goes up to list_getNbElements
+// retrieves the data from a specific position in the list (elementNB)
+// elementNB designs which position in the list counts from 1 goes up to 
+// list_getNbElements
 // To retrieve value of current position send LIST_CURRENT (=0) value
 // for best performance ask for current (constant vs linear time)
 // do not modify current position
 void* list_getData(LIST_HEAD head, int elementNB);
 
-// return the data which id is the sent id parameter (as asked to idOfData (see list_create))
-// Begin it's search form current pos, when end is reach, restart at top
+// return the data which id is the sent id parameter 
+// (as asked to idOfData (see list_create))
+// Begins its search form current pos, when end is reached, restarts at top
 // if found, current now is this node
-// if not found return NULL, and current position kept
+// if not found returns NULL, and current position kept
 // if idOfData not set at list_create (i.e == NULL), doesn't do anything
 void* list_getDataFromId(LIST_HEAD *pHead, int id); 
 
 // ----------
-// Return the number of elements (ie. data) stored in the list
+// Returns the number of elements (ie. data) stored in the list
 int   list_getNbElements(LIST_HEAD head);
 
 // ----------
-// sort in an ascending way the list (see sortData in LIST_HEAD structure)
-// set current to first element
+// sorts the list in an ascending way (see sortData in LIST_HEAD structure)
+// sets current to first element
 // if sortData not set at list_create (i.e == NULL), doesn't do anything
 void list_sort(LIST_HEAD *pHead);
 
 // ----------
-// utility func to ease data manipulation : apply the same func to a specific set of data
+// utility func to ease data manipulation : apply the same func to a specific
+// set of data
 // doesn't modify the current element
 
-// call func wih parameter the data of all the elements of the list after the current one.
+// call func wih parameter the data of all the elements of the list after 
+// the current one.
 // do not do it for the current one, hence if current==last, doesn't do anything
 // if current == NULL, doesn't do anything
 void list_fctToAllNext    (LIST_HEAD head, void (*func) (void *data));
 
-//  call func with parameter the data of all the list's element
+// call func with parameter the data of all the list's element
 // hence func is called nbElements time
 void list_fctToAllElements(LIST_HEAD head, void (*func) (void *data));
 
@@ -172,10 +182,12 @@ LIST_ELEMENT* list_add(LIST_HEAD *pHead, void *data);
 
 // -----------
 // funcs to delete elements
-// every time an element is deleted, the func deleteData is called on its data (see structure HEAD_LIST)
-// if deleteData == NULL, this step is ommited, but the elements of the list are still deleted
+// every time an element is deleted, the func deleteData is called on its data
+// (see structure HEAD_LIST)
+// if deleteData == NULL, this step is ommited, but the elements of the list are
+// still deleted
 
-// delete the current element (see list_goToFirst, list_goToNext and list_getDataFormId) 
+// delete current element (see list_goToFirst, list_goToNext and list_getDataFormId)
 // if current == NULL, doesn't do anything
 LIST_ELEMENT* list_deleteCurrent(LIST_HEAD *pHead); 
 // delete all the elements of the list

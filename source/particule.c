@@ -497,9 +497,12 @@ void part_saveAllData(FILE *file) {
 
 void part_color(VECTOR speed) {
 	
-	float red   = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 1  );
-	float green = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
-	float blue  = linear_interpolation(vector_norm(speed), 0, 0 , MAX_VITESSE, 0.2);
+	float red   = linear_interpolation(vector_norm(speed), 0, 0, 
+									   MAX_VITESSE, 1  );
+	float green = linear_interpolation(vector_norm(speed), 0, 0, 
+									   MAX_VITESSE, 0.2);
+	float blue  = linear_interpolation(vector_norm(speed), 0, 0, 
+									   MAX_VITESSE, 0.2);
 	
 	graphic_set_color_3f(red, green, blue);
 }
