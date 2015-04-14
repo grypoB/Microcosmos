@@ -1,5 +1,5 @@
 /* Nom: linked_list.c
- * Description: module qui gère les liste chaine
+ * Description: module qui gère les listes chainees
  * Date: 22.03.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne

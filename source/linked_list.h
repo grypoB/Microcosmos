@@ -9,7 +9,7 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
-/* A quick guide to use this module which imlpements double linked list:
+/* A quick guide to use this module which implements double linked list:
    - creation : see list_create
    - adding data : see list_add
    - delete data : see list_deleteCurrent and list_deleteAll
