@@ -1,6 +1,6 @@
 /* Nom: particule.h
  * Description: module qui gère les particules
- * Date: 22.03.2015
+ * Date: 15.04.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -16,7 +16,7 @@
 
 // all particles are stored with a static in .c
 // creating one returns a unique ID (used to reference this particle later)
-// don't forget to delete afterwards (to clear memory)
+// don't forget to delete afterwards (to clear memory), see part_deleteAll
 
 /*
 Particles caracterised by : 
@@ -30,58 +30,54 @@ Particles caracterised by :
 
 
 // ------------
-// constructor
-// return UNNASIGNED if radius not in [RMIN, RMAX], or speed norm>MAX_VITESSE
-// otherwise return the id (>=0) of the particle
+// Creations
+/* Create a particle with given parameter */
 int  part_create(double radius, POINT center, VECTOR speed);
-// check if given params are valid (see part_create)
-// if verbose and if param aren't valid it will call the appropriate error fct
-// (sending it the given orgin and id number)
+/* Checks if arguments are valid for the creation of a particle */
 bool part_validParams(double radius, POINT center, VECTOR speed,
                       bool verbose, ERREUR_ORIG origin, int id);
 
 
 // ------------
-// destructors
-// return false if particle wasn't found
+// Destruction
+/* Delete particle with given ID */
 bool part_deletePart(int partID);
-// delete all particles, use with caution
+/* Delete all existing particles */
 void part_deleteAll();
 
-// setter, return true if set was successful (i.e. partiule was found)
-// locked particles can't move (see part_nextTick)
-bool part_setLock  (int partID, bool lock);
-
+// ----------
+// Setters/Getters
+/* Lock a given particle in place (or unlock) */
+bool part_setLock(int partID, bool lock);
+// Append to pHead all particles' center
+// Please, do not modify their values (except if you feel lucky)
+void part_getAllCenters(LIST_HEAD *pHead);
+//Return total number of existing particle
+int part_totalNB();
 
 // ------------
-// Create particle from data in a string
-// Expected format (all in double): radius posx posy vx vy 
-// prints errors if it couldn't read string
+// String and file interface
+/* Create particle from data in a string */
 bool part_readData(const char *string);
+/* Append all the particles to a file */
 void part_saveAllData(FILE *file);
 
 // ------------
-// force/simultaion related
-// prints force norm between the two first particles
+// Force/Integration related (see specs)
+/* prints force norm between the two first particles */
 void particule_force_rendu1();
+/* prints status of first particle after one tick of simulation */
 void particule_integration_rendu2();
 
-// update simulation (calc all forces, acceleration, speed and pos) 
-// for all particles (don't make locked particles move)
-// delta_t is the amount of time the "tick" lasts 
-// return false if particle data structure doesn't exist
-// (try creating a particle first), or delta_t<0
-bool part_nextTick(double delta_t);
-// return ID of closest part to a point
+
+// ------------
+// Manage simulation
+/* Update kinematic of all particles */
+void part_nextTick(double delta_t);
+/* return ID of closest part to a point, which it overlaps */
 int part_closestPartOn(POINT point);
-
-//return total number of particle
-int part_totalNB();
-
-//manages the display of particles
+// Display all particles
 void part_display(void);
 
-//gets datas of particles
-void part_getAllCenters(LIST_HEAD *pHead);
 
 #endif
