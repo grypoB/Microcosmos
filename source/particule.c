@@ -335,10 +335,6 @@ int part_closestPartOn(POINT point) {
 // Diplay all particles
 void part_display(void) {
     list_fctToAllElements(particles, part_draw);
-
-	#ifdef DEBUG
-	printf("Display particles\n");
-	#endif
 }
 
 // Draws a single particle

@@ -98,9 +98,6 @@ static void bckH_draw(void *data)
 void bckH_display(void)
 {
     list_fctToAllElements(blackHoles, bckH_draw);
-	#ifdef DEBUG
-	printf("bckh_display 1\n");
-	#endif
 }
 
 
