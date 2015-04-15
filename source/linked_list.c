@@ -1,6 +1,6 @@
 /* Nom: linked_list.c
  * Description: module qui gère les liste chaine
- * Date: 22.03.2015
+ * Date: 15.04.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -11,12 +11,16 @@
 #include <stdbool.h>
 #include "linked_list.h"
 
-// for complete details on how these funcs behaves, see linked_list.h
+/** Note :
+ *  for complete details on how these funcs behaves, see linked_list.h
+ */
 
 
 static void swap_data(LIST_ELEMENT *p_a, LIST_ELEMENT *p_b);
 
 
+// ====================================================================
+// creation of linked list
 LIST_HEAD list_create(void (*deleteData) (void *data),
                       int (*sortData) (void *a, void *b),
                       int (*idOfData) (void *data)) {
@@ -30,13 +34,94 @@ LIST_HEAD list_create(void (*deleteData) (void *data),
     head.nbElements = 0;
 
     head.deleteData = deleteData;
-    head.sortData = sortData;
-    head.idOfData = idOfData;
+    head.sortData   = sortData;
+    head.idOfData   = idOfData;
     
     return head;
 }
 
 
+// ====================================================================
+// adds it at the end of the list
+// return the pointer to the new node
+LIST_ELEMENT* list_add(LIST_HEAD *pHead, void *data) {
+    LIST_ELEMENT *p = NULL;
+
+    if (pHead != NULL) {
+        p = malloc(sizeof(LIST_ELEMENT));
+
+        if (p == NULL) {
+            printf("Memory allocation failure in %s\n", __func__);
+            exit(EXIT_FAILURE);
+        }
+
+        if (pHead->last == NULL) { // list empty (then first also == NULL)
+            pHead->first = p;
+            p->prev = NULL;
+        } else {
+            pHead->last->next = p;
+            p->prev = pHead->last;
+        }
+
+        p->data = data;
+        p->next = NULL;
+        pHead->last = p;
+
+        pHead->nbElements++;
+    }
+
+    return p;
+}
+
+
+// ====================================================================
+// Deletions
+
+// return new current node
+// i.e : the one after the deleted one
+LIST_ELEMENT* list_deleteCurrent(LIST_HEAD *pHead) {
+    LIST_ELEMENT *prev = NULL;
+    LIST_ELEMENT *next = NULL;
+
+    if (pHead!=NULL && pHead->current!=NULL) {
+        prev = pHead->current->prev;
+        next = pHead->current->next;
+
+        // reassociate the pointers to next and prev
+        if (prev != NULL) { prev->next = next; }
+        else { pHead->first = next; }
+
+        if (next != NULL) { next->prev = prev; }
+        else { pHead->last = prev; }
+
+        // free memory
+        if (pHead->deleteData != NULL) {
+            (*(pHead->deleteData)) (pHead->current->data);
+        }
+        free(pHead->current);
+
+        pHead->current = next;
+        pHead->nbElements--;
+
+        return pHead->current;
+    }
+
+    return NULL;
+}
+
+// after : first,current,last = NULL
+void list_deleteAll(LIST_HEAD *pHead) {
+    if (pHead != NULL) {
+        (void) list_goToFirst(pHead);
+
+        // cycles through all modes to delete them one by one
+        while (list_deleteCurrent(pHead) != NULL);
+    }
+}
+
+
+// ====================================================================
+// Move through the list
 LIST_ELEMENT* list_goToFirst(LIST_HEAD *pHead) {
     LIST_ELEMENT *p = NULL;
 
@@ -78,131 +163,15 @@ LIST_ELEMENT* list_goToLast(LIST_HEAD *pHead) {
 }
 
 
-// doesn't change the position in the list (cause it's not a pointer)
-// doesn't apply the func to current
-void list_fctToAllNext(LIST_HEAD head, void (*func) (void *data)) {
-    if (head.current!=NULL && func!=NULL) {
-
-        while (list_goToNext(&head) != NULL) {
-            (*func)(head.current->data);
-        }
-    }
-}
-
-// doesn't change the position in the list (because it's not a pointer)
-void list_fctToAllElements(LIST_HEAD head, void (*func) (void *data)) {
-
-        if (list_goToFirst(&head) != NULL) {
-            do {
-                (*func)(head.current->data);
-            } while (list_goToNext(&head) != NULL);
-        }
-}
-
-void list_fctToAll2combinations(LIST_HEAD head, void (*func) (void *a, void *b)) {
-    LIST_ELEMENT *a = list_goToFirst(&head);
-    LIST_ELEMENT *b = NULL;
-
-    while (a != NULL) {
-        b = a->next;
-
-        while (b != NULL){
-            (*func) (a->data, b->data);
-            b = b->next;
-        }
-
-        a = a->next;
-    }
-}
-
-
-// adds it at the end of the list
-// return the pointer to the new node
-LIST_ELEMENT* list_add(LIST_HEAD *pHead, void *data) {
-    LIST_ELEMENT *p = NULL;
-
-    if (pHead != NULL) {
-        p = malloc(sizeof(LIST_ELEMENT));
-
-        if (p == NULL) {
-            printf("Memory allocation failure in %s\n", __func__);
-            exit(EXIT_FAILURE);
-        }
-
-        if (pHead->last == NULL) { // list empty (then first also == NULL)
-            pHead->first = p;
-            p->prev = NULL;
-        } else {
-            pHead->last->next = p;
-            p->prev = pHead->last;
-        }
-
-        p->data = data;
-        p->next = NULL;
-        pHead->last = p;
-
-        pHead->nbElements++;
-    }
-
-    return p;
-}
-
-
-// return new current node
-// i.e : the one after the deleted one
-LIST_ELEMENT* list_deleteCurrent(LIST_HEAD *pHead) {
-    LIST_ELEMENT *prev = NULL;
-    LIST_ELEMENT *next = NULL;
-
-    if (pHead!=NULL && pHead->current!=NULL) {
-        prev = pHead->current->prev;
-        next = pHead->current->next;
-
-        if (prev != NULL) {
-            prev->next = next;
-        } else {
-            pHead->first = next;
-        }
-
-        if (next != NULL) {
-            next->prev = prev;
-        } else {
-            pHead->last = prev;
-        }
-
-        // free memory
-        if (pHead->deleteData != NULL) {
-            (*(pHead->deleteData)) (pHead->current->data);
-        }
-        free(pHead->current);
-
-        pHead->current = next;
-
-        pHead->nbElements--;
-
-        return pHead->current;
-    }
-
-    return NULL;
-}
-
-
-// after : first,current,last = NULL
-void list_deleteAll(LIST_HEAD *pHead) {
-    if (pHead != NULL) {
-        (void) list_goToFirst(pHead);
-
-        // cycles through all modes to delete them one by one
-        while (list_deleteCurrent(pHead) != NULL);
-    }
-}
-
-
+// ====================================================================
+// Getter
 int list_getNbElements(LIST_HEAD head) {
     return head.nbElements;
 }
 
 
+// ====================================================================
+// Get data
 void* list_getData(LIST_HEAD head, int elementNB) {
     void *returnPointer = NULL;
     LIST_ELEMENT *el = NULL;
@@ -228,8 +197,8 @@ void* list_getData(LIST_HEAD head, int elementNB) {
     return returnPointer;
 }
 
-
 // change current of list
+// return NULL, if not found
 void* list_getDataFromId(LIST_HEAD *pHead, int id) {
     void *returnedData = NULL;
     LIST_ELEMENT *startingEl = NULL;
@@ -251,19 +220,59 @@ void* list_getDataFromId(LIST_HEAD *pHead, int id) {
 }
 
 
-// de maniere croissant
+// ====================================================================
+// Utility functions
+
+// doesn't change the position in the list (cause it's not a pointer)
+// doesn't apply the func to current
+void list_fctToAllNext(LIST_HEAD head, void (*func) (void *data)) {
+
+    if (head.current!=NULL && func!=NULL) {
+
+        while (list_goToNext(&head) != NULL) {
+            (*func)(head.current->data);
+        }
+    }
+}
+
+// doesn't change the position in the list (because it's not a pointer)
+void list_fctToAllElements(LIST_HEAD head, void (*func) (void *data)) {
+
+        if (list_goToFirst(&head) != NULL) {
+            do {
+                (*func)(head.current->data);
+            } while (list_goToNext(&head) != NULL);
+        }
+}
+
+void list_fctToAll2combinations(LIST_HEAD head, void (*func)(void*a,void*b)) {
+    LIST_ELEMENT *a = list_goToFirst(&head);
+    LIST_ELEMENT *b = NULL;
+
+    while (a != NULL) {
+        b = a->next;
+
+        while (b != NULL){
+            (*func) (a->data, b->data);
+            b = b->next;
+        }
+
+        a = a->next;
+    }
+}
+
+// ====================================================================
+// Ascending sort
 // the current then points to the first node
 void list_sort(LIST_HEAD *pHead) {
     bool sorted = false;
     int i=0;
     LIST_ELEMENT *tmpLast = NULL;
-    
-    if (pHead!=NULL && pHead->sortData!=NULL) {
 
+    if (pHead!=NULL && pHead->sortData!=NULL) {
         tmpLast = pHead->last;
 
         for (i=0 ; i<pHead->nbElements && !sorted ; i++) {
-
             (void) list_goToFirst(pHead);
             sorted = true;
 
@@ -277,7 +286,6 @@ void list_sort(LIST_HEAD *pHead) {
             }
 
             tmpLast = tmpLast->prev;
-
         }
 
         // to ensure the current node is the first one
