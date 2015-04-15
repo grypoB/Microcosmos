@@ -1,6 +1,6 @@
 /* Nom: geometry.h
  * Description: module qui gère les calculs géométriques
- * Date: 08.02.2014
+ * Date: 15.03.2015
  * version : 1.1
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière

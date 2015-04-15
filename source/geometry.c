@@ -1,6 +1,6 @@
 /* Nom: geometry.c
  * Description: module qui gère les calculs géométriques
- * Date: 08.02.2014
+ * Date: 15.03.2015
  * version : 1.1
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -70,7 +70,7 @@ double vector_norm(VECTOR v)
 double linear_interpolation(double xC,
                             double xA, double yA,
                             double xB, double yB) {
-    if (abs(xA-xB) > EPSILON_ZERO) {
+    if (fabs(xA-xB) > EPSILON_ZERO) {
         return yA + (yB-yA)/(xB-xA) * (xC-xA);
     } else {
         return 0;
