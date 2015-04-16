@@ -6,8 +6,8 @@
  * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
 
-#define DASH_TOTAL_SIDES 150
-#define DASH_SIZE 2
+#define DASH_TOTAL_SIDES 100
+#define DASH_SIZE 5
 
 #define CIRCLE_SIDES 16
 
@@ -32,7 +32,7 @@
 //draws a circle : dashed lines or continuous lines can be chosen
 void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 {
-	int i,j;
+	int i;
     double x, y, alpha;
 	
 	switch(detail)
@@ -51,21 +51,15 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
             break;
 
 		case DASH_LINE :
+            glBegin(GL_LINES);
             for (i=0; i<DASH_TOTAL_SIDES; i++)
             {
-                if ((i/DASH_SIZE)%2 == 0) {
-                    glBegin(GL_LINE_STRIP);
-
-                    for (j=0; j<DASH_SIZE+1 ; j++) {
-                        alpha = (i+j) * 2. * M_PI / DASH_TOTAL_SIDES;
-                        x = center.x + radius * cos (alpha);
-                        y = center.y + radius * sin (alpha);
-                        glVertex2f(x,y);
-                    }
-                    i+= j;
-                    glEnd();
-                }
+                alpha = i * 2. * M_PI / DASH_TOTAL_SIDES;
+                x = center.x + radius * cos (alpha);
+                y = center.y + radius * sin (alpha);
+                glVertex2f(x,y);
             }
+            glEnd();
             break;
 		case DISC :
             glBegin (GL_POLYGON);
