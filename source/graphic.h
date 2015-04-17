@@ -27,7 +27,7 @@ CONTINUOUS, DASH_LINE, DISC
 void graphic_draw_circle(POINT center, double radius, DETAIL detail);
 
 //draws a polygon
-void graphic_draw_polygon(int nb_sides, POINT center);
+void graphic_draw_polygon(POINT center, int nb_sides);
 
 //draws a vector
 void graphic_draw_vector(POINT center, VECTOR vector);

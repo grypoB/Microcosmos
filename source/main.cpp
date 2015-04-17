@@ -58,7 +58,6 @@ static MODE read_mode(const char string[]);
 
 namespace
 {
-    //GLUI* glui;
     int main_window;
     GLUI_Panel *file;
     GLUI_Panel *simulation;
@@ -79,8 +78,6 @@ namespace
             right= 50, 
             down = -50, 
             up   = 50;
-    double aspect_ratio;
-    
 }
 
 
@@ -278,14 +275,10 @@ static void display(void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     glLoadIdentity();
-    
-    // update glOrtho
-    if (aspect_ratio <= 1.)
-        glOrtho(left, right, down/aspect_ratio, up/aspect_ratio, -1.0, 1.0);
-
-    else
-        glOrtho(left*aspect_ratio, right*aspect_ratio, down, up, -1.0, 1.0);
 	
+    // update glOrtho
+    glOrtho(left, right, down, up, -1.0, 1.0);
+
     sim_display();
 
     //met à jour nb éléments
@@ -297,6 +290,7 @@ static void display(void)
 static void reshape(int w, int h)
 {
     double xmin, xmax, ymin, ymax;
+    double base = 0, shift = 0;
 
     glViewport(0, 0, w, h);
 	
@@ -307,11 +301,23 @@ static void reshape(int w, int h)
     down  = ymin - RMAX;
     up    = ymax + RMAX;
     
-    #ifdef DEBUG
-    printf("reshape\n");
-    #endif
+    // update dimension for glOrtho
+    if ( (double)w/h > (right-left)/(up-down) ) {
+        base   = (double) w*(up-down)/h;
+        shift  = (base - (right-left))/2;
+        left  -= shift;
+        right += shift;
+    } else {
+        base  = (double) h*(right-left)/w;
+        shift = (base - (up-down))/2;
+        down -= shift;
+        up   += shift;
+    }
 
-    aspect_ratio = (float) w/h;
+    #ifdef DEBUG
+    printf("reshape : left=%f, right=%f, down=%f, up=%f\n",
+                      left,    right,    down,    up);
+    #endif
 
     glutPostRedisplay(); 
 }
