@@ -90,21 +90,21 @@ int main (int argc, char *argv[])
 	}
 
     switch(mode) {
-        case ERROR: sim_mode(argv[2], ERROR);
+        case ERROR: sim_openFile(argv[2], ERROR);
         break;
-        case FORCE: sim_mode(argv[2], FORCE);
+        case FORCE: sim_openFile(argv[2], FORCE);
         break;
-        case INTEGRATION: sim_mode(argv[2], INTEGRATION);
+        case INTEGRATION: sim_openFile(argv[2], INTEGRATION);
         break;
         case GRAPHIC: 
-            sim_mode(argv[2], GRAPHIC);
+            sim_openFile(argv[2], GRAPHIC);
             glutInit(&argc, argv);
             initOpenGl();
             initGlui(argv[2]);
             glutMainLoop();
         break;
         case SIMULATION: 
-            sim_mode(argv[2], SIMULATION);
+            sim_openFile(argv[2], SIMULATION);
             // no break because same command afterwards for sim mode
         case DEFAULT :
             glutInit(&argc, argv);
@@ -330,7 +330,7 @@ static void file_cb(int id) {
         case LOAD:
 			glutIdleFunc(NULL);
             sim_clean();
-            sim_mode(loadFile->get_text(), SIMULATION);
+            sim_openFile(loadFile->get_text(), SIMULATION);
             simulation_running = false;
 
             reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));

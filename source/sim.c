@@ -58,32 +58,31 @@ static bool read_entities (enum Read_state *state, const char *line,
 // return the value fgets returned (line[] address, or NULL if error occured)
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
 
-void sim_mode(const char filename[], enum Mode mode)
+void sim_openFile(const char filename[], enum Mode mode)
 {
 	if (sim_lecture(filename)) 
 	{
 	
 		switch(mode) 
-		{
-			case ERROR: error_success();
-						sim_clean();
-			break;
-			case FORCE: particule_force_rendu1();
-						sim_clean();
-			break;
-			case INTEGRATION: particule_integration_rendu2();
-			break;
-			case GRAPHIC: sim_display();
-			break;
-			case SIMULATION: sim_display();
-			break;
-			default : printf("Invalid state in sim error\n");
-		}
+        {
+            case ERROR:       error_success();
+                              sim_clean();
+            break;
+            case FORCE:       particule_force_rendu1();
+                              sim_clean();
+            break;
+            case INTEGRATION: particule_integration_rendu2();
+            break;
+            // handle GRAPHIC, SIMULATION and DEFAULT the same way :
+            // dont' do anything
+            case GRAPHIC:
+            case SIMULATION:
+            case DEFAULT:
+            break;
+            case MODE_UNSET:  printf("Invalid mode\n");
+            break;
+        }
 	}
-    else 
-    {
-        error_msg("Couldn't open simulation, input file has errors");
-    }
 }
 
 // Free memory from all modules accross the simulation

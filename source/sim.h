@@ -23,7 +23,7 @@ typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION,
 
 // Different mode supported by the simulation
 // for more details see the specs of the projects
-void sim_mode(const char filename[], enum Mode mode);
+void sim_openFile(const char filename[], enum Mode mode);
 
 //updates the number of entities
 void sim_nbEntities(int elementnb[ENTITY_NB]);
