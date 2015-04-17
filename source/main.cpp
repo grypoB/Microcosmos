@@ -35,46 +35,47 @@ extern "C"
 #define STEP  1
 
 
+// Calulate  next simulations status
 static void next_step(void);
 
-//fonction pour GLUI
+// OpenGl callbacks
 static void display(void);
 static void reshape(int w, int h);
 static void file_cb(int id);
 static void simulation_cb(int id);
 static void idle(void);
 
-//fonction pour le mode GRAPHIC
+// init graphic display
 static void initOpenGl(void);
 static void initGlui(char* filename);
-
 
 // Return the mode read from a string (argv[1])
 // return MODE_UNSET if string wasn't valid
 static MODE read_mode(const char string[]);
 
+
 namespace
 {
+    // OpenGl window
     int main_window;
-    GLUI_Panel *file;
-    GLUI_Panel *simulation;
-    GLUI_Panel *information;
 
+    // button controlling the simulation (start/stop)
     GLUI_Button *startButton;
 
+    // field containing the names of file to save/open
     GLUI_EditText *saveFile;
     GLUI_EditText *loadFile;
 	
+    // field displaying the number of entities
     GLUI_EditText *nb_trou_noir;
     GLUI_EditText *nb_generateur;
     GLUI_EditText *nb_particule;
 
     bool simulation_running = false;
 
-    GLfloat left = -50, 
-            right= 50, 
-            down = -50, 
-            up   = 50;
+    // limits of displayed area (for glOrtho)
+    GLfloat left = -RMAX, right = RMAX, 
+            down = -RMAX, up    = RMAX;
 }
 
 
@@ -145,35 +146,47 @@ static MODE read_mode(const char string[])
 
 static void initOpenGl()
 {
-    /*Initialise Glut and Create Window*/
+    #ifdef DEBUG
+    printf("Init Opengl...");
+    #endif
+
+    /* Initialise Glut and Create Window */
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-    glutInitWindowPosition(200, 200);
-    glutInitWindowSize(250, 250);
 
     main_window = glutCreateWindow("Microcosmos");
 
-    glClearColor(1.0, 1.0, 1.0, 0.0);
-    
-    #ifdef DEBUG
-    printf("initOpengl\n");
-    #endif
-
-    /* Fonctions callback*/
+    /* Fonctions callback */
     GLUI_Master.set_glutDisplayFunc(display);
     GLUI_Master.set_glutReshapeFunc(reshape);
     //GLUI_Master.set_glutMouseFunc(mouse);
     //GLUI_Master.set_glutKeyboardFunc(keyboard);
     GLUI_Master.set_glutIdleFunc(idle);
+
+    #ifdef DEBUG
+    printf("done\n");
+    #endif
 }
 
 // send null if no file for the openfile field
-static void initGlui(char* filename) {
-    /*Code GLUI pour l'interface*/
-    GLUI *glui = GLUI_Master.create_glui( "GLUI", 0, 400, 50 );
+static void initGlui(char* filename)
+{
 
-    //File
-    file     = glui->add_panel("File" );
-    loadFile = glui-> add_edittext_to_panel(file, "Filename", 
+    GLUI *glui = NULL;
+    // multiple panle used in the glui window
+    GLUI_Panel *file        = NULL;
+    GLUI_Panel *simulation  = NULL;
+    GLUI_Panel *information = NULL;
+
+    #ifdef DEBUG
+    printf("Init GLUI interface ...");
+    #endif
+
+    /*Code GLUI pour l'interface*/
+    glui = GLUI_Master.create_glui("GLUI");
+
+    //File panel
+    file     = glui->add_panel("File");
+    loadFile = glui-> add_edittext_to_panel(file, "Filename",
 											GLUI_EDITTEXT_TEXT);
     if (filename != NULL) {
         loadFile->set_text(filename);
@@ -185,24 +198,28 @@ static void initGlui(char* filename) {
     glui-> add_button_to_panel(file,"Save", SAVE, file_cb);
 
 
-    //Simulation
+    //Simulation panel
     simulation = glui->add_panel("Simulation");
-    startButton = glui->add_button_to_panel(simulation , "Start", 
+    startButton = glui->add_button_to_panel(simulation, "Start",
 											START, simulation_cb);
-    glui->add_button_to_panel(simulation ,"Step",  STEP,  simulation_cb);
+    glui->add_button_to_panel(simulation, "Step",  STEP, simulation_cb);
 
-    //Information
-    information   = glui->add_panel("Information" );
-    nb_particule  = glui-> add_edittext_to_panel(information, "Nb Particule", 
+    //Information panel
+    information   = glui->add_panel("Information");
+    nb_particule  = glui-> add_edittext_to_panel(information, "Nb Particule",
 												 GLUI_EDITTEXT_INT); 
-    nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur", 
+    nb_generateur = glui-> add_edittext_to_panel(information, "Nb Generateur",
 												 GLUI_EDITTEXT_INT);
-    nb_trou_noir  = glui-> add_edittext_to_panel(information, "Nb Trou noir", 
+    nb_trou_noir  = glui-> add_edittext_to_panel(information, "Nb Trou noir",
 												 GLUI_EDITTEXT_INT);
 
     glui->add_button( "Quit", EXIT_SUCCESS, (GLUI_Update_CB) exit);
 
     glui->set_main_gfx_window( main_window );
+
+    #ifdef DEBUG
+    printf("done\n");
+    #endif
 }
 
 static void update_nbEntities() {
@@ -224,7 +241,6 @@ static void idle()
         next_step();
     }
 
-    glutPostRedisplay();
 }
 
 static void next_step(void)
@@ -268,14 +284,15 @@ static void simulation_cb(int id)
 
 static void display(void)
 {
-    glClearColor ( 1., 1., 1., 0. );       // specifie la couleur 
+    // reset the display
+    glClearColor ( 1., 1., 1., 0. ); // background color 
     glClear(GL_COLOR_BUFFER_BIT);
-
     glLoadIdentity();
 	
-    // update glOrtho
+    // set region to see
     glOrtho(left, right, down, up, -1.0, 1.0);
 
+    // print all simulation entities
     sim_display();
 
     //met à jour nb éléments
@@ -298,7 +315,7 @@ static void reshape(int w, int h)
     down  = ymin - RMAX;
     up    = ymax + RMAX;
     
-    // update dimension for glOrtho
+    // update dimension for future glOrtho
     if ( (double)w/h > (right-left)/(up-down) ) {
         base   = (double) w*(up-down)/h;
         shift  = (base - (right-left))/2;

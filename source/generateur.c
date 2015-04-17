@@ -185,10 +185,10 @@ static void gen_draw(void *data)
 
     if (gen != NULL) {
         graphic_set_line_width(2.);
-        graphic_set_color(BLUE);
-        graphic_draw_vector(gen->center, gen->speed);
         graphic_set_color(AQUA);
         graphic_draw_circle(gen->center, gen->radius*GEN_RAYON_RATIO, DISC);
+        graphic_set_color(BLUE);
+        graphic_draw_vector(gen->center, gen->speed);
     }
 }
 
