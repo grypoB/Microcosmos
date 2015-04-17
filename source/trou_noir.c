@@ -19,6 +19,7 @@
 
 // for drawing of center polygon of the black hole
 #define NB_COTES 4
+#define RAYON 2
 
 
 typedef struct Trou_noir {
@@ -162,7 +163,7 @@ static void bckH_draw(void *data)
     if (bckH != NULL) {
        graphic_set_line_width(1.5);
        graphic_set_color(GREEN);
-       graphic_draw_polygon(bckH->center, NB_COTES);
+       graphic_draw_polygon(bckH->center, NB_COTES, RAYON);
        graphic_draw_circle(bckH->center, RBLACK, DASH_LINE);
     }
 }

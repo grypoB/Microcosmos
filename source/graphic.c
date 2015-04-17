@@ -10,7 +10,6 @@
 #define DASH_SIZE 5
 #define CIRCLE_SIDES 16
 
-#define SIZE 2
 // for display purposes
 #define VECTOR_RATIO 0.3
 
@@ -86,7 +85,7 @@ void graphic_draw_vector(POINT center, VECTOR vector)
 
 }
 
-void graphic_draw_polygon(POINT center, int nb_sides)  //radius en arg a la place de size
+void graphic_draw_polygon(POINT center, int nb_sides, int rayon)  //radius en arg a la place de size
 {
 	int i;
 	float alpha = 0;
@@ -96,8 +95,8 @@ void graphic_draw_polygon(POINT center, int nb_sides)  //radius en arg a la plac
 	for(i=0; i<nb_sides; i++)
 	{
 		  alpha = i * 2. * M_PI / nb_sides;
-		  glVertex2f (center.x + SIZE * cos (alpha), 
-					  center.y + SIZE * sin (alpha));
+		  glVertex2f (center.x + rayon * cos (alpha), 
+					  center.y + rayon * sin (alpha));
 	}
 	  
 	glEnd ();
