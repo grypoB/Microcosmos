@@ -1,17 +1,10 @@
 /* Nom: graphic.c
  * Description: module pour les dessins Opengl
- * Date: 08.02.2014
- * version : 1.1
+ * Date: 17.04.2015
+ * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
  */
-
-#define DASH_TOTAL_SIDES 100
-#define DASH_SIZE 5
-#define CIRCLE_SIDES 16
-
-// for display purposes
-#define VECTOR_RATIO 0.3
 
 #include <stdio.h>
 #include <math.h>
@@ -27,7 +20,14 @@
 #include "constantes.h"
 
 
-//draws a circle : dashed lines or continuous lines can be chosen
+// for drawing pseudo-circles 
+#define DASH_TOTAL_SIDES 100
+#define CIRCLE_SIDES 16
+
+// for displaying the vector top point
+#define VECTOR_RATIO 0.3
+
+//draws a circle with specific detail (see enum DETAIL)
 void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 {
 	int i;
@@ -74,6 +74,7 @@ void graphic_draw_vector(POINT center, VECTOR vector)
 				  center.y +vector.y*(1+VECTOR_RATIO));
 	glEnd ();
 	
+    // triangle at the end to make the vector an arrow
 	glBegin (GL_POLYGON);
 	  glVertex2f(center.x + vector.x * (1+VECTOR_RATIO), 
 				 center.y + vector.y * (1+VECTOR_RATIO));
@@ -85,7 +86,8 @@ void graphic_draw_vector(POINT center, VECTOR vector)
 
 }
 
-void graphic_draw_polygon(POINT center, int nb_sides, int rayon)  //radius en arg a la place de size
+//draws a regular polygon of nb_sides and circumradius rayon 
+void graphic_draw_polygon(POINT center, int nb_sides, int rayon)
 {
 	int i;
 	float alpha = 0;
@@ -126,11 +128,14 @@ void graphic_set_color(GRAPHIC_COLOR color)
         case YELLOW :  glColor3f(1, 1, 0);          break;
      }
 }
+
+//sets the color to a specific RGB value (normalized format [0,1])
 void graphic_set_color_3f(float red, float green, float blue) {
 	
 	glColor3f(red, green, blue);
 }
 
+//sets the width of all lines to draw
 void graphic_set_line_width(float width)
 {
   glLineWidth(width);
