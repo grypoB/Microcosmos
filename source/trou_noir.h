@@ -50,7 +50,7 @@ void bckH_deleteAll();
 // Getters
 //return total number of black holes
 int bckH_totalNB();
-// Append to pHead all particles' center
+// Append to pHead all balck holes' center
 // Please, do not modify their values (except if you feel lucky)
 void bckH_getAllCenters(LIST_HEAD *pHead);
 

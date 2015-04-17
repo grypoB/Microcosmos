@@ -1,6 +1,6 @@
 /* Nom: generateur.c
  * Description: module qui gère les générateurs
- * Date: 22.03.2015
+ * Date: 17.04.2015
  * version : 1.1
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -18,7 +18,8 @@
 #include "generateur.h"
 #include "particule.h"
 
-#define GEN_RAYON 2
+// size of center point of generator
+#define GEN_RAYON_RATIO 0.1
 
 typedef struct Generateur {
 
@@ -33,39 +34,34 @@ typedef struct Generateur {
 } GENERATEUR;
 
 
+// Graphics
 static void gen_draw(void *data);
 
-static void deleteGen(void *toDelete);
+// to manage data structure
 static GENERATEUR* newGen();
+static void deleteGen(void *toDelete);
 
-// list where all generators are stored
+
+// ====================================================================
+// list where all generators are stored (needs to be initialized)
 static bool genList_initialized = false;
 static LIST_HEAD generators = {0};
 
-// from an input string, creates a particle generator
-// Expected format (all in double): radius posx posy vx vy 
-// prints errors if it couldn't read string
-bool gen_readData(const char *string) {
-    double param[5] = {0};
-    bool returnVal = false;
 
-    if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2],
-                                              &param[3], &param[4])==5) {
-        if (gen_create(param[0], point_create(param[1], param[2]),
-            vector_create(param[3], param[4])) != UNASSIGNED) {
-            returnVal = true;
-        }
-    } else {
-        error_lecture_elements(ERR_GENERAT, ERR_PAS_ASSEZ);
-    }
-
-    return returnVal;
-}
-
-
-// return UNNASIGNED=-1 if create unssucceful
-// otherwise return the id of the generator
-// See particle module for params validity domain
+// ====================================================================
+// Creation of generator
+/** Create a generator with given parameter
+ *      see part_create
+ * Parameters :
+ *  - radius : radius of the generated particle, valide domain [RMIN, RMAX]
+ *  - center : position of it's center when created
+ *  - speed  : generated particle's speed, validity domain : norm<=MAX_VITESSE
+ *             see vector_norm
+ * Return values :
+ *  - id of generator created (>=0) for future reference
+ *  - UNNASIGNED (=-1) if parameters unvalid, prints error in terminal
+ *      see error_rayon_partic, error_vitesse_partic
+ */
 int gen_create(double radius, POINT center, VECTOR speed) {
     static int id = 0;
     int returnID = UNASSIGNED;
@@ -93,11 +89,74 @@ int gen_create(double radius, POINT center, VECTOR speed) {
     return returnID;
 }
 
-// return the total number of current generator
+
+// ====================================================================
+// Destructions
+/** Delete all existing black holes
+ * Note : use with care
+ */
+void gen_deleteAll() {
+    list_deleteAll(&generators);
+}
+
+
+// ====================================================================
+// String and file interface
+/** Create particle from data in a string
+ *      see part_create
+ * Parameters :
+ *  - string : to parse data from
+ *             Expected format (all in double): radius posx posy vx vy
+ * Return values :
+ *  - if generator was successfully created
+ *  - if false, error in string format or parameters value (see gen_create)
+ *              and appropriate errors will be displayed in terminal
+ */
+bool gen_readData(const char *string) {
+    double param[5] = {0};
+    bool returnVal = false;
+
+    if (sscanf(string, "%lf %lf %lf %lf %lf", &param[0], &param[1], &param[2],
+                                              &param[3], &param[4])==5) {
+        if (gen_create(param[0], point_create(param[1], param[2]),
+            vector_create(param[3], param[4])) != UNASSIGNED) {
+            returnVal = true;
+        }
+    } else {
+        error_lecture_elements(ERR_GENERAT, ERR_PAS_ASSEZ);
+    }
+
+    return returnVal;
+}
+
+/** Append all the generators to a file
+ *      write in the same format as string format in gen_readData
+ * Parameters : 
+ *  - file : file to append to
+ */
+void gen_saveAllData(FILE *file) {
+    GENERATEUR *gen = NULL;
+
+    if (list_goToFirst(&generators) != NULL) {
+        do {
+            gen = list_getData(generators, LIST_CURRENT);
+            fprintf(file, "%f %f %f %f %f\n" , gen->radius,
+                    gen->center.x, gen->center.y,
+                    gen->speed.x,  gen->speed.y);
+        } while (list_goToNext(&generators) != NULL);
+    }
+}
+
+
+// ====================================================================
+// Getters
+// return total number of generator
 int gen_totalNB() {
     return list_getNbElements(generators);
 }
 
+// Append to pHead all generators' center
+// Please, do not modify their values (except if you feel lucky)
 void gen_getAllCenters(LIST_HEAD *pHead)
 {
     GENERATEUR *gen = NULL;
@@ -111,11 +170,15 @@ void gen_getAllCenters(LIST_HEAD *pHead)
 }
 
 
-void gen_deleteAll() {
-    list_deleteAll(&generators);
+// ====================================================================
+// Graphics
+// Display all generators
+void gen_display(void)
+{
+    list_fctToAllElements(generators, gen_draw);
 }
 
-//draws generators
+// Draw a single generator
 static void gen_draw(void *data)
 {
     GENERATEUR *gen = data;
@@ -123,17 +186,16 @@ static void gen_draw(void *data)
     if (gen != NULL) {
         graphic_set_line_width(2.);
         graphic_set_color(BLUE);
-        graphic_draw_circle(gen->center, GEN_RAYON, DISC);
         graphic_draw_vector(gen->center, gen->speed);
+        graphic_set_color(AQUA);
+        graphic_draw_circle(gen->center, gen->radius*GEN_RAYON_RATIO, DISC);
     }
 }
 
-//manages the display of generators
-void gen_display(void)
-{
-    list_fctToAllElements(generators, gen_draw);
-}
 
+// ====================================================================
+// utilities functions (managing datas tructure)
+// return pointer to an empty slot in the data structure
 static GENERATEUR* newGen() {
     GENERATEUR* newGen = malloc(sizeof(GENERATEUR));
 
@@ -167,15 +229,3 @@ static void deleteGen(void *toDelete) {
     }
 }
 
-void gen_saveAllData(FILE *file) {
-    GENERATEUR *gen = NULL;
-
-    if (list_goToFirst(&generators) != NULL) {
-        do {
-            gen = list_getData(generators, LIST_CURRENT);
-            fprintf(file, "%f %f %f %f %f\n" , gen->radius,
-                    gen->center.x, gen->center.y,
-                    gen->speed.x,  gen->speed.y);
-        } while (list_goToNext(&generators) != NULL);
-    }
-}

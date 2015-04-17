@@ -1,6 +1,6 @@
 /* Nom: generateur.h
  * Description: module qui gère les générateurs
- * Date: 22.03.2015
+ * Date: 17.04.2015
  * version : 1.1
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -14,6 +14,10 @@
 #include "linked_list.h"
 #include <stdbool.h>
 
+// all generators are stored with a static in .c
+// creating one returns a unique ID (used to reference this generator later)
+// don't forget to delete afterwards (to clear memory), see gen_deleteAll
+
 /*
 Generator (of particles) defined by :
 - an id
@@ -22,27 +26,35 @@ Generator (of particles) defined by :
 - the speed vector of the particles it creates
 */
 
-
-
-// from an input string, creates a particle generator
-// Expected format (all in double): radius posx posy vx vy 
-// prints errors if it couldn't read string
-bool gen_readData(const char *string);
-void gen_saveAllData(FILE *file);
-
-// return UNNASIGNED=-1 if create unssucceful
-// otherwise return the id of the generator
-// See particle module for params validity domain
+// ====================================================================
+// Creation of generator
+/* Create a generator with given parameter */
 int gen_create(double radius, POINT center, VECTOR speed);
 
-//return total number of generator
+
+// ====================================================================
+// Destructions
+/* Delete all existing black holes */
+void gen_deleteAll();
+
+
+// ====================================================================
+// String and file interface
+/* Create particle from data in a string */
+bool gen_readData(const char *string);
+/* Append all the generators to a file */
+void gen_saveAllData(FILE *file);
+
+// ====================================================================
+// Getters
+// return total number of generator
 int gen_totalNB(void);
+// Append to pHead all generators' center
+// Please, do not modify their values (except if you feel lucky)
 void gen_getAllCenters(LIST_HEAD *pHead);
 
-//manages the displayof the generators
+// ====================================================================
+// Display all generators
 void gen_display(void);
-
-//gets datas of generators 
-void gen_deleteAll();
 
 #endif
