@@ -57,6 +57,8 @@ static void deletePart(void *toDelete);
 static int sortPart(void *p_a, void *p_b);
 static int idPart(void *p_a);
 
+
+// ====================================================================
 // list to store all the particle in (needs to be initialized)
 static bool partList_initialized = false;
 static LIST_HEAD particles = {0};
@@ -142,7 +144,7 @@ bool part_validParams(double radius, POINT center, VECTOR speed,
 /** Create particle from data in a string
  *      see part_create
  * Parameters :
- *  - string : to parse data
+ *  - string : to parse data from
  *             Expected format (all in double): radius posx posy vx vy
  * Return values :
  *  - if particle was successfully created
