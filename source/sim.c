@@ -31,7 +31,7 @@ enum Read_state {NB_GENERATEUR,
                  NB_PARTICULE,
                  PARTICULE,
                  FIN,
-                 ERROR};
+                 ERREUR};
 
 
 // read a file and store all entities read into the appropriate module
@@ -58,51 +58,30 @@ static bool read_entities (enum Read_state *state, const char *line,
 // return the value fgets returned (line[] address, or NULL if error occured)
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
 
-
-// Mode Error, called from main.
-// Input : the file to read the entities form
-void sim_error(const char filename[]) {
-    if (sim_lecture(filename)) {
-        error_success();
-    }
-    sim_clean();
-}
-
-// Mode Force, called from main.
-// Input : file to read the entities from
-void sim_force(const char filename[]) {
-    if (sim_lecture(filename)) {
-        particule_force_rendu1();
-    } else {
-        error_msg("Couldn't open simulation, input file has errors");
-    }
-    sim_clean();
-}
-
-void sim_integration(const char filename[]) {
-	if (sim_lecture(filename)) {
-        particule_integration_rendu2();
-    } else {
-        error_msg("Couldn't open simulation, input file has errors");
-    }
-}
-
-//Mode Graphic, called from main.
-// Input : the file to read the entities form
-void sim_graphic(const char filename[])
+void sim_mode(const char filename[], enum Mode mode)
 {
-	if (sim_lecture(filename)) {
-        // successful read
-    } else {
-        error_msg("Couldn't open simulation, input file has errors");
-    }
-}
-
-void sim_simulation(const char filename[])
-{
-	if (sim_lecture(filename)) {
-		sim_display();
-    } else {
+	if (sim_lecture(filename)) 
+	{
+	
+		switch(mode) 
+		{
+			case ERROR: error_success();
+						sim_clean();
+			break;
+			case FORCE: particule_force_rendu1();
+						sim_clean();
+			break;
+			case INTEGRATION: particule_integration_rendu2();
+			break;
+			case GRAPHIC: sim_display();
+			break;
+			case SIMULATION: sim_display();
+			break;
+			default : printf("Invalid state in sim error\n");
+		}
+	}
+    else 
+    {
         error_msg("Couldn't open simulation, input file has errors");
     }
 }
@@ -136,7 +115,7 @@ static bool sim_lecture(const char filename[])
 
     if(file != NULL)
     {
-        while(state!=ERROR && state !=FIN)
+        while(state!=ERREUR && state !=FIN)
         {
             if (file_nextUsefulLine(line, BUFFER_SIZE, file)) {
                 #ifdef DEBUG
@@ -157,19 +136,19 @@ static bool sim_lecture(const char filename[])
 											 nb_entities);
                     break;
                     case FIN:
-                    case ERROR:
+                    case ERREUR:
                     default:
                         error_msg("invalid state in sim lecture"
 								  "(sim_lecture)");
                 }
             } else {
                 error_fichier_incomplet();
-                state = ERROR;
+                state = ERREUR;
             }
         }
 
         fclose(file);
-        if (state == ERROR) {
+        if (state == ERREUR) {
             return false;
         } else {
             return true;
@@ -212,11 +191,11 @@ static int read_nbEntities(enum Read_state *state, const char *line) {
             case TROU_NOIR:
             case PARTICULE:
             case FIN:
-            case ERROR:
+            case ERREUR:
             default :
                 error_msg("invalid state in sim lecture (read_nbEntities)");
         }
-        *state = ERROR;
+        *state = ERREUR;
     }
 
     return nb_entities;
@@ -271,7 +250,7 @@ static bool read_entities(enum Read_state *state, const char *line,
             case NB_TROU_NOIR:
             case NB_PARTICULE:
             case FIN:
-            case ERROR:
+            case ERREUR:
             default :
                 error_msg("invalid state in sim lecture (read_entities)");
         }
@@ -280,7 +259,7 @@ static bool read_entities(enum Read_state *state, const char *line,
             (*pCounter)++;
         } else {
             // error message handled in ...._readData()
-            *state = ERROR;
+            *state = ERREUR;
         }
 
     }

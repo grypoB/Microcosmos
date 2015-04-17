@@ -48,9 +48,6 @@ static void idle(void);
 static void initOpenGl(void);
 static void initGlui(char* filename);
 
-// Mode of the simulation to be ran on, see specs sheet for details
-typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, 
-				   DEFAULT, MODE_UNSET} MODE;
 
 // Return the mode read from a string (argv[1])
 // return MODE_UNSET if string wasn't valid
@@ -93,21 +90,21 @@ int main (int argc, char *argv[])
 	}
 
     switch(mode) {
-        case ERROR: sim_error(argv[2]);
+        case ERROR: sim_mode(argv[2], ERROR);
         break;
-        case FORCE: sim_force(argv[2]);
+        case FORCE: sim_mode(argv[2], FORCE);
         break;
-        case INTEGRATION: sim_integration(argv[2]);
+        case INTEGRATION: sim_mode(argv[2], INTEGRATION);
         break;
         case GRAPHIC: 
-            sim_graphic(argv[2]);
+            sim_mode(argv[2], GRAPHIC);
             glutInit(&argc, argv);
             initOpenGl();
             initGlui(argv[2]);
             glutMainLoop();
         break;
         case SIMULATION: 
-            sim_simulation(argv[2]);
+            sim_mode(argv[2], SIMULATION);
             // no break because same command afterwards for sim mode
         case DEFAULT :
             glutInit(&argc, argv);
@@ -333,7 +330,7 @@ static void file_cb(int id) {
         case LOAD:
 			glutIdleFunc(NULL);
             sim_clean();
-            sim_simulation(loadFile->get_text());
+            sim_mode(loadFile->get_text(), SIMULATION);
             simulation_running = false;
 
             reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));

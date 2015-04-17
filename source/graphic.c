@@ -8,7 +8,6 @@
 
 #define DASH_TOTAL_SIDES 100
 #define DASH_SIZE 5
-
 #define CIRCLE_SIDES 16
 
 #define SIZE 2
@@ -34,47 +33,37 @@ void graphic_draw_circle(POINT center, double radius, DETAIL detail)
 {
 	int i;
     double x, y, alpha;
+    int nb_sides;
 	
 	switch(detail)
 	{
 		case CONTINUOUS :
             glBegin (GL_LINE_LOOP);
-
-            for (i=0; i < CIRCLE_SIDES; i++)
-            {
-                alpha = i * 2. * M_PI / CIRCLE_SIDES;
-                x = center.x + radius * cos (alpha);
-                y = center.y + radius * sin (alpha);
-                glVertex2f(x,y);
-            }
-            glEnd ();
+            nb_sides = CIRCLE_SIDES;
+           
             break;
 
 		case DASH_LINE :
             glBegin(GL_LINES);
-            for (i=0; i<DASH_TOTAL_SIDES; i++)
-            {
-                alpha = i * 2. * M_PI / DASH_TOTAL_SIDES;
-                x = center.x + radius * cos (alpha);
-                y = center.y + radius * sin (alpha);
-                glVertex2f(x,y);
-            }
-            glEnd();
+            nb_sides = DASH_TOTAL_SIDES;
+          
             break;
+            
 		case DISC :
             glBegin (GL_POLYGON);
-
-            for (i=0; i < CIRCLE_SIDES; i++)
-            {
-                alpha = i * 2. * M_PI / CIRCLE_SIDES;
-                x = center.x + radius * cos (alpha);
-                y = center.y + radius * sin (alpha);
-                glVertex2f(x,y);
-            }
-            glEnd ();
+			nb_sides = CIRCLE_SIDES;
+			
             break;
 	}
 
+	for (i=0; i < nb_sides; i++)
+    {
+            alpha = i * 2. * M_PI / nb_sides;
+            x = center.x + radius * cos (alpha);
+            y = center.y + radius * sin (alpha);
+            glVertex2f(x,y);
+	}
+	glEnd ();
 }
 
 //draws a vector
@@ -97,7 +86,7 @@ void graphic_draw_vector(POINT center, VECTOR vector)
 
 }
 
-void graphic_draw_polygon(POINT center, int nb_sides)
+void graphic_draw_polygon(POINT center, int nb_sides)  //radius en arg a la place de size
 {
 	int i;
 	float alpha = 0;

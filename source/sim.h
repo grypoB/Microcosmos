@@ -17,14 +17,18 @@
 #define GEN_SLOT 1
 #define BCKH_SLOT 2
 
+// Mode of the simulation to be ran on, see specs sheet for details
+typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, 
+				   DEFAULT, MODE_UNSET} MODE;
 
 // Different mode supported by the simulation
 // for more details see the specs of the projects
-void sim_error(const char filename[]);
+void sim_mode(const char filename[], enum Mode mode);
+/*void sim_error(const char filename[]);
 void sim_force(const char filename[]);
 void sim_graphic(const char filename[]);
 void sim_integration(const char filename[]);
-void sim_simulation(const char filename[]);
+void sim_simulation(const char filename[]);*/
 
 //updates the number of entities
 void sim_nbEntities(int elementnb[ENTITY_NB]);
