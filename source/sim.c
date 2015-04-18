@@ -391,3 +391,20 @@ void sim_save(const char filename[])
 	}
 	else printf("File didn't open in %s\n", __func__);
 }
+
+
+void sim_select(double x, double y) {
+    #ifdef DEBUG
+    printf("Select : (%f,%f)\n",x,y);
+    #endif
+
+    printf("%s\n", __func__);
+}
+
+void sim_deleteSelection() {
+    printf("%s\n", __func__);
+}
+
+void sim_unselect() {
+    printf("%s\n", __func__);
+}

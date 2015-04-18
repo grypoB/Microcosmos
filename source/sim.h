@@ -21,25 +21,36 @@
 typedef enum Mode {ERROR, FORCE, INTEGRATION, GRAPHIC, SIMULATION, 
 				   DEFAULT, MODE_UNSET} MODE;
 
+// ====================================================================
+// File management
 // Different mode supported by the simulation
 // for more details see the specs of the projects
 void sim_openFile(const char filename[], enum Mode mode);
+// saves the current state of simulation in filename
+void sim_save(const char filename[]);
 
+// ====================================================================
+// Getters : info about the simulation
 //updates the number of entities
 void sim_nbEntities(int elementnb[ENTITY_NB]);
-
 //return extreme points
 void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax);
 
-//saves the current state of simulation in filename
-void sim_save(const char filename[]);
-
+// ====================================================================
 //displays entities
 void sim_display(void);
 
-//handles calculation for the next step of the simulation
+// ====================================================================
+// handles calculation for the next step of the simulation
 void sim_next_step(void);
 
+// ====================================================================
+// Inputs
+void sim_select(double x, double y);
+void sim_deleteSelection();
+void sim_unselect();
+
+// ====================================================================
 // Free memory from all modules accross the simultion
 void sim_clean();
 

@@ -26,6 +26,8 @@ extern "C"
 }
 
 
+#define DELETE_KEY 'd'
+
 // id for all callbacks
 // file_cb
 #define SAVE 0
@@ -44,6 +46,8 @@ static void reshape(int w, int h);
 static void file_cb(int id);
 static void simulation_cb(int id);
 static void idle(void);
+static void mouse(int button, int state, int x, int y);
+static void keyboard(unsigned char key, int x, int y);
 
 // init graphic display
 static void initOpenGl(void);
@@ -158,8 +162,8 @@ static void initOpenGl()
     /* Fonctions callback */
     GLUI_Master.set_glutDisplayFunc(display);
     GLUI_Master.set_glutReshapeFunc(reshape);
-    //GLUI_Master.set_glutMouseFunc(mouse);
-    //GLUI_Master.set_glutKeyboardFunc(keyboard);
+    GLUI_Master.set_glutMouseFunc(mouse);
+    GLUI_Master.set_glutKeyboardFunc(keyboard);
     GLUI_Master.set_glutIdleFunc(idle);
 
     #ifdef DEBUG
@@ -336,7 +340,6 @@ static void reshape(int w, int h)
     glutPostRedisplay(); 
 }
 
-
 //Réponse à l'interface utilisateur partie fichier
 static void file_cb(int id) {
     switch(id) {
@@ -357,4 +360,31 @@ static void file_cb(int id) {
     }
 
     glutPostRedisplay(); 
+}
+
+static void mouse(int button, int state, int x, int y) {
+    int w = glutGet(GLUT_WINDOW_WIDTH);
+    int h = glutGet(GLUT_WINDOW_HEIGHT);
+
+    #ifdef DEBUG
+    printf("w=%d, h=%d\n",w,h);
+    #endif
+
+    if (button == GLUT_LEFT_BUTTON) {
+        switch (state) {
+            case GLUT_DOWN:
+                sim_select((double) x/w*(right-left)+left, 
+                           (double) -y/h*(up-down)+up);
+            break;
+            case GLUT_UP:
+                sim_unselect();
+            break;
+        }
+    }
+}
+
+static void keyboard(unsigned char key, int x, int y) {
+    if (key == DELETE_KEY) {
+        sim_deleteSelection();
+    }
 }
