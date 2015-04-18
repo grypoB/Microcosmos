@@ -50,7 +50,7 @@ Low level representation of points and vectors and functions to manipulate them 
 \item[Module: linked\_list]
 Abstract double linked list data structure.
 Some basic dictionary are implemented such as : first, next, add, delete, search.
-More complex operations exist such as : sorting and calling a function with 2 elements as argument , for every possible 2-combinations of elements
+More complex operations exist such as : sorting and calling a function with 2 elements as arguments, for every possible 2-combinations of elements
 (to work out the forces between every particles for example)
 
 %This module in included in the modules : \emph{sim}, \emph{generateur}, \emph{particule}, \emph{trou\_noir}.
@@ -63,29 +63,32 @@ to retrieve a particle's ID to then destroy it with : \texttt{part\_delete( int 
 
 \item[Dependency: generateur $\rightarrow$ particule]
 This allows \emph{generateur} to delegate the validity of a generator's argument to \emph{particule}
+(using \texttt{part\_validParams}) 
 and to create particle by a simple call of \texttt{part\_create}
 \end{description}
 
-Working with these modules eases our work by reducing the amount of redundant code.
+Working with these modules eases our work by reducing the amount of redundant code and delegating complex tasks
+(such as adding an element to a linked list or working out a linear interpolation) to specialized modules.
 It also eased the testing part, as we could validate the correctness of these modules before using them in the project.
 
 % =====================================================================
 \section{Data structures}
 
 To store the data from the particles, generators and black holes,
-we used array of size MAX\_RENDU1 for the \emph{rendu1}.
+we used arrays of size MAX\_RENDU1 for the \emph{rendu1}.
 But for the \emph{rendu 2} we needed a way to store large numbers of entities,
 without any knowledge of the maximum amount.
 We first consider arrays which double in size when full, but it had 2 drawbacks :
 spikes (when the array is re-allocated) in calculation time
-and a possibility that half the allocated memory isn't used.
+and a possibility that half the allocated memory isn't used (possibly even more if some elements are deleted)
 
-This is why we went for \emph{linked list}.
+To avoid these drawbacks we had little choice but to use \emph{linked lists}.
+Because we were going to use linked lists for the particles, generators and black holes, to avoid redudant code,
+we decided to write an abstract linked list module.
 
-To ease our work, we decided to use the same kind of data structure for all entities,
-hence the abstract linked list module.
+This even allowed us to code some complex behaviour in the module that we could later use with a simple function call
+(ex: search, sort or even applying a function to all elements), without any \texttt{while} or \texttt{for} loop to write.
 
-This module allowed us write complex 
 
 
 % =====================================================================
@@ -95,28 +98,28 @@ Here are the different functions of sim.c called in main.cpp :
 \begin{itemize}
 \item For file managment:
     \begin{itemize}
-    \item sim\_openFile that manages the different mode supported bt the simulation
-    \item sim\_save that saves the current state of the simulation in a file
+    \item \texttt{sim\_openFile} that manages the different mode supported bt the simulation
+    \item \texttt{sim\_save} that saves the current state of the simulation in a file
     \end{itemize}
 \item Getting information from the simulation:
     \begin{itemize}
-    \item sim\_nbEntities updates the number of each entity
-    \item sim\_extremPoints returns the outermost points at the beginning of the simulation to calculate the frame of the window to open
+    \item \texttt{sim\_nbEntities} updates the number of each entity
+    \item \texttt{sim\_extremPoints} returns the outermost points at the beginning of the simulation to calculate the frame of the window to open
     \end{itemize}
 \item Handling the advancement of the simulation
     \begin{itemize}
-    \item sim\_display that calls the different entities to display them
-    \item sim\_next\_step that handles calculation for the next step of the simulation
+    \item \texttt{sim\_display} that calls the different entities to display them
+    \item \texttt{sim\_next}\_step that handles calculation for the next step of the simulation
     \end{itemize}
 \item Handling the user inputs:
     \begin{itemize}
-    \item sim\_select enables the user of the program to select an entity
-    \item sim\_deleteSelection to delete it
-    \item sim\_unselect to unselect a selected entity
+    \item \texttt{sim\_select} enables the user of the program to select an entity
+    \item \texttt{sim\_deleteSelection} to delete it
+    \item \texttt{sim\_unselect} to unselect a selected entity
     \end{itemize}
 \item Exiting a simulation:
     \begin{itemize}
-    \item sim\_clean object is to free memory from all modules accross the simulation
+    \item \texttt{sim\_clean} object is to free memory from all modules accross the simulation
     \end{itemize}
 \end{itemize}
 
