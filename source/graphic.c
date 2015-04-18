@@ -10,9 +10,9 @@
 #include <math.h>
 
 #ifdef __APPLE__
-#include <GLUT/glut.h>
+#include <Opengl/glu.h>
 #else
-#include <GL/glut.h>
+#include <GL/glu.h>
 #endif
 
 #include "graphic.h"
