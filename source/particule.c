@@ -16,6 +16,8 @@
 #include "particule.h"
 #include "linked_list.h"
 
+// size of the line of the particle circle
+#define LINE_WIDTH 2.
 
 typedef struct Particule {
 
@@ -344,7 +346,7 @@ static void part_draw(void *pData) {
     PARTICULE *part = pData;
 
     if (part != NULL) {
-        graphic_set_line_width(2.);
+        graphic_set_line_width(LINE_WIDTH);
         part_setColor(part->speed);
         graphic_draw_circle(part->center, part->radius, CONTINUOUS);
     }

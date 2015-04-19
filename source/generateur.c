@@ -20,6 +20,8 @@
 
 // size of center point of generator
 #define GEN_RAYON_RATIO 0.1
+// size of the line of the vector
+#define LINE_WIDTH 2.
 
 typedef struct Generateur {
 
@@ -184,7 +186,7 @@ static void gen_draw(void *data)
     GENERATEUR *gen = data;
 
     if (gen != NULL) {
-        graphic_set_line_width(2.);
+        graphic_set_line_width(LINE_WIDTH);
         graphic_set_color(AQUA);
         graphic_draw_circle(gen->center, gen->radius*GEN_RAYON_RATIO, DISC);
         graphic_set_color(BLUE);
