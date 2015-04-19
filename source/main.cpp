@@ -1,7 +1,7 @@
 /* Nom: main.cpp
  * Description: module sous-système de contrôle: gestion du dialogue 
  avec l'utilisateur et interface graphique
- * Date: 22.03.2014
+ * Date: 19.04.2015
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -31,20 +31,24 @@ extern "C"
 #define STEP  1
 
 
-// Calulate  next simulations status
-static void next_step(void);
 
 // OpenGl callbacks
-static void display(void);
+// visuals
 static void reshape(int w, int h);
+static void display(void);
+static void update_nbEntities();
+// interaction callbakcs
 static void file_cb(int id);
 static void simulation_cb(int id);
-static void idle(void);
 static void mouse(int button, int state, int x, int y);
 static void keyboard(unsigned char key, int x, int y);
+// simulation advancement
+static void idle(void);
+static void next_step(void);
 
 // init graphic display
 static void initOpenGl(void);
+// filename is the string to display in the load section
 static void initGlui(char* filename);
 
 // Return the mode read from a string (argv[1])
@@ -54,6 +58,9 @@ static MODE read_mode(const char string[]);
 
 namespace
 {
+    // store in which mode the sim is
+    MODE mode = MODE_UNSET;  
+
     // OpenGl window
     int main_window;
 
@@ -77,9 +84,9 @@ namespace
 }
 
 
+// ====================================================================
 int main (int argc, char *argv[])
 {
-    MODE mode = MODE_UNSET;  
 
     if(argc==3) {
         mode = read_mode(argv[1]);
@@ -89,28 +96,24 @@ int main (int argc, char *argv[])
 	}
 
     switch(mode) {
-        case ERROR: sim_openFile(argv[2], ERROR);
-        break;
-        case FORCE: sim_openFile(argv[2], FORCE);
-        break;
-        case INTEGRATION: sim_openFile(argv[2], INTEGRATION);
+        case ERROR:
+        case FORCE:
+        case INTEGRATION: // sim handle the difference between those modes
+            sim_openFile(argv[2], mode);
         break;
         case GRAPHIC: 
-            sim_openFile(argv[2], GRAPHIC);
+        case SIMULATION: // sim handle the difference betwee those modes
+            sim_openFile(argv[2], mode);
             glutInit(&argc, argv);
             initOpenGl();
             initGlui(argv[2]);
             glutMainLoop();
         break;
-        case SIMULATION: 
-            sim_openFile(argv[2], SIMULATION);
-            // no break because same command afterwards for sim mode
         case DEFAULT :
             glutInit(&argc, argv);
             initOpenGl();
-            initGlui(NULL);
+            initGlui(NULL); // don't print anything in the load section
             glutMainLoop();
-
         case MODE_UNSET:
         default :
             printf("Syntaxe attendue : sim.x "
@@ -121,6 +124,8 @@ int main (int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
+// ====================================================================
+// initialization
 static MODE read_mode(const char string[])
 {
     MODE mode = MODE_UNSET;
@@ -180,7 +185,7 @@ static void initGlui(char* filename)
     #endif
 
     /*Code GLUI pour l'interface*/
-    glui = GLUI_Master.create_glui("GLUI");
+    glui = GLUI_Master.create_glui("Control panel");
 
     //File panel
     file     = glui->add_panel("File");
@@ -220,16 +225,59 @@ static void initGlui(char* filename)
     #endif
 }
 
-static void update_nbEntities() {
-    int nbEntities[ENTITY_NB] = {0};
-    
-    sim_nbEntities(nbEntities);
+// ====================================================================
+// Callbacks
+static void mouse(int button, int state, int x, int y) {
+    int w = glutGet(GLUT_WINDOW_WIDTH);
+    int h = glutGet(GLUT_WINDOW_HEIGHT);
 
-    nb_generateur->set_int_val(nbEntities[GEN_SLOT]);
-    nb_trou_noir ->set_int_val(nbEntities[BCKH_SLOT]);
-    nb_particule ->set_int_val(nbEntities[PART_SLOT]);
+    #ifdef DEBUG
+    printf("w=%d, h=%d\n",w,h);
+    #endif
+
+    if (button == GLUT_LEFT_BUTTON) {
+        switch (state) {
+            case GLUT_DOWN:
+                sim_select((double) x/w*(right-left)+left, 
+                           (double) -y/h*(up-down)+up);
+            break;
+            case GLUT_UP:
+                sim_deselect();
+            break;
+        }
+    }
 }
 
+static void keyboard(unsigned char key, int x, int y) {
+    if (key == DELETE_KEY) {
+        sim_deleteSelection();
+    }
+}
+
+//Réponse à l'interface utilisateur partie fichier
+static void file_cb(int id) {
+    switch(id) {
+        case SAVE:
+			glutIdleFunc(NULL);
+            sim_save(saveFile->get_text());
+        break;
+        case LOAD:
+			glutIdleFunc(NULL);
+            sim_clean();
+            sim_openFile(loadFile->get_text(), mode);
+            simulation_running = false;
+
+            reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+        break;
+        default:
+            printf("Wrong id in %s\n",__func__);
+    }
+
+    glutPostRedisplay(); 
+}
+
+// ====================================================================
+// Simulation advancement
 static void idle()
 {
     if ( glutGetWindow() != main_window ) 
@@ -279,7 +327,8 @@ static void simulation_cb(int id)
     glutPostRedisplay();
 }
 
-
+// ====================================================================
+// All visual functions
 static void display(void)
 {
     // reset the display
@@ -297,6 +346,16 @@ static void display(void)
     update_nbEntities();
 
     glutSwapBuffers();
+}
+
+static void update_nbEntities() {
+    int nbEntities[ENTITY_NB] = {0};
+    
+    sim_nbEntities(nbEntities);
+
+    nb_generateur->set_int_val(nbEntities[GEN_SLOT]);
+    nb_trou_noir ->set_int_val(nbEntities[BCKH_SLOT]);
+    nb_particule ->set_int_val(nbEntities[PART_SLOT]);
 }
 
 static void reshape(int w, int h)
@@ -332,53 +391,4 @@ static void reshape(int w, int h)
     #endif
 
     glutPostRedisplay(); 
-}
-
-//Réponse à l'interface utilisateur partie fichier
-static void file_cb(int id) {
-    switch(id) {
-        case SAVE:
-			glutIdleFunc(NULL);
-            sim_save(saveFile->get_text());
-        break;
-        case LOAD:
-			glutIdleFunc(NULL);
-            sim_clean();
-            sim_openFile(loadFile->get_text(), SIMULATION);
-            simulation_running = false;
-
-            reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-        break;
-        default:
-            printf("Wrong id in %s\n",__func__);
-    }
-
-    glutPostRedisplay(); 
-}
-
-static void mouse(int button, int state, int x, int y) {
-    int w = glutGet(GLUT_WINDOW_WIDTH);
-    int h = glutGet(GLUT_WINDOW_HEIGHT);
-
-    #ifdef DEBUG
-    printf("w=%d, h=%d\n",w,h);
-    #endif
-
-    if (button == GLUT_LEFT_BUTTON) {
-        switch (state) {
-            case GLUT_DOWN:
-                sim_select((double) x/w*(right-left)+left, 
-                           (double) -y/h*(up-down)+up);
-            break;
-            case GLUT_UP:
-                sim_deselect();
-            break;
-        }
-    }
-}
-
-static void keyboard(unsigned char key, int x, int y) {
-    if (key == DELETE_KEY) {
-        sim_deleteSelection();
-    }
 }
