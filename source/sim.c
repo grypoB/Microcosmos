@@ -68,7 +68,7 @@ void sim_openFile(const char filename[], enum Mode mode)
             case INTEGRATION: particule_integration_rendu2();
             break;
             // handle GRAPHIC, SIMULATION and DEFAULT the same way :
-            // dont' do anything
+            // don't do anything anymore
             case GRAPHIC:
             case SIMULATION:
             case DEFAULT:
@@ -77,6 +77,11 @@ void sim_openFile(const char filename[], enum Mode mode)
             break;
         }
 	}
+    else // delete entity which were created if file has errors
+    {
+        sim_clean();
+    }
+
 }
 
 //saves the current state ofthe simulation in a file which name is given
