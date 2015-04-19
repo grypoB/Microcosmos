@@ -405,6 +405,6 @@ void sim_deleteSelection() {
     printf("%s\n", __func__);
 }
 
-void sim_unselect() {
+void sim_deselect() {
     printf("%s\n", __func__);
 }

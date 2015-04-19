@@ -371,7 +371,7 @@ static void mouse(int button, int state, int x, int y) {
                            (double) -y/h*(up-down)+up);
             break;
             case GLUT_UP:
-                sim_unselect();
+                sim_deselect();
             break;
         }
     }

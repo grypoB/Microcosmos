@@ -48,7 +48,7 @@ void sim_next_step(void);
 // Inputs
 void sim_select(double x, double y);
 void sim_deleteSelection();
-void sim_unselect();
+void sim_deselect();
 
 // ====================================================================
 // Free memory from all modules accross the simultion
