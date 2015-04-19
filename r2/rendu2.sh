@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ $1 ]; then
+if [ "$1" = "-c"  ]; then
     SOURCE_FOLDER="../source"
     RENDU_PATH="../source/rendu2.x"
 
@@ -18,7 +18,7 @@ then
     while [ $j -le 3 ]
     do
         echo "Running I$j.txt!"
-        "./"rendu2.x Integration "I$j.txt" >> "out_I$j.txt"
+        "./"rendu2.x Integration "I$j.txt" > "out_I$j.txt"
         let "j++"
         echo "Done!"
     done
