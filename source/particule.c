@@ -297,7 +297,7 @@ void particule_integration_rendu2() {
         printf("%7.3f %7.3f %9.4f %9.4f\n", part->speed.x,  part->speed.y,
                                             part->center.x, part->center.y);
     } else {
-        error_msg("No particule found. There must be at leat one particule\n");
+        error_msg("No particule found (minimum one particule)\n");
     }
 }
 
@@ -473,7 +473,7 @@ static void updateKinematic(PARTICULE* part, double delta_t) {
         if (!part->locked) { // a locked particule doesn't build up speed
             // update speed
             part->speed = vector_sum(part->speed,
-                                     vector_multiply(part->acceleration, delta_t));
+                                vector_multiply(part->acceleration, delta_t));
             speed_norm  = vector_norm(part->speed);
     
             if (speed_norm > MAX_VITESSE) { // scale down the vector
@@ -483,7 +483,7 @@ static void updateKinematic(PARTICULE* part, double delta_t) {
     
             // update position
             part->center = point_translate(part->center,
-                                           vector_multiply(part->speed, delta_t));
+                                       vector_multiply(part->speed, delta_t));
         }
     }
 }
