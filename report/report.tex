@@ -35,7 +35,7 @@
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.45\textwidth]{architecture.jpg}
+\includegraphics[width=0.48\textwidth]{architecture.jpg}
 \caption{Final architecture}
 \end{figure}
 
@@ -62,12 +62,13 @@ Plus, to destroy particles too close to a black hole, it can call \texttt{int pa
 to retrieve a particle's ID to then destroy it with: \texttt{part\_delete( int partID )}
 
 \item[Dependency: generateur $\rightarrow$ particule.]
-This allows \emph{generateur} to delegate the validity of a generator's argument to \emph{particule}
+This allows \emph{generateur} to delegate the validity of a generator's arguments to \emph{particule}
 (using \texttt{part\_validParams}) 
-and to create particle by a simple call of \texttt{part\_create}
+and to create new particles by a simple call of \texttt{part\_create}
+(but first call \texttt{part\_closestPartOn} to check if a particle covers the generator)
 \end{description}
 
-Working with these modules eases our work by reducing the amount of redundant code and delegating complex tasks
+Working with these modules eases our work by reducing the amount of redundant code and delegating complex generic tasks
 (such as adding an element to a linked list or working out a linear interpolation) to specialized modules.
 It also eased the testing part, as we could validate the correctness of these modules before using them in the project.
 
@@ -75,7 +76,7 @@ It also eased the testing part, as we could validate the correctness of these mo
 \section{Data structures}
 
 To store the data from the particles, generators and black holes,
-we used arrays of size MAX\_RENDU1 for the \emph{rendu1}.
+we used arrays of size MAX\_RENDU1 for the \emph{rendu 1}.
 But for the \emph{rendu 2} we needed a way to store large numbers of entities,
 without any knowledge of the maximum amount.
 We first consider arrays which double in size when full, but it has 2 drawbacks :
@@ -86,8 +87,10 @@ To avoid these drawbacks we had little choice but to use \emph{linked lists}.
 Because we were going to use linked lists for the particles, generators and black holes, to avoid redundant code,
 we decided to write a generic double linked list module.
 
-This even allowed us to code some complex behaviour in the module that we could later use with a simple function call
-(ex: search, sort or even applying a function to all elements), without any \texttt{while} or \texttt{for} loop to write.
+This module handles all the hassle of creating and deleting dynamically elements.
+
+%This even allowed us to code some complex behaviour in the module that we could later use with a simple function call
+%(ex: search, sort or even applying a function to all elements), without any \texttt{while} or \texttt{for} loop to write.
 
 
 % =====================================================================
@@ -95,20 +98,20 @@ This even allowed us to code some complex behaviour in the module that we could 
 Here are the different functions of \emph{sim.c} called in \emph{main.cpp} :
 
 \begin{itemize}
-\item For file management:
+\item Beginning and saving a simulation:
     \begin{itemize}
-    \item \texttt{sim\_openFile}: manages the different mode supported by the simulation
-    \item \texttt{sim\_save}: saves the current state of the simulation in a file
+    \item \texttt{sim\_openFile}: begin a new simulation from a given file and mode
+    \item \texttt{sim\_save}: save the current state of the simulation in a file
     \end{itemize}
 \item Getting information from the simulation:
     \begin{itemize}
     \item \texttt{sim\_nbEntities}: get the number of each entity (to display in GLUI)
-    \item \texttt{sim\_extremPoints}: returns the outermost points of the simulation to calculate the frame of the window to open
+    \item \texttt{sim\_extremPoints}: return the outermost points of the simulation to calculate the frame of the window to open
     \end{itemize}
 \item Handling the advancement of the simulation:
     \begin{itemize}
     \item \texttt{sim\_display}: display the current state of the simulation (with all the entities) 
-    \item \texttt{sim\_next\_step}: handles calculation for the next step of the simulation
+    \item \texttt{sim\_next\_step}: calculate the simulation's next step
     \end{itemize}
 \item Handling the user inputs:
     \begin{itemize}
