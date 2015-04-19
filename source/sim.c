@@ -1,6 +1,6 @@
 /* Nom: sim.c
  * Description: module qui lit le fichier en entrée
- * Date: 22.03.2014
+ * Date: 19.04.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -24,6 +24,7 @@
 #define DATA_SEPARATOR "FIN_LISTE"
 
 // enum to store state of reading automate
+// see sim_lecture, read_nbEntities and read_entities
 enum Read_state {NB_GENERATEUR,
                  GENERATEUR,
                  NB_TROU_NOIR,
@@ -34,30 +35,23 @@ enum Read_state {NB_GENERATEUR,
                  ERREUR};
 
 
-// read a file and store all entities read into the appropriate module
-// return false, if an error occured
-// (ex : file formated wrong, param not in validity domain, etc.)
-// see specs of the project for file syntax
-// print the error in the terminal 
+// Reading file
+/* read a file and store all entities read into the appropriate module */
 static bool sim_lecture(const char filename[]);
-
-// Centralised way of reading the number of entities in the input file 
-// return the nb_entities read
-// modify the state appropriatly after that
-// print any error detected (then set state=error)
+/* Centralised way of reading the number of entities in the input file */
 static int read_nbEntities(enum Read_state *state, const char *line);
-// centralised way to read an entity value
-// update the state (see read_nbEntities) and the counter of entities read
-// return false if an error occured (also print it in the terminal)
+/* centralised way to read an entity value */
 static bool read_entities (enum Read_state *state, const char *line,
                            int *pCounter, int nb_entities);
-                           
-// parse the empty or commented lines in a file to find the next useful line
-// line content stored in char line[], file should have already open
-// Useful line are : none empty and without '#' as first characters
-// return the value fgets returned (line[] address, or NULL if error occured)
+/*parse the empty or commented lines in a file to find the next useful line*/
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
 
+// ====================================================================
+// File managment
+/** Different mode supported by the simulation
+ * open simulation fron file
+ * for more details see the specs of the projects
+ */
 void sim_openFile(const char filename[], enum Mode mode)
 {
 	if (sim_lecture(filename)) 
@@ -85,7 +79,131 @@ void sim_openFile(const char filename[], enum Mode mode)
 	}
 }
 
-// Free memory from all modules accross the simulation
+//saves the current state ofthe simulation in a file which name is given
+void sim_save(const char filename[])
+{
+	FILE *file = fopen(filename, "w");
+
+    if(file != NULL)
+    {
+        // deleguate to all module;
+        
+        // gen
+        fprintf(file, "%d\n", gen_totalNB());
+        gen_saveAllData(file);
+		fprintf(file, "%s\n",DATA_SEPARATOR);
+        // bckH
+        fprintf(file, "%d\n", bckH_totalNB());
+        bckH_saveAllData(file);
+		fprintf(file, "%s\n",DATA_SEPARATOR);
+        // part
+        fprintf(file, "%d\n", part_totalNB());
+        part_saveAllData(file);
+		fprintf(file, "%s\n",DATA_SEPARATOR);
+
+	    fclose(file);
+	}
+	else printf("File didn't open in %s\n", __func__);
+}
+
+// ====================================================================
+// Getters : info about the simulation
+// get the number of every single entities
+void sim_nbEntities(int elementnb[3])
+{
+	elementnb[PART_SLOT] = part_totalNB();
+	elementnb[GEN_SLOT]  = gen_totalNB();
+	elementnb[BCKH_SLOT] = bckH_totalNB();
+}
+
+// return the outermost points of the simulation
+void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
+{
+    LIST_HEAD centers = list_create(NULL, NULL, NULL);
+    POINT *point = NULL;
+
+    // init with default values
+    *xmin = 0;
+    *xmax = 0;
+    *ymin = 0;
+    *ymax = 0;
+
+    // retrieve all center point from all entities
+    part_getAllCenters(&centers);
+    gen_getAllCenters(&centers);
+    bckH_getAllCenters(&centers);
+
+    if (list_goToFirst(&centers) != NULL) {
+
+        // initialize with values from points
+        point = list_getData(centers, LIST_CURRENT);
+        *xmin = point->x;
+        *xmax = point->x;
+        *ymin = point->y;
+        *ymax = point->y;
+
+        while (list_goToNext(&centers) != NULL) {
+            point = list_getData(centers, LIST_CURRENT);
+
+            if(point->x < *xmin) *xmin = point->x;
+            if(point->x > *xmax) *xmax = point->x;
+            if(point->y < *ymin) *ymin = point->y;
+            if(point->y > *ymax) *ymax = point->y;
+        }
+    }
+
+    #ifdef DEBUG
+    printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",
+		   *xmin, *xmax, *ymin, *ymax);
+    #endif
+
+    // free memory
+    list_deleteAll(&centers);
+}
+
+// ====================================================================
+//displays entities
+void sim_display(void)
+{
+	part_display();
+	gen_display();
+	bckH_display();
+}
+
+// ====================================================================
+// handles calculation for the next step of the simulation
+void sim_next_step(void)
+{
+	part_nextTick(DELTA_T);
+}
+
+
+
+// ====================================================================
+// Inputs
+// select the closest entity of point (x,y)
+void sim_select(double x, double y) {
+    #ifdef DEBUG
+    printf("Select : (%f,%f)\n",x,y);
+    #endif
+
+    printf("%s\n", __func__);
+}
+
+// delete the current selection
+// in nothing selected, don't do anything
+void sim_deleteSelection() {
+    printf("%s\n", __func__);
+}
+
+// deslect the current selection
+void sim_deselect() {
+    printf("%s\n", __func__);
+}
+
+
+// ====================================================================
+// Free memory from all modules accross the simultion
 void sim_clean() {
     #ifdef DEBUG
     printf("Freeing memory from entities\n");
@@ -97,11 +215,14 @@ void sim_clean() {
 }
 
 
-// ----------
-// read a file and store all entities read into the appropriate module
-// return false, if an error occured
-// (ex : file formated wrong, param not in validity domain, etc.)
-// prints the error in the terminal 
+// ====================================================================
+// Reading file
+/** read a file and store all entities read into the appropriate module
+ * return false, if an error occured
+ * (ex : file formated wrong, param not in validity domain, etc.)
+ * see specs of the project for file syntax
+ * print the error in the terminal 
+ */
 static bool sim_lecture(const char filename[])
 {
     char line[BUFFER_SIZE] = {0};
@@ -160,11 +281,11 @@ static bool sim_lecture(const char filename[])
 	}
 }
 
-
-// Centralised way of reading the number of entities in the input file 
-// return the nb_entities read
-// modify the state appropriatly after that
-// prints any error detected (then sets state=error)
+/** Centralised way of reading the number of entities in the input file 
+ * return the nb_entities read
+ * modify the state appropriatly after that
+ * print any error detected (then set state=error)
+ */
 static int read_nbEntities(enum Read_state *state, const char *line) {
     int nb_entities = 0;
     bool success = false;
@@ -200,11 +321,10 @@ static int read_nbEntities(enum Read_state *state, const char *line) {
     return nb_entities;
 }
 
-
-// centralised way to read an entity value
-// call appropriate module to create the entity
-// update the state and the counter of entities read
-// return false if an error occured (also print it in the terminal)
+/** centralised way to read an entity value
+ * update the state (see read_nbEntities) and the counter of entities read
+ * return false if an error occured (also print it in the terminal)
+ */
 static bool read_entities(enum Read_state *state, const char *line,
                           int *pCounter, int nb_entities) {
     char string[BUFFER_SIZE] = {0};
@@ -266,14 +386,11 @@ static bool read_entities(enum Read_state *state, const char *line,
     return success;
 }
 
-
-
-// ---------
-// parse the empty or commented lines in a file to find the next useful line
-// line content stored in char line[], file should have already open
-// Useful line are : none empty and without '#' as first characters
-// return the value fgets returned (line[] address, or NULL if error occured)
-// Caution : each line of the file should have less than line_size caracters
+/** parse the empty or commented lines in a file to find the next useful line
+ * line content stored in char line[], file should have already open
+ * Useful line are : none empty and without '#' as first characters
+ * return the value fgets returned (line[] address, or NULL if error occured)
+ */
 static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     int useful = true;
     char *returnVal = NULL;
@@ -300,111 +417,3 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file) {
     return returnVal;
 }
 
-void sim_display(void)
-{
-	part_display();
-	gen_display();
-	bckH_display();
-}
-
-void sim_next_step(void)
-{
-	part_nextTick(DELTA_T);
-}
-
-void sim_nbEntities(int elementnb[3])
-{
-	elementnb[PART_SLOT] = part_totalNB();
-	elementnb[GEN_SLOT]  = gen_totalNB();
-	elementnb[BCKH_SLOT] = bckH_totalNB();
-}
-
-
-//finds two extreme points at bottom-left and up-right
-void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
-{
-    LIST_HEAD centers = list_create(NULL, NULL, NULL);
-    POINT *point = NULL;
-
-    // init with default values
-    *xmin = 0;
-    *xmax = 0;
-    *ymin = 0;
-    *ymax = 0;
-
-    // retrieve all center point from all entities
-    part_getAllCenters(&centers);
-    gen_getAllCenters(&centers);
-    bckH_getAllCenters(&centers);
-
-    if (list_goToFirst(&centers) != NULL) {
-
-        // initialize with values from points
-        point = list_getData(centers, LIST_CURRENT);
-        *xmin = point->x;
-        *xmax = point->x;
-        *ymin = point->y;
-        *ymax = point->y;
-
-        while (list_goToNext(&centers) != NULL) {
-            point = list_getData(centers, LIST_CURRENT);
-
-            if(point->x < *xmin) *xmin = point->x;
-            if(point->x > *xmax) *xmax = point->x;
-            if(point->y < *ymin) *ymin = point->y;
-            if(point->y > *ymax) *ymax = point->y;
-        }
-    }
-
-    #ifdef DEBUG
-    printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",
-		   *xmin, *xmax, *ymin, *ymax);
-    #endif
-
-    // free memory
-    list_deleteAll(&centers);
-}
-
-//saves the current state ofthe simulation in a file which name is given
-void sim_save(const char filename[])
-{
-	FILE *file = fopen(filename, "w");
-
-    if(file != NULL)
-    {
-        // deleguate to all module;
-        
-        // gen
-        fprintf(file, "%d\n", gen_totalNB());
-        gen_saveAllData(file);
-		fprintf(file, "%s\n",DATA_SEPARATOR);
-        // bckH
-        fprintf(file, "%d\n", bckH_totalNB());
-        bckH_saveAllData(file);
-		fprintf(file, "%s\n",DATA_SEPARATOR);
-        // part
-        fprintf(file, "%d\n", part_totalNB());
-        part_saveAllData(file);
-		fprintf(file, "%s\n",DATA_SEPARATOR);
-
-	    fclose(file);
-	}
-	else printf("File didn't open in %s\n", __func__);
-}
-
-
-void sim_select(double x, double y) {
-    #ifdef DEBUG
-    printf("Select : (%f,%f)\n",x,y);
-    #endif
-
-    printf("%s\n", __func__);
-}
-
-void sim_deleteSelection() {
-    printf("%s\n", __func__);
-}
-
-void sim_deselect() {
-    printf("%s\n", __func__);
-}
