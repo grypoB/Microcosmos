@@ -179,7 +179,7 @@ void sim_display(void)
 // handles calculation for the next step of the simulation
 void sim_next_step(void)
 {
-	part_nextTick(DELTA_T);
+    printf("%s\n", __func__);
 }
 
 
