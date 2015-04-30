@@ -40,6 +40,8 @@ void bckH_saveAllData(FILE *file);
 
 // ====================================================================
 // Destructions
+/* Delete black hole  with given ID */
+bool bckH_deleteBckH(int partID);
 /** Delete all existing black holes
  * Note : use with care
  */

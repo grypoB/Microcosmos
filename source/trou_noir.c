@@ -39,6 +39,7 @@ static void bckH_draw(void *data);
 // to manage data structure
 static TROU_NOIR* newBckH();
 static void deleteBckH(void *toDelete);
+static int idBckH(void *p_a);
 
 
 // ====================================================================
@@ -75,6 +76,25 @@ int bckH_create(POINT center) {
 
 // ====================================================================
 // Destructions
+/** Delete black holes with given ID
+ * Parameters :
+ *  - bckHID : id of black hole to delete
+ *             see bckH_create
+ * Return values :
+ *  - if black hole was successfully deleted
+ *  - if returns false probably already deleted of never existed
+ */
+bool bckH_deleteBckH(int bckHID) {
+
+    if (list_getDataFromId(&blackHoles, bckHID) == NULL) {
+        return false;
+    } else { // black holes found in list and is the current one
+        (void) list_deleteCurrent(&blackHoles);
+        return true;
+    }
+
+}
+
 /** Delete all existing black holes
  * Note : use with care
  */
@@ -178,7 +198,7 @@ static TROU_NOIR* newBckH() {
     TROU_NOIR *newBckH = malloc(sizeof(TROU_NOIR));
 
     if (!bckHList_initialized) {
-        blackHoles = list_create(deleteBckH, NULL, NULL);
+        blackHoles = list_create(deleteBckH, NULL, idBckH);
         bckHList_initialized = true;
     }
     
@@ -202,4 +222,15 @@ static void deleteBckH(void *toDelete) {
 
         free(bckH);
     }
+}
+
+// return ID of black holes
+static int idBckH(void *p_a) {
+    int val = UNASSIGNED; 
+
+    if (p_a != NULL) {
+        val = ((TROU_NOIR*)p_a)->id;
+    }
+
+    return val;
 }
