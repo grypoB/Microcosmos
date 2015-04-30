@@ -42,6 +42,7 @@ static void gen_draw(void *data);
 // to manage data structure
 static GENERATEUR* newGen();
 static void deleteGen(void *toDelete);
+static int idGen(void *p_a);
 
 
 // ====================================================================
@@ -94,6 +95,25 @@ int gen_create(double radius, POINT center, VECTOR speed) {
 
 // ====================================================================
 // Destructions
+/** Delete generator with given ID
+ * Parameters :
+ *  - genID : id of generator to delete
+ *             see gen_create
+ * Return values :
+ *  - if generators was successfully deleted
+ *  - if returns false probably already deleted of never existed
+ */
+bool gen_deleteGen(int genID) {
+
+    if (list_getDataFromId(&generators, genID) == NULL) {
+        return false;
+    } else { // particule found in list and is the current one
+        (void) list_deleteCurrent(&generators);
+        return true;
+    }
+
+}
+
 /** Delete all existing black holes
  * Note : use with care
  */
@@ -203,7 +223,7 @@ static GENERATEUR* newGen() {
 
     if (!genList_initialized) {
         // TODO add support the other fct
-        generators = list_create(deleteGen, NULL, NULL);
+        generators = list_create(deleteGen, NULL, idGen);
         genList_initialized = true;
     }
 
@@ -231,3 +251,13 @@ static void deleteGen(void *toDelete) {
     }
 }
 
+// return ID of generateur
+static int idGen(void *p_a) {
+    int val = UNASSIGNED; 
+
+    if (p_a != NULL) {
+        val = ((GENERATEUR*)p_a)->id;
+    }
+
+    return val;
+}

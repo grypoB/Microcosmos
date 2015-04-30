@@ -34,6 +34,8 @@ int gen_create(double radius, POINT center, VECTOR speed);
 
 // ====================================================================
 // Destructions
+/* Delete generator with given ID */
+bool gen_deleteGen(int genID);
 /* Delete all existing black holes */
 void gen_deleteAll();
 
