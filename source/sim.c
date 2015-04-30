@@ -114,7 +114,7 @@ void sim_save(const char filename[])
 // ====================================================================
 // Getters : info about the simulation
 // get the number of every single entities
-void sim_nbEntities(int elementnb[3])
+void sim_nbEntities(int elementnb[ENTITY_NB])
 {
 	elementnb[PART_SLOT] = part_totalNB();
 	elementnb[GEN_SLOT]  = gen_totalNB();
