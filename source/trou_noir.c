@@ -150,6 +150,15 @@ int bckH_totalNB() {
 
 
 // ====================================================================
+// Manage simulation													TODOOOOOOOOOOOO
+//return ID of closest blackhole to a point
+int bckh_closestBckhOn(POINT point, double* length)
+{
+	return 1;
+}
+
+
+// ====================================================================
 // Drawings
 //Display all black holes 
 void bckH_display(void)

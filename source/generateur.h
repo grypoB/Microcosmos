@@ -53,6 +53,12 @@ int gen_totalNB(void);
 // Please, do not modify their values (except if you feel lucky)
 void gen_getAllCenters(LIST_HEAD *pHead);
 
+
+// ====================================================================
+// Manage simulation													TODO
+//return ID of closest generator to a point
+int gen_closestGenOn(POINT point, double* length);
+
 // ====================================================================
 // Display all generators
 void gen_display(void);

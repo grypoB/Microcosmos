@@ -18,10 +18,15 @@
 #include "generateur.h"
 #include "trou_noir.h"
 #include "particule.h"
+#include "geometry.h"
 
 #define BUFFER_SIZE 100 // size of reading buffer
 // separator in input file between entities declarations
 #define DATA_SEPARATOR "FIN_LISTE"
+
+#define LOCK 1
+#define UNLOCK 0
+
 
 // enum to store state of reading automate
 // see sim_lecture, read_nbEntities and read_entities
@@ -34,6 +39,7 @@ enum Read_state {NB_GENERATEUR,
                  FIN,
                  ERREUR};
 
+static int selected;
 
 // Reading file
 /* read a file and store all entities read into the appropriate module */
@@ -49,14 +55,13 @@ static char* file_nextUsefulLine(char line[], int line_size, FILE *file);
 // ====================================================================
 // File managment
 /** Different mode supported by the simulation
- * open simulation fron file
- * for more details see the specs of the projects
+ * open simulation from file
+ * for more details see the specs of the project
  */
 void sim_openFile(const char filename[], enum Mode mode)
 {
 	if (sim_lecture(filename)) 
 	{
-	
 		switch(mode) 
         {
             case ERROR:       error_success();
@@ -68,7 +73,7 @@ void sim_openFile(const char filename[], enum Mode mode)
             case INTEGRATION: particule_integration_rendu2();
             break;
             // handle GRAPHIC, SIMULATION and DEFAULT the same way :
-            // dont' do anything
+            // doesn't do anything
             case GRAPHIC:
             case SIMULATION:
             case DEFAULT:
@@ -79,7 +84,7 @@ void sim_openFile(const char filename[], enum Mode mode)
 	}
 }
 
-//saves the current state ofthe simulation in a file which name is given
+//saves the current state of the simulation in a file which name is given
 void sim_save(const char filename[])
 {
 	FILE *file = fopen(filename, "w");
@@ -183,21 +188,47 @@ void sim_next_step(void)
 // Inputs
 // select the closest entity of point (x,y)
 void sim_select(double x, double y) {
-    #ifdef DEBUG
-    printf("Select : (%f,%f)\n",x,y);
-    #endif
-
+   
+    POINT point = {x , y};
+    double *dist_gen  = NULL;
+    double *dist_bckh = NULL;
+    
+    if(part_closestPartOn(point) != UNASSIGNED)
+    {
+		selected = part_closestPartOn(point);
+		part_setLock(selected, LOCK);
+	}
+    
+    int closestGen  = gen_closestGenOn(point, dist_gen);
+    int closestBckh = bckh_closestBckhOn(point, dist_bckh);
+    
+    if((*dist_gen) < (*dist_bckh))
+    {
+		selected = closestGen;
+	}
+    else selected = closestBckh;
+    
     printf("%s\n", __func__);
 }
 
 // delete the current selection
 // in nothing selected, don't do anything
 void sim_deleteSelection() {
+	
+	//DÉTRUIRE LA PARTICULE DONT ON REÇOIT LE ID
     printf("%s\n", __func__);
 }
 
-// deslect the current selection
-void sim_deselect() {
+// deselect the current selection
+void sim_deselect(int selected) {
+	if(part_setLock(selected, UNLOCK))
+	{
+		selected = UNASSIGNED;
+	}
+	else
+	{
+		selected = UNASSIGNED;
+	}
     printf("%s\n", __func__);
 }
 
@@ -208,7 +239,8 @@ void sim_clean() {
     #ifdef DEBUG
     printf("Freeing memory from entities\n");
     #endif
-
+	sim_deselect(selected);
+	
     part_deleteAll();
     gen_deleteAll();
     bckH_deleteAll();

@@ -38,6 +38,7 @@ bool bckH_readData(const char *string);
 void bckH_saveAllData(FILE *file);
 
 
+
 // ====================================================================
 // Destructions
 /** Delete all existing black holes
@@ -54,6 +55,10 @@ int bckH_totalNB();
 // Please, do not modify their values (except if you feel lucky)
 void bckH_getAllCenters(LIST_HEAD *pHead);
 
+// ====================================================================
+// Manage simulation													TODO
+//return ID of closest blackhole to a point
+int bckh_closestBckhOn(POINT point, double* length);
 
 // ====================================================================
 // Display all black holes 

@@ -60,7 +60,7 @@ typedef struct List_element LIST_ELEMENT;
 typedef struct List_head    LIST_HEAD;
 
 // Structure which should be exclusively handled by this module
-struct List_element {
+struct List_element {                                               //?????????????? element particule/gen/bckh
 
     void *data; // pointer to data of the node/element
 
@@ -98,7 +98,7 @@ struct List_head {
 
 // -----------
 // Creation :
-/**  return a empty LIST_HEAD with functionality built in 
+/**  returns an empty LIST_HEAD with functionality built in 
  *      (see LIST_HEAD structure for how these func should behave):
  *      - deleteData : func called whenever a data is removed
  *      - sortData   : func used to sort the data (see list_sort and the
@@ -120,7 +120,7 @@ LIST_HEAD list_create(void (*deleteData) (void *data),
 
 
 // -----------
-// adds an element to the end of list, set its data to data
+// adds an element to the end of list, sets its data to data
 // returns the new current position : the new element added
 // exits if malloc fails
 LIST_ELEMENT* list_add(LIST_HEAD *pHead, void *data);
@@ -134,7 +134,7 @@ LIST_ELEMENT* list_add(LIST_HEAD *pHead, void *data);
 // list are still deleted
 
 // delete current element
-// see list_goToFirst, list_goToNext and list_getDataFormId
+// see list_goToFirst, list_goToNext and list_getDataFromId
 // if current == NULL, doesn't do anything
 LIST_ELEMENT* list_deleteCurrent(LIST_HEAD *pHead); 
 // delete all the elements of the list

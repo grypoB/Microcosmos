@@ -171,6 +171,13 @@ void gen_getAllCenters(LIST_HEAD *pHead)
     }
 }
 
+// ====================================================================
+// Manage simulation													TODOOOOOOOOOOOOO
+//return ID of closest generator to a point
+int gen_closestGenOn(POINT point, double* length)
+{
+	return 1;
+}
 
 // ====================================================================
 // Graphics

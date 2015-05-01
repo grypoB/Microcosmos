@@ -210,7 +210,6 @@ bool part_deletePart(int partID) {
         return true;
     }
 
-
 }
 
 /** Delete all existing particles

@@ -183,7 +183,7 @@ void* list_getData(LIST_HEAD head, int elementNB) {
 
         el = head.first;
 
-        for (i=1 ; i<elementNB ; i++) { // counts form 1
+        for (i=1 ; i<elementNB ; i++) { // counts from 1
             if (el == NULL) {
                 printf("FATAL ERROR in linked-list (%s)\n", __func__);
                 exit(EXIT_FAILURE);
