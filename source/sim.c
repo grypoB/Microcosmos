@@ -38,7 +38,7 @@ enum Read_state {NB_GENERATEUR,
                  PARTICULE,
                  FIN,
                  ERREUR};
-
+static enum Entity {PART, GEN, BCKH} entity;
 static int selected;
 
 // Reading file
@@ -190,11 +190,13 @@ void sim_next_step(void)
 void sim_select(double x, double y) {
    
     POINT point = {x , y};
+    
     double *dist_gen  = NULL;
     double *dist_bckh = NULL;
     
     if(part_closestPartOn(point) != UNASSIGNED)
     {
+		entity = PART;
 		selected = part_closestPartOn(point);
 		part_setLock(selected, LOCK);
 	}
@@ -204,9 +206,14 @@ void sim_select(double x, double y) {
     
     if((*dist_gen) < (*dist_bckh))
     {
+		entity = GEN;
 		selected = closestGen;
 	}
-    else selected = closestBckh;
+    else 
+    {
+		entity = BCKH;
+		selected = closestBckh;
+    }
     
     printf("%s\n", __func__);
 }
@@ -214,8 +221,16 @@ void sim_select(double x, double y) {
 // delete the current selection
 // in nothing selected, don't do anything
 void sim_deleteSelection() {
+	switch(entity)
+	{
+		case PART: part_deletePart(selected);
+		break;
+		case GEN:  deleteGen(&selected);
+		break;
+		case BCKH: deleteBckH(&selected);
+		break;
+	}
 	
-	//DÉTRUIRE LA PARTICULE DONT ON REÇOIT LE ID
     printf("%s\n", __func__);
 }
 

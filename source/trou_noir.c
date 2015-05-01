@@ -38,7 +38,6 @@ static void bckH_draw(void *data);
 
 // to manage data structure
 static TROU_NOIR* newBckH();
-static void deleteBckH(void *toDelete);
 
 
 // ====================================================================
@@ -150,7 +149,7 @@ int bckH_totalNB() {
 
 
 // ====================================================================
-// Manage simulation													TODOOOOOOOOOOOO
+// Manage simulation													TODO
 //return ID of closest blackhole to a point
 int bckh_closestBckhOn(POINT point, double* length)
 {
@@ -200,7 +199,7 @@ static TROU_NOIR* newBckH() {
     return newBckH;
 }
 
-static void deleteBckH(void *toDelete) {
+void deleteBckH(void *toDelete) {
     TROU_NOIR *bckH = (TROU_NOIR*) toDelete;
 
     if (bckH != NULL) {

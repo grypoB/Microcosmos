@@ -41,7 +41,6 @@ static void gen_draw(void *data);
 
 // to manage data structure
 static GENERATEUR* newGen();
-static void deleteGen(void *toDelete);
 
 
 // ====================================================================
@@ -223,7 +222,7 @@ static GENERATEUR* newGen() {
     return newGen;
 }
 
-static void deleteGen(void *toDelete) {
+void deleteGen(void *toDelete) {
     GENERATEUR *gen = (GENERATEUR*) toDelete;
 
     if (gen != NULL) {

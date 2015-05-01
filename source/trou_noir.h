@@ -45,7 +45,7 @@ void bckH_saveAllData(FILE *file);
  * Note : use with care
  */
 void bckH_deleteAll();
-
+void deleteBckH(void *toDelete);
 
 // ====================================================================
 // Getters

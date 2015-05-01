@@ -36,7 +36,7 @@ int gen_create(double radius, POINT center, VECTOR speed);
 // Destructions
 /* Delete all existing black holes */
 void gen_deleteAll();
-
+void deleteGen(void *toDelete);
 
 // ====================================================================
 // String and file interface
