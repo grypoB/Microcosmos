@@ -61,4 +61,10 @@ void bckH_getAllCenters(LIST_HEAD *pHead);
 // Display all black holes 
 void bckH_display(void);
 
+// ====================================================================
+// Simulation related 
+/* Apply forces to all particles */
+void bckH_calcTick();
+/* Destroy all particles too close from the black holes */
+void bckH_nextTick();
 #endif

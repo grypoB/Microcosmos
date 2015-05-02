@@ -182,11 +182,11 @@ void sim_next_step(void)
     //gen_nextTick(DELTA_T);  // create new particles
     part_initTick();
     
-    //bckH_calcTick();        // caculate all the forces
+    bckH_calcTick();        // caculate all the forces
     part_calcTick();
 
 	part_nextTick(DELTA_T); // update kinematic
-    //bckH_nextTick();        // let the black holes eat the particles
+    bckH_nextTick();        // let the black holes eat the particles
 }
 
 

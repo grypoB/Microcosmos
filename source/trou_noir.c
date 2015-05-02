@@ -16,6 +16,7 @@
 #include "geometry.h"
 #include "error.h"
 #include "trou_noir.h"
+#include "particule.h"
 
 // for drawing of center polygon of the black hole
 #define NB_COTES 4
@@ -35,6 +36,10 @@ typedef struct Trou_noir {
 
 // Graphic func
 static void bckH_draw(void *data);
+
+// Simulation related
+static VECTOR bckH_forceField(POINT p);
+static double bckH_calcForceToParticles(TROU_NOIR bckH, POINT p);
 
 // to manage data structure
 static TROU_NOIR* newBckH();
@@ -190,6 +195,64 @@ static void bckH_draw(void *data)
     }
 }
 
+// ====================================================================
+// Simulation update fct
+/* Apply forces to all particles */
+void bckH_calcTick() {
+    // apply forces to particles
+    part_applyForceField(bckH_forceField);
+}
+
+
+/* Destroy all particles too close from the black holes */
+void bckH_nextTick() {
+    // eat those particle which were a bit too close
+    TROU_NOIR *bckH = NULL;
+    int partID = UNASSIGNED;
+
+    if (list_goToFirst(&blackHoles) != NULL) {
+        do {
+            bckH = list_getData(blackHoles, LIST_CURRENT);
+
+            while ((partID=part_closestPartOn(bckH->center)) != UNASSIGNED) {
+                part_deletePart(partID);
+            }
+
+        } while (list_goToNext(&blackHoles) != NULL);
+    }
+}
+
+/* Calc the force all black holes apply on a point p */
+static VECTOR bckH_forceField(POINT p) {
+    TROU_NOIR *bckH = NULL;
+    VECTOR force = vector_null();
+    double force_norm = 0;
+
+    if (list_goToFirst(&blackHoles) != NULL) {
+        do {
+            bckH = list_getData(blackHoles, LIST_CURRENT);
+
+            force_norm  = bckH_calcForceToParticles(*bckH, p);
+            force = vector_sum(force,
+                               vector_fitLine(p, bckH->center, force_norm));
+
+        } while (list_goToNext(&blackHoles) != NULL);
+    }
+
+    return force;
+}
+
+/* Return the norm of the force a given black hole exerce on a point */
+static double bckH_calcForceToParticles(TROU_NOIR bckH, POINT p) {
+    double force_norm = FBLACK_MIN;
+    double dist = point_distance(bckH.center, p);
+    
+    if (dist<RBLACK) {
+        force_norm += linear_interpolation(dist, 0, FBLACK, RBLACK, 0);
+    }
+
+    return force_norm;
+}
 
 // ====================================================================
 // utilities functions (managing datas tructure)
