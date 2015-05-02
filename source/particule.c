@@ -477,10 +477,7 @@ static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
     if (distance < EPSILON_ZERO) {
         force = vector_create(0, force_norm);
     } else { // general case
-        force = vector_create(force_norm/distance *
-                             (p2->center.x-p1->center.x), 
-                             (force_norm/distance) * 
-                             (p2->center.y-p1->center.y));
+        force = vector_fitLine(p1->center, p2->center, force_norm);
     }
 
     p1->force = vector_sum(p1->force, force);
