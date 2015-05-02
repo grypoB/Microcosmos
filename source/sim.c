@@ -179,7 +179,14 @@ void sim_display(void)
 // handles calculation for the next step of the simulation
 void sim_next_step(void)
 {
-	part_nextTick(DELTA_T);
+    //gen_nextTick(DELTA_T);  // create new particles
+    part_initTick();
+    
+    //bckH_calcTick();        // caculate all the forces
+    part_calcTick();
+
+	part_nextTick(DELTA_T); // update kinematic
+    //bckH_nextTick();        // let the black holes eat the particles
 }
 
 

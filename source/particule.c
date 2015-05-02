@@ -40,7 +40,6 @@ typedef struct Particule {
 static void part_initMass(PARTICULE *part);
 
 // Simulation related
-static void part_updateAllForces();
 static void updateKinematic(PARTICULE *part, double delta_t);
 static void initForceVec (void *data);
 static void part_interact(void *dataA, void *dataB);
@@ -368,7 +367,23 @@ static void part_setColor(VECTOR speed) {
 
 // ====================================================================
 // Simulation update fct
-/** Update kinematic of all particles
+/** Init the partciles for the next tick calculation
+ *  It is to be called before part_calcTick and part_nextTick
+ */
+void part_initTick() {
+    list_fctToAllElements(particles, initForceVec);
+}
+
+/** Calculation for the particles next tick
+ *  to be called between part_initTick and part_nextTick
+ *  see part_applyForceField
+ */
+void part_calcTick() {
+    list_fctToAll2combinations(particles, part_interact);
+}
+
+/** Update kinematic of all particles to finish the next tick 
+ * to be called after part_initTick and part_calcTick
  * Parameters :
  *  - delta_t : time ammount to run the simulation on
  *              the smaller, the more precise the results
@@ -378,9 +393,6 @@ void part_nextTick(double delta_t) {
     PARTICULE *part = NULL;
 
     if (delta_t>=0.) {
-        //TODO part_collisionBlackHole();
-        part_updateAllForces();
-
         // update kinematic for every particles
         if (list_goToFirst(&particles) != NULL) {
             do {
@@ -391,11 +403,24 @@ void part_nextTick(double delta_t) {
     }
 }
 
-// update force value of all particles
-static void part_updateAllForces() {
+/** Apply a force field to all particles
+ * to be called between part_initTick and part_nextTick
+ * it doesn't matter if it called before/after part_calcTick.
+ * Parameters :
+ *  - forceFieldAt : function of the force field to apply
+ *                   given a point (center of the particle), it should
+ *                   return the force vector to apply
+ */
+void part_applyForceField(VECTOR (*forceFieldAt) (POINT p)) {
+    PARTICULE *part = NULL;
 
-    list_fctToAllElements     (particles, initForceVec);
-    list_fctToAll2combinations(particles, part_interact);
+    if (list_goToFirst(&particles) != NULL) {
+        do {
+            part = list_getData(particles, LIST_CURRENT);
+            part->force = vector_sum(part->force,
+                                     (*forceFieldAt)(part->center));
+        } while (list_goToNext(&particles));
+    }
 }
 
 // set force vector to null
