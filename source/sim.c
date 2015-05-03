@@ -236,9 +236,9 @@ void sim_deleteSelection() {
 	{
 		case PART: part_deletePart(selected);
 		break;
-		case GEN:  deleteGen(&selected);
+		case GEN:  gen_deleteGen(selected);
 		break;
-		case BCKH: deleteBckH(&selected);
+		case BCKH: bckH_deleteBckH(selected);
 		break;
 	}
 	

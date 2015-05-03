@@ -24,6 +24,7 @@
 // size of the outer circle line
 #define LINE_WIDTH 1.5
 
+#define TAILLE_FENETRE 100 //A CHANGER
 
 typedef struct Trou_noir {
 
@@ -179,7 +180,24 @@ int bckH_totalNB() {
 //return ID of closest blackhole to a point
 int bckh_closestBckhOn(POINT point, double* length)
 {
-	return 1;
+	int bckHID = UNASSIGNED;
+	double newDist = 0;
+	double dist = TAILLE_FENETRE +1;
+    TROU_NOIR* current = NULL;
+	
+	if (list_goToFirst(&blackHoles) != NULL) {
+        do {
+            current = list_getData(blackHoles, LIST_CURRENT);
+            newDist = point_distance(current->center, point);
+
+            if (newDist < dist) {
+                dist = newDist;
+                bckHID = current->id;
+            }
+        } while (list_goToNext(&blackHoles) != NULL);
+    }
+	
+	return bckHID;
 }
 
 

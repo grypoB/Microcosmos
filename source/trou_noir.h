@@ -47,7 +47,6 @@ bool bckH_deleteBckH(int partID);
  * Note : use with care
  */
 void bckH_deleteAll();
-void deleteBckH(void *toDelete);
 
 // ====================================================================
 // Getters

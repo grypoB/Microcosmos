@@ -23,6 +23,8 @@
 // size of the line of the vector
 #define LINE_WIDTH 2.
 
+#define TAILLE_FENETRE 100 //A CHANGER
+
 typedef struct Generateur {
 
     int id; // unique identifier
@@ -41,8 +43,8 @@ static void gen_draw(void *data);
 
 // to manage data structure
 static GENERATEUR* newGen();
-static void deleteGen(void *toDelete);
 static int idGen(void *p_a);
+static void deleteGen(void *toDelete);
 
 
 // ====================================================================
@@ -196,8 +198,26 @@ void gen_getAllCenters(LIST_HEAD *pHead)
 //return ID of closest generator to a point
 int gen_closestGenOn(POINT point, double* length)
 {
-	return 1;
+	int genID = UNASSIGNED;
+	double newDist = 0;
+	double dist = TAILLE_FENETRE +1;
+    GENERATEUR* current = NULL;
+	
+	if (list_goToFirst(&generators) != NULL) {
+        do {
+            current = list_getData(generators, LIST_CURRENT);
+            newDist = point_distance(current->center, point);
+
+            if (newDist < dist) {
+                dist = newDist;
+                genID = current->id;
+            }
+        } while (list_goToNext(&generators) != NULL);
+    }
+	
+	return genID;
 }
+
 
 // ====================================================================
 // Graphics
