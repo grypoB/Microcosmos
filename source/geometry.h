@@ -41,6 +41,8 @@ VECTOR vector_multiply(VECTOR v, double scalar);
 // return the norm of v
 double vector_norm(VECTOR v);
 
+/* Return vector of norm vec_norm ann of direction p1->p2 */
+VECTOR vector_fitLine(POINT p1, POINT p2, double vec_norm);
 
 // give the y coord of point C
 // by linear interpolation of the point A and B

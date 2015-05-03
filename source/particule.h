@@ -72,8 +72,15 @@ void particule_integration_rendu2();
 
 // ------------
 // Manage simulation
-/* Update kinematic of all particles */
+/* Init the partciles for the next tick calculation */
+void part_initTick();
+/* Calculation for the particles next tick */
+void part_calcTick();
+/* Update kinematic of all particles to finish the next tick*/
 void part_nextTick(double delta_t);
+
+/* Apply a force field to all particles */
+void part_applyForceField(VECTOR (*forceFieldAt) (POINT p));
 /* return ID of closest part to a point, which it overlaps */
 int part_closestPartOn(POINT point);
 // Display all particles

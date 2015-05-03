@@ -60,8 +60,25 @@ double vector_norm(VECTOR v)
 	return sqrt(v.x * v.x + v.y  * v.y);
 }
 
+/** Return vector of norm vec_norm and of direction p1->p2
+ *  Return the null vector if p1==p2
+ *  Parameters :
+ *      - point p1 and p2 : defining the line on which the returned
+ *                          vector must fit
+ *      - vec_norm : norm of the vector to return 
+ */
+VECTOR vector_fitLine(POINT p1, POINT p2, double vec_norm) {
+    double dist = point_distance(p1, p2);
 
+    if (dist == 0.) {
+        return vector_null();
+    }
 
+    return (VECTOR) {vec_norm/dist * (p2.x-p1.x),
+                     vec_norm/dist * (p2.y-p1.y)};
+}
+
+// ===================================================================
 // Other fcts
 
 // give the y coord of point C

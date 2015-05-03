@@ -37,6 +37,7 @@ extern "C"
 static void reshape(int w, int h);
 static void display(void);
 static void update_nbEntities();
+static void open_window();
 // interaction callbakcs
 static void file_cb(int id);
 static void simulation_cb(int id);
@@ -102,7 +103,7 @@ int main (int argc, char *argv[])
             sim_openFile(argv[2], mode);
         break;
         case GRAPHIC: 
-        case SIMULATION: // sim handle the difference betwee those modes
+        case SIMULATION: // sim handle the difference between those modes
             sim_openFile(argv[2], mode);
             glutInit(&argc, argv);
             initOpenGl();
@@ -329,6 +330,19 @@ static void simulation_cb(int id)
 
 // ====================================================================
 // All visual functions
+/*static void open_window(void)
+{
+	double xmin, xmax, ymin, ymax;
+	sim_extremPoints(&xmin, &xmax, &ymin, &ymax);
+    
+    left  = xmin - RMAX;
+    right = xmax + RMAX;
+    down  = ymin - RMAX;
+    up    = ymax + RMAX;
+     
+    glOrtho(left, right, down, up, -1.0, 1.0);
+}*/
+
 static void display(void)
 {
     // reset the display

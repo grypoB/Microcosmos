@@ -72,8 +72,7 @@ void sim_openFile(const char filename[], enum Mode mode)
             break;
             case INTEGRATION: particule_integration_rendu2();
             break;
-            // handle GRAPHIC, SIMULATION and DEFAULT the same way :
-            // doesn't do anything
+            // handle GRAPHIC, SIMULATION and DEFAULT the same way
             case GRAPHIC:
             case SIMULATION:
             case DEFAULT:
@@ -82,6 +81,11 @@ void sim_openFile(const char filename[], enum Mode mode)
             break;
         }
 	}
+    else // delete entity which were created if file has errors
+    {
+        sim_clean();
+    }
+
 }
 
 //saves the current state of the simulation in a file which name is given
@@ -114,7 +118,7 @@ void sim_save(const char filename[])
 // ====================================================================
 // Getters : info about the simulation
 // get the number of every single entities
-void sim_nbEntities(int elementnb[3])
+void sim_nbEntities(int elementnb[ENTITY_NB])
 {
 	elementnb[PART_SLOT] = part_totalNB();
 	elementnb[GEN_SLOT]  = gen_totalNB();
@@ -179,7 +183,14 @@ void sim_display(void)
 // handles calculation for the next step of the simulation
 void sim_next_step(void)
 {
-	part_nextTick(DELTA_T);
+    //gen_nextTick(DELTA_T);  // create new particles
+    part_initTick();
+    
+    bckH_calcTick();        // caculate all the forces
+    part_calcTick();
+
+	part_nextTick(DELTA_T); // update kinematic
+    bckH_nextTick();        // let the black holes eat the particles
 }
 
 

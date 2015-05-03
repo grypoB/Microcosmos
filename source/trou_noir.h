@@ -41,6 +41,8 @@ void bckH_saveAllData(FILE *file);
 
 // ====================================================================
 // Destructions
+/* Delete black hole  with given ID */
+bool bckH_deleteBckH(int partID);
 /** Delete all existing black holes
  * Note : use with care
  */
@@ -64,4 +66,10 @@ int bckh_closestBckhOn(POINT point, double* length);
 // Display all black holes 
 void bckH_display(void);
 
+// ====================================================================
+// Simulation related 
+/* Apply forces to all particles */
+void bckH_calcTick();
+/* Destroy all particles too close from the black holes */
+void bckH_nextTick();
 #endif
