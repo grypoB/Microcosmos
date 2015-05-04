@@ -194,9 +194,9 @@ void gen_getAllCenters(LIST_HEAD *pHead)
 }
 
 // ====================================================================
-// Manage simulation													TODOOOOOOOOOOOOO
+// Manage simulation
 //return ID of closest generator to a point
-int gen_closestGenOn(POINT point, double* length)
+int gen_closestGen(POINT point, double* length)
 {
 	int genID = UNASSIGNED;
 	double newDist = 0;

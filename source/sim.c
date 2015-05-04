@@ -24,9 +24,6 @@
 // separator in input file between entities declarations
 #define DATA_SEPARATOR "FIN_LISTE"
 
-#define LOCK 1
-#define UNLOCK 0
-
 
 // enum to store state of reading automate
 // see sim_lecture, read_nbEntities and read_entities
@@ -38,7 +35,7 @@ enum Read_state {NB_GENERATEUR,
                  PARTICULE,
                  FIN,
                  ERREUR};
-static enum Entity {PART, GEN, BCKH} entity;
+static enum SelectedEntity {PART, GEN, BCKH} selected_entity;
 static int selected;
 
 // Reading file
@@ -204,26 +201,24 @@ void sim_select(double x, double y) {
     
     double *dist_gen  = NULL;
     double *dist_bckh = NULL;
+    int closestGen  = gen_closestGen(point, dist_gen);
+    int closestBckH = bckh_closestBckH(point, dist_bckh);
     
     if(part_closestPartOn(point) != UNASSIGNED)
     {
-		entity = PART;
+		selected_entity = PART;
 		selected = part_closestPartOn(point);
-		part_setLock(selected, LOCK);
-	}
-    
-    int closestGen  = gen_closestGenOn(point, dist_gen);
-    int closestBckh = bckh_closestBckhOn(point, dist_bckh);
-    
-    if((*dist_gen) < (*dist_bckh))
+		part_setLock(selected, true);
+	}   
+    else if(closestBckH == UNASSIGNED || (*dist_gen) < (*dist_bckh))
     {
-		entity = GEN;
+		selected_entity = GEN;
 		selected = closestGen;
 	}
-    else 
+    else if(closestGen == UNASSIGNED || (*dist_gen) > (*dist_bckh))
     {
-		entity = BCKH;
-		selected = closestBckh;
+		selected_entity = BCKH;
+		selected = closestBckH;
     }
     
     printf("%s\n", __func__);
@@ -232,30 +227,31 @@ void sim_select(double x, double y) {
 // delete the current selection
 // in nothing selected, don't do anything
 void sim_deleteSelection() {
-	switch(entity)
-	{
-		case PART: part_deletePart(selected);
-		break;
-		case GEN:  gen_deleteGen(selected);
-		break;
-		case BCKH: bckH_deleteBckH(selected);
-		break;
-	}
 	
+	if (selected!=UNASSIGNED)
+	{
+		switch(selected_entity)
+		{
+			case PART: part_deletePart(selected);
+			break;
+			case GEN:  gen_deleteGen(selected);
+			break;
+			case BCKH: bckH_deleteBckH(selected);
+			break;
+		}
+	}
     printf("%s\n", __func__);
 }
 
 // deselect the current selection
-void sim_deselect(int selected) {
-	if(part_setLock(selected, UNLOCK))
+void sim_deselect() {
+	if(selected_entity == PART)
 	{
-		selected = UNASSIGNED;
+		part_setLock(selected, false);
 	}
-	else
-	{
-		selected = UNASSIGNED;
-	}
-    printf("%s\n", __func__);
+	selected = UNASSIGNED;
+	
+	printf("%s\n", __func__);
 }
 
 

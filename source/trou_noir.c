@@ -176,9 +176,9 @@ int bckH_totalNB() {
 
 
 // ====================================================================
-// Manage simulation													TODO
+// Manage simulation
 //return ID of closest blackhole to a point
-int bckh_closestBckhOn(POINT point, double* length)
+int bckh_closestBckH(POINT point, double* length)
 {
 	int bckHID = UNASSIGNED;
 	double newDist = 0;
