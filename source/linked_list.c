@@ -209,7 +209,8 @@ void* list_getDataFromId(LIST_HEAD *pHead, int id) {
         
         do {
             (void) list_goToNext(pHead);
-            if ((*(pHead->idOfData))(pHead->current->data) == id) {
+            if (pHead->current!=NULL &&
+                (*(pHead->idOfData))(pHead->current->data) == id) {
                 found = true;
                 returnedData = pHead->current->data;
             }
