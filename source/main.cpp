@@ -105,6 +105,7 @@ int main (int argc, char *argv[])
         case GRAPHIC: 
         case SIMULATION: // sim handle the difference between those modes
             sim_openFile(argv[2], mode);
+            open_window();
             glutInit(&argc, argv);
             initOpenGl();
             initGlui(argv[2]);
@@ -330,7 +331,7 @@ static void simulation_cb(int id)
 
 // ====================================================================
 // All visual functions
-/*static void open_window(void)
+static void open_window(void)
 {
 	double xmin, xmax, ymin, ymax;
 	sim_extremPoints(&xmin, &xmax, &ymin, &ymax);
@@ -341,7 +342,7 @@ static void simulation_cb(int id)
     up    = ymax + RMAX;
      
     glOrtho(left, right, down, up, -1.0, 1.0);
-}*/
+}
 
 static void display(void)
 {
@@ -350,8 +351,8 @@ static void display(void)
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
 	
-    // set region to see
-    glOrtho(left, right, down, up, -1.0, 1.0);
+  /*  // set region to see
+    glOrtho(left, right, down, up, -1.0, 1.0);*/
 
     // print all simulation entities
     sim_display();
@@ -374,17 +375,17 @@ static void update_nbEntities() {
 
 static void reshape(int w, int h)
 {
-    double xmin, xmax, ymin, ymax;
+   // double xmin, xmax, ymin, ymax;
     double base = 0, shift = 0;
 
     glViewport(0, 0, w, h);
 	
-    sim_extremPoints(&xmin, &xmax, &ymin, &ymax);
+   // sim_extremPoints(&xmin, &xmax, &ymin, &ymax);
     
-    left  = xmin - RMAX;
+   /* left  = xmin - RMAX;
     right = xmax + RMAX;
     down  = ymin - RMAX;
-    up    = ymax + RMAX;
+    up    = ymax + RMAX;*/
     
     // update dimension for future glOrtho
     if ( (double)w/h > (right-left)/(up-down) ) {

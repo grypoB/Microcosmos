@@ -181,7 +181,7 @@ int bckh_closestBckH(POINT point, double* length)
 {
 	int bckHID = UNASSIGNED;
 	double newDist = 0;
-	double dist = TAILLE_FENETRE +1;
+	double dist = 0;
     TROU_NOIR* current = NULL;
 	
 	if (list_goToFirst(&blackHoles) != NULL) {
