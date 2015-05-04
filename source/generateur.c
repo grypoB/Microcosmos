@@ -23,7 +23,6 @@
 // size of the line of the vector
 #define LINE_WIDTH 2.
 
-#define TAILLE_FENETRE 100 //A CHANGER
 
 typedef struct Generateur {
 
@@ -200,10 +199,11 @@ int gen_closestGen(POINT point, double* length)
 {
 	int genID = UNASSIGNED;
 	double newDist = 0;
-	double dist = TAILLE_FENETRE +1;
+	double dist = 0;
     GENERATEUR* current = NULL;
 	
 	if (list_goToFirst(&generators) != NULL) {
+        dist = point_distance(current->center, point);
         do {
             current = list_getData(generators, LIST_CURRENT);
             newDist = point_distance(current->center, point);
