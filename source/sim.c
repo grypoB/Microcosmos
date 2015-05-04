@@ -197,8 +197,9 @@ void sim_next_step(void)
 // select the closest entity of point (x,y)
 void sim_select(double x, double y) {
    
+    /* 
     POINT point = {x , y};
-    
+   
     double *dist_gen  = NULL;
     double *dist_bckh = NULL;
     int closestGen  = gen_closestGen(point, dist_gen);
@@ -220,6 +221,7 @@ void sim_select(double x, double y) {
 		selected_entity = BCKH;
 		selected = closestBckH;
     }
+    */
     
     printf("%s\n", __func__);
 }
@@ -245,6 +247,7 @@ void sim_deleteSelection() {
 
 // deselect the current selection
 void sim_deselect() {
+
 	if(selected_entity == PART)
 	{
 		part_setLock(selected, false);
@@ -261,7 +264,7 @@ void sim_clean() {
     #ifdef DEBUG
     printf("Freeing memory from entities\n");
     #endif
-	sim_deselect(selected);
+	sim_deselect();
 	
     part_deleteAll();
     gen_deleteAll();
