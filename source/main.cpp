@@ -101,6 +101,7 @@ int main (int argc, char *argv[])
         case FORCE:
         case INTEGRATION: // sim handle the difference between those modes
             sim_openFile(argv[2], mode);
+            open_window();
         break;
         case GRAPHIC: 
         case SIMULATION: // sim handle the difference between those modes
@@ -237,7 +238,7 @@ static void mouse(int button, int state, int x, int y) {
     printf("w=%d, h=%d\n",w,h);
     #endif
 
-    if (button == GLUT_LEFT_BUTTON) {
+    if (button == GLUT_LEFT_BUTTON && w!=0 && h!=0 ) {
         switch (state) {
             case GLUT_DOWN:
                 sim_select((double) x/w*(right-left)+left, 
@@ -267,6 +268,7 @@ static void file_cb(int id) {
 			glutIdleFunc(NULL);
             sim_clean();
             sim_openFile(loadFile->get_text(), mode);
+            open_window();
             simulation_running = false;
 
             reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
@@ -340,8 +342,6 @@ static void open_window(void)
     right = xmax + RMAX;
     down  = ymin - RMAX;
     up    = ymax + RMAX;
-     
-    glOrtho(left, right, down, up, -1.0, 1.0);
 }
 
 static void display(void)
@@ -351,8 +351,8 @@ static void display(void)
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
 	
-  /*  // set region to see
-    glOrtho(left, right, down, up, -1.0, 1.0);*/
+    // set region to see
+    glOrtho(left, right, down, up, -1.0, 1.0);
 
     // print all simulation entities
     sim_display();
@@ -375,18 +375,10 @@ static void update_nbEntities() {
 
 static void reshape(int w, int h)
 {
-   // double xmin, xmax, ymin, ymax;
     double base = 0, shift = 0;
 
     glViewport(0, 0, w, h);
-	
-   // sim_extremPoints(&xmin, &xmax, &ymin, &ymax);
-    
-   /* left  = xmin - RMAX;
-    right = xmax + RMAX;
-    down  = ymin - RMAX;
-    up    = ymax + RMAX;*/
-    
+
     // update dimension for future glOrtho
     if ( (double)w/h > (right-left)/(up-down) ) {
         base   = (double) w*(up-down)/h;
