@@ -195,21 +195,21 @@ void gen_getAllCenters(LIST_HEAD *pHead)
 // ====================================================================
 // Manage simulation
 //return ID of closest generator to a point
-int gen_closestGen(POINT point, double* length)
+int gen_closestGen(POINT point, double* dist)
 {
 	int genID = UNASSIGNED;
 	double newDist = 0;
-	double dist = 0;
+	dist = NULL;
     GENERATEUR* current = NULL;
 	
 	if (list_goToFirst(&generators) != NULL) {
-        dist = point_distance(current->center, point);
+        *dist = point_distance(current->center, point);
         do {
             current = list_getData(generators, LIST_CURRENT);
             newDist = point_distance(current->center, point);
 
-            if (newDist < dist) {
-                dist = newDist;
+            if (newDist < *dist) {
+                *dist = newDist;
                 genID = current->id;
             }
         } while (list_goToNext(&generators) != NULL);

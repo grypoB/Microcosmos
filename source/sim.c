@@ -197,13 +197,13 @@ void sim_next_step(void)
 // select the closest entity of point (x,y)
 void sim_select(double x, double y) {
    
-    /* 
+    
     POINT point = {x , y};
    
-    double *dist_gen  = NULL;
-    double *dist_bckh = NULL;
-    int closestGen  = gen_closestGen(point, dist_gen);
-    int closestBckH = bckh_closestBckH(point, dist_bckh);
+    double dist_gen  = 0;
+    double dist_bckh = 0;
+    int closestGen  = gen_closestGen(point, &dist_gen);
+    int closestBckH = bckh_closestBckH(point, &dist_bckh);
     
     if(part_closestPartOn(point) != UNASSIGNED)
     {
@@ -211,17 +211,17 @@ void sim_select(double x, double y) {
 		selected = part_closestPartOn(point);
 		part_setLock(selected, true);
 	}   
-    else if(closestBckH == UNASSIGNED || (*dist_gen) < (*dist_bckh))
+    else if(closestBckH == UNASSIGNED || (dist_gen) < (dist_bckh))
     {
 		selected_entity = GEN;
 		selected = closestGen;
 	}
-    else if(closestGen == UNASSIGNED || (*dist_gen) > (*dist_bckh))
+    else if(closestGen == UNASSIGNED || (dist_gen) > (dist_bckh))
     {
 		selected_entity = BCKH;
 		selected = closestBckH;
     }
-    */
+    
     
     printf("%s\n", __func__);
 }
@@ -248,12 +248,14 @@ void sim_deleteSelection() {
 // deselect the current selection
 void sim_deselect() {
 
-	if(selected_entity == PART)
+	if(selected != UNASSIGNED)
 	{
-		part_setLock(selected, false);
+		if(selected_entity == PART)
+		{
+			part_setLock(selected, false);
+		}
+		selected = UNASSIGNED;
 	}
-	selected = UNASSIGNED;
-	
 	printf("%s\n", __func__);
 }
 

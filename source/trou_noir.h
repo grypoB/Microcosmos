@@ -59,7 +59,7 @@ void bckH_getAllCenters(LIST_HEAD *pHead);
 // ====================================================================
 // Manage simulation
 //return ID of closest blackhole to a point
-int bckh_closestBckH(POINT point, double* length);
+int bckh_closestBckH(POINT point, double* dist);
 
 // ====================================================================
 // Display all black holes 

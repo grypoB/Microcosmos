@@ -177,21 +177,21 @@ int bckH_totalNB() {
 // ====================================================================
 // Manage simulation
 //return ID of closest blackhole to a point
-int bckh_closestBckH(POINT point, double* length)
+int bckh_closestBckH(POINT point, double* dist)
 {
 	int bckHID = UNASSIGNED;
 	double newDist = 0;
-	double dist = 0;
+	dist = NULL;
     TROU_NOIR* current = NULL;
 	
 	if (list_goToFirst(&blackHoles) != NULL) {
-		dist = point_distance(current->center, point);
+		*dist = point_distance(current->center, point);
         do {
             current = list_getData(blackHoles, LIST_CURRENT);
             newDist = point_distance(current->center, point);
 
-            if (newDist < dist) {
-                dist = newDist;
+            if (newDist < *dist) {
+                *dist = newDist;
                 bckHID = current->id;
             }
         } while (list_goToNext(&blackHoles) != NULL);
