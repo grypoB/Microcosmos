@@ -219,6 +219,22 @@ int gen_closestGen(POINT point, double* length)
 }
 
 
+void gen_nextTick(double delta_t) {
+    GENERATEUR *gen = NULL;
+
+    if (list_goToFirst(&generators) != NULL) {
+        do {
+            gen = list_getData(generators, LIST_CURRENT);
+            
+            //rand !!
+            if (randomDouble()<delta_t*NBP && part_closestPartOn(gen->center)==UNASSIGNED) {
+                (void) part_create(gen->radius, gen->center, gen->speed);
+            }
+
+        } while (list_goToNext(&generators) != NULL);
+    }
+}
+
 // ====================================================================
 // Graphics
 // Display all generators

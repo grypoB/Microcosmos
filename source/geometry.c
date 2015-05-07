@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
+#include <stdbool.h>
 #include "geometry.h"
 #include "constantes.h"
 
@@ -92,4 +94,21 @@ double linear_interpolation(double xC,
     } else {
         return 0;
     }
+}
+
+
+// Return a random number in [0,1).
+double randomDouble() {
+    static bool initialized = false;
+
+    if (!initialized) {
+        #ifdef DEBUG
+        printf("Initialized random\n");
+        #endif
+        srand(time(NULL)); // initialized lsit of random number
+        initialized = true;
+    }
+
+    // rand return int in [1, RAND_MAX-1]
+    return (double) (rand()-1)/(RAND_MAX-1);
 }

@@ -180,7 +180,7 @@ void sim_display(void)
 // handles calculation for the next step of the simulation
 void sim_next_step(void)
 {
-    //gen_nextTick(DELTA_T);  // create new particles
+    gen_nextTick(DELTA_T);  // create new particles
     part_initTick();
     
     bckH_calcTick();        // caculate all the forces
