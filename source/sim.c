@@ -213,19 +213,21 @@ void sim_select(double x, double y) {
 	
     else 
     {
-		if(closestBckH == UNASSIGNED || (dist_gen) < (dist_bckh))
+		if((closestBckH == UNASSIGNED) ? (selected_entity = BCKH) : (selected_entity = GEN));
+		else if((closestGen == UNASSIGNED) ? (selected_entity = GEN) : (selected_entity = BCKH));
+		else if((dist_gen) < (dist_bckh)) selected_entity = GEN;
+		else if((dist_gen) > (dist_bckh)) selected_entity = BCKH;
+		else if((closestBckH == UNASSIGNED) && (closestGen == UNASSIGNED)); //ne fait rien
+			
+		switch(selected_entity)
 		{
-			selected_entity = GEN;
-			selected = closestGen;
-		}
-	
-		else if(closestGen == UNASSIGNED || (dist_gen) > (dist_bckh))
-		{
-			selected_entity = BCKH;
-			selected = closestBckH;
+			case GEN: selected = closestGen;
+			break;
+			case BCKH:selected = closestBckH;
+			break;
+			default: (printf("PORTNAWAK\n"));
 		}
 	}
-
     
     #ifdef DEBUG
     printf("selected type: %d\n", selected_entity);
@@ -246,10 +248,13 @@ void sim_deleteSelection() {
 		switch(selected_entity)
 		{
 			case PART: part_deletePart(selected);
+					printf("Pomme\n");
 			break;
 			case GEN:  gen_deleteGen(selected);
+					printf("Mangue\n");
 			break;
 			case BCKH: bckH_deleteBckH(selected);
+					printf("FRAISES CHANTILLY\n");
 			break;
 		}
 	}
