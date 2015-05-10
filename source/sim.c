@@ -225,19 +225,7 @@ void sim_select(double x, double y) {
 			selected = closestBckH;
 		}
 	}
-=======
-	}
-    else if(closestBckH == UNASSIGNED || (dist_gen) < (dist_bckh))
-    {
-		selected_entity = GEN;
-		selected = closestGen;
-	}
-    else if(closestGen == UNASSIGNED || (dist_gen) > (dist_bckh))
-    {
-		selected_entity = BCKH;
-		selected = closestBckH;
-    }
->>>>>>> 4471abac2a6238c47910d1d83678f3cffecb2298
+
     
     #ifdef DEBUG
     printf("selected type: %d\n", selected_entity);
