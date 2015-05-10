@@ -181,11 +181,12 @@ int bckh_closestBckH(POINT point, double* dist)
 {
 	int bckHID = UNASSIGNED;
 	double newDist = 0;
-	dist = 0;
     TROU_NOIR* current = NULL;
 	
 	if (list_goToFirst(&blackHoles) != NULL) {
+        current = list_getData(blackHoles, LIST_CURRENT);
 		*dist = point_distance(current->center, point);
+        bckHID = current->id;
         do {
             current = list_getData(blackHoles, LIST_CURRENT);
             newDist = point_distance(current->center, point);
