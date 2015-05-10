@@ -103,7 +103,7 @@ int main (int argc, char *argv[])
         case FORCE:
         case INTEGRATION: // sim handle the difference between those modes
             sim_openFile(argv[2], mode);
-            open_window();      											//ici
+            open_window();
         break;
         case GRAPHIC: 
         case SIMULATION: // sim handle the difference between those modes
@@ -152,7 +152,7 @@ static MODE read_mode(const char string[])
     return mode;
 }
 
-static void initOpenGl()									//init glut plutot ?
+static void initOpenGl()
 {
     #ifdef DEBUG
     printf("Init Opengl...");
@@ -251,12 +251,16 @@ static void mouse(int button, int state, int x, int y) {
             break;
         }
     }
+
+    glutPostRedisplay();
 }
 
 static void keyboard(unsigned char key, int x, int y) {
     if (key == DELETE_KEY) {
         sim_deleteSelection();
     }
+
+    glutPostRedisplay();
 }
 
 //Réponse à l'interface utilisateur partie fichier

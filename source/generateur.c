@@ -199,12 +199,15 @@ int gen_closestGen(POINT point, double* dist)
 {
 	int genID = UNASSIGNED;
 	double newDist = 0;
-	*dist = 0;
     GENERATEUR* current = NULL;
 	
+
 	if (list_goToFirst(&generators) != NULL) {
+        // init the return to the first generator
+        current = list_getData(generators, LIST_CURRENT);
         *dist = point_distance(current->center, point);
-        do {
+        genID = current->id;
+        do { // cycle through the rest of the generators
             current = list_getData(generators, LIST_CURRENT);
             newDist = point_distance(current->center, point);
 
