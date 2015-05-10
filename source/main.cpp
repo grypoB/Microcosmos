@@ -82,6 +82,8 @@ namespace
     // limits of displayed area (for glOrtho)
     GLfloat left = -RMAX, right = RMAX, 
             down = -RMAX, up    = RMAX;
+
+	double xmin=0, xmax=0, ymin=0, ymax=0;
 }
 
 
@@ -335,13 +337,13 @@ static void simulation_cb(int id)
 // All visual functions
 static void open_window(void)
 {
-	double xmin, xmax, ymin, ymax;
 	sim_extremPoints(&xmin, &xmax, &ymin, &ymax);
     
-    left  = xmin - RMAX;
-    right = xmax + RMAX;
-    down  = ymin - RMAX;
-    up    = ymax + RMAX;
+    // add a small border arround the area to display
+    xmin  -= RMAX;
+    xmax  += RMAX;
+    ymin  -= RMAX;
+    ymax  += RMAX;
 }
 
 static void display(void)
@@ -378,6 +380,11 @@ static void reshape(int w, int h)
     double base = 0, shift = 0;
 
     glViewport(0, 0, w, h);
+
+    up    = ymax;
+    down  = ymin;
+    right = xmax;
+    left  = xmin;
 
     // update dimension for future glOrtho
     if ( (double)w/h > (right-left)/(up-down) ) {

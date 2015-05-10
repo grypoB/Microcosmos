@@ -51,4 +51,5 @@ double linear_interpolation(double xC,
                             double xA, double yA,
                             double xB, double yB);
 
+double randomDouble();
 #endif
