@@ -196,18 +196,18 @@ void sim_next_step(void)
 // Inputs
 // select the closest entity of point (x,y)
 void sim_select(double x, double y) {
-   
-    
-    POINT point = {x , y};
  
+    POINT point = {x , y};
+    printf(" select begins \n");   //ok ici
     double dist_gen  = 0;
     double dist_bckh = 0;
     int closestGen = 0;
+   printf(" select begins 1\n"); 
     closestGen  = gen_closestGen(point, &dist_gen);
-   
+   printf(" gen closest\n");
     int closestBckH = 0;
     closestBckH = bckh_closestBckH(point, &dist_bckh);
-    
+   printf(" bckh closest\n");
     if(part_closestPartOn(point) != UNASSIGNED)
     {
 		selected_entity = PART;
