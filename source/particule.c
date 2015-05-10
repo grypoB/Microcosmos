@@ -178,13 +178,29 @@ bool part_readData(const char *string) {
  */
 void part_saveAllData(FILE *file) {
     PARTICULE *part = NULL;
+    double xSpeed = 0, ySpeed = 0;
 
     if (list_goToFirst(&particles) != NULL) {
         do {
             part = list_getData(particles, LIST_CURRENT);
-            fprintf(file, "%f %f %f %f %f\n" , part->radius,
-                    part->center.x, part->center.y,
-                    part->speed.x,  part->speed.y);
+
+            // reduce slightly the speed so the norm is below MAX_VITESSE
+            xSpeed = part->speed.x; 
+            ySpeed = part->speed.y;
+            if (vector_norm(part->speed) > MAX_VITESSE-EPSILON_ZERO) {
+                xSpeed += (xSpeed > 0)? -EPSILON_ZERO : +EPSILON_ZERO;
+                ySpeed += (ySpeed > 0)? -EPSILON_ZERO : +EPSILON_ZERO;
+                #ifdef DEBUG
+                if (vector_norm(part->speed) > MAX_VITESSE) {
+                    printf("Scaling down speed: %.20f (%.9f, %.9f)\n",
+                      vector_norm(part->speed), part->speed.x, part->speed.y);
+                }
+                #endif
+            }
+
+            fprintf(file, "%f %f %f %.9f %.9f\n" , part->radius,
+                    part->center.x, part->center.y, xSpeed, ySpeed);
+
         } while (list_goToNext(&particles) != NULL);
     }
 }
