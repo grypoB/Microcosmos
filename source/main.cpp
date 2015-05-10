@@ -101,7 +101,7 @@ int main (int argc, char *argv[])
         case FORCE:
         case INTEGRATION: // sim handle the difference between those modes
             sim_openFile(argv[2], mode);
-            open_window();
+            open_window();      											//ici
         break;
         case GRAPHIC: 
         case SIMULATION: // sim handle the difference between those modes
@@ -150,7 +150,7 @@ static MODE read_mode(const char string[])
     return mode;
 }
 
-static void initOpenGl()
+static void initOpenGl()									//init glut plutot ?
 {
     #ifdef DEBUG
     printf("Init Opengl...");
