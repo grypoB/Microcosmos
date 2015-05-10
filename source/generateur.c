@@ -199,7 +199,7 @@ int gen_closestGen(POINT point, double* dist)
 {
 	int genID = UNASSIGNED;
 	double newDist = 0;
-	dist = 0;
+	*dist = 0;
     GENERATEUR* current = NULL;
 	
 	if (list_goToFirst(&generators) != NULL) {

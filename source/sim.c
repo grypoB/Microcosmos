@@ -199,18 +199,14 @@ void sim_select(double x, double y) {
    
     
     POINT point = {x , y};
-   printf("0\n");
+ 
     double dist_gen  = 0;
     double dist_bckh = 0;
     int closestGen = 0;
     closestGen  = gen_closestGen(point, &dist_gen);
-     
-      printf("milieu\n");
    
     int closestBckH = 0;
     closestBckH = bckh_closestBckH(point, &dist_bckh);
-    
-    printf("1\n");
     
     if(part_closestPartOn(point) != UNASSIGNED)
     {
@@ -230,7 +226,6 @@ void sim_select(double x, double y) {
 		selected_entity = BCKH;
 		selected = closestBckH;
     }
-    printf("4\n");
     
     printf("%s\n", __func__);
 }
@@ -243,11 +238,11 @@ void sim_deleteSelection() {
 	{
 		switch(selected_entity)
 		{
-			case PART: if(part_deletePart(selected));
+			case PART: part_deletePart(selected);
 			break;
-			case GEN:  if(gen_deleteGen(selected));
+			case GEN:  gen_deleteGen(selected);
 			break;
-			case BCKH: if(bckH_deleteBckH(selected));
+			case BCKH: bckH_deleteBckH(selected);
 			break;
 		}
 	}
