@@ -267,15 +267,12 @@ static void keyboard(unsigned char key, int x, int y) {
 static void file_cb(int id) {
     switch(id) {
         case SAVE:
-			glutIdleFunc(NULL);
             sim_save(saveFile->get_text());
         break;
         case LOAD:
-			glutIdleFunc(NULL);
             sim_clean();
             sim_openFile(loadFile->get_text(), mode);
             open_window();
-            simulation_running = false;
 
             reshape(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
         break;
@@ -315,12 +312,10 @@ static void simulation_cb(int id)
     {
         case START:
             if (simulation_running) {
-					startButton->set_name("Start");
-					glutIdleFunc(NULL);
+                startButton->set_name("Start");
                 simulation_running = false;
             } else {
-					startButton->set_name("Stop");
-					glutIdleFunc(idle);
+                startButton->set_name("Stop");
                 simulation_running = true;
             }
         break;
