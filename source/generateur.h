@@ -1,6 +1,6 @@
 /* Nom: generateur.h
  * Description: module qui gère les générateurs
- * Date: 17.04.2015
+ * Date: 11.06.2015
  * version : 1.1
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière

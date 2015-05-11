@@ -1,6 +1,6 @@
 /* Nom: sim.c
  * Description: module qui lit le fichier en entrée
- * Date: 19.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -69,7 +69,7 @@ void sim_openFile(const char filename[], enum Mode mode)
             break;
             case INTEGRATION: particule_integration_rendu2();
             break;
-            // handle GRAPHIC, SIMULATION and DEFAULT the same way
+            // handles GRAPHIC, SIMULATION and DEFAULT the same way
             case GRAPHIC:
             case SIMULATION:
             case DEFAULT:
@@ -78,7 +78,7 @@ void sim_openFile(const char filename[], enum Mode mode)
             break;
         }
 	}
-    else // delete entity which were created if file has errors
+    else // deletes entity which were created if file has errors
     {
         sim_clean();
     }
@@ -128,13 +128,13 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
     LIST_HEAD centers = list_create(NULL, NULL, NULL);
     POINT *point = NULL;
 
-    // init with default values
+    // initialize with default values
     *xmin = 0;
     *xmax = 0;
     *ymin = 0;
     *ymax = 0;
 
-    // retrieve all center point from all entities
+    // retrieve all center points from all entities
     part_getAllCenters(&centers);
     gen_getAllCenters(&centers);
     bckH_getAllCenters(&centers);
@@ -204,40 +204,32 @@ void sim_select(double x, double y) {
     int closestGen  = gen_closestGen(point, &dist_gen);
     int closestBckH = bckh_closestBckH(point, &dist_bckh);
     
-    if(part_closestPartOn(point) != UNASSIGNED)
-    {
+    if(part_closestPartOn(point) != UNASSIGNED)    {
 		selected_entity = PART;
 		selected = part_closestPartOn(point);
 		part_setLock(selected, true);
 	}   
 	
-    else 
-    {
-		if((closestBckH == UNASSIGNED) && (closestGen == UNASSIGNED))
-		{
+    else     {
+		if((closestBckH == UNASSIGNED) && (closestGen == UNASSIGNED))		{
 			selected_entity = NONE;
 		}
-		else if(closestBckH == UNASSIGNED)
-		{
+		else if(closestBckH == UNASSIGNED)		{
 			selected_entity = GEN;
 			selected = closestGen;
 		}
-		else if(closestGen  == UNASSIGNED)
-		{
+		else if(closestGen  == UNASSIGNED)		{
 			selected_entity = BCKH;
 			selected = closestBckH;;
 		}
-		else if((dist_gen) < (dist_bckh))
-		{
+		else if((dist_gen) < (dist_bckh))		{
 			selected_entity = GEN;
 			selected = closestGen;
 		}
-		else if((dist_gen) > (dist_bckh))
-		{
+		else if((dist_gen) > (dist_bckh))		{
 			selected_entity = BCKH;
 			selected = closestBckH;
 		}
-		
 	}
     
     #ifdef DEBUG

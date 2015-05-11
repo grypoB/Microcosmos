@@ -180,7 +180,7 @@ static void initGlui(char* filename)
 {
 
     GLUI *glui = NULL;
-    // multiple panle used in the glui window
+    // multiple panels used in the glui window
     GLUI_Panel *file        = NULL;
     GLUI_Panel *simulation  = NULL;
     GLUI_Panel *information = NULL;
@@ -390,7 +390,7 @@ static void reshape(int w, int h)
     right = xmax;
     left  = xmin;
 
-    // update dimension for future glOrtho
+    // update dimension for glOrtho
     if ( (double)w/h > (right-left)/(up-down) ) {
         base   = (double) w*(up-down)/h;
         shift  = (base - (right-left))/2;

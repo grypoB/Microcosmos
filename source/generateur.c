@@ -1,6 +1,6 @@
 /* Nom: generateur.c
  * Description: module qui gère les générateurs
- * Date: 17.04.2015
+ * Date: 11.06.2015
  * version : 1.1
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -96,19 +96,19 @@ int gen_create(double radius, POINT center, VECTOR speed) {
 
 // ====================================================================
 // Destructions
-/** Delete generator with given ID
+/** Deletes generator with given ID
  * Parameters :
  *  - genID : id of generator to delete
  *             see gen_create
  * Return values :
  *  - if generators was successfully deleted
- *  - if returns false probably already deleted of never existed
+ *  - if returns false probably already deleted or never existed
  */
 bool gen_deleteGen(int genID) {
 
     if (list_getDataFromId(&generators, genID) == NULL) {
         return false;
-    } else { // particule found in list and is the current one
+    } else { // particle found in list and is the current one
         (void) list_deleteCurrent(&generators);
         return true;
     }
@@ -228,7 +228,7 @@ void gen_nextTick(double delta_t) {
         do {
             gen = list_getData(generators, LIST_CURRENT);
             
-            //rand !!
+            //rand !!																				///?????????????
             if (randomDouble()<delta_t*NBP && part_closestPartOn(gen->center)==UNASSIGNED) {
                 (void) part_create(gen->radius, gen->center, gen->speed);
             }

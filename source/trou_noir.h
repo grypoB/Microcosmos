@@ -1,6 +1,6 @@
 /* Nom: trou_noir.h
  * Description: module qui gère les trous noirs
- * Date: 17.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -43,7 +43,7 @@ void bckH_saveAllData(FILE *file);
 // Destructions
 /* Delete black hole  with given ID */
 bool bckH_deleteBckH(int partID);
-/** Delete all existing black holes
+/** Deletes all existing black holes
  * Note : use with care
  */
 void bckH_deleteAll();
@@ -57,18 +57,18 @@ int bckH_totalNB();
 void bckH_getAllCenters(LIST_HEAD *pHead);
 
 // ====================================================================
-// Manage simulation
-//return ID of closest blackhole to a point
+// Manages simulation
+//returns ID of closest blackhole to a point
 int bckh_closestBckH(POINT point, double* dist);
 
 // ====================================================================
-// Display all black holes 
+// Displays all black holes 
 void bckH_display(void);
 
 // ====================================================================
 // Simulation related 
 /* Apply forces to all particles */
 void bckH_calcTick();
-/* Destroy all particles too close from the black holes */
+/* Destroys all particles too close from black holes */
 void bckH_nextTick();
 #endif

@@ -1,6 +1,6 @@
 /* Nom: sim.h
  * Description: module qui lit le fichier en entrée
- * Date: 19.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière

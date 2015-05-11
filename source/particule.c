@@ -1,6 +1,6 @@
 /* Nom: particule.c
  * Description: module qui gère les particules
- * Date: 15.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -36,7 +36,7 @@ typedef struct Particule {
 } PARTICULE;
 
 
-// Init
+// Initialisation
 static void part_initMass(PARTICULE *part);
 
 // Simulation related
@@ -68,9 +68,9 @@ static LIST_HEAD particles = {0};
 
 // ====================================================================
 // Creation of particle
-/** Create a particle with given parameter
+/** Creates a particle with given parameters
  * Parameters :
- *  - radius : radius of the particle, valide domain [RMIN, RMAX]
+ *  - radius : radius of the particle, valid domain [RMIN, RMAX]
  *  - center : position of it's center when created
  *  - speed  : its speed, validity domain : norm<=MAX_VITESSE
  *             see vector_norm
@@ -87,13 +87,13 @@ int part_create(double radius, POINT center, VECTOR speed) {
     if (part_validParams(radius, center, speed, true, ERR_PARTIC, id)) {
         pPart = newPart();
 
-        pPart->locked = false;
-        pPart->id = id;
-        pPart->radius = radius;
+        pPart->locked		= false;
+        pPart->id 			= id;
+        pPart->radius 		= radius;
         part_initMass(pPart);
-        pPart->center = center;
-        pPart->speed = speed;
-        pPart->force = vector_null();
+        pPart->center 		= center;
+        pPart->speed		= speed;
+        pPart->force		= vector_null();
         pPart->acceleration = vector_null();
 
         returnID = id;
@@ -113,12 +113,12 @@ int part_create(double radius, POINT center, VECTOR speed) {
  * Parameters :
  *  - radius, center, speed : see part_create
  *  - verbose    : if errors should be displayed in terminal
- *  - origin, id : argument sent to error function if verbose,
- *                 if not verbose, those parameters won't be use (send 0,0)
+ *  - origin, id : arguments sent to error function if verbose,
+ *                 if not verbose, those parameters won't be used (sends 0,0)
  *                 see error_rayon_partic, error_vitesse_partic
  * Return values :
  *  - true  : arguments can be use to create a particle
- *  - false : arguments invalid for the creation fo a particle
+ *  - false : arguments invalid for the creation of a particle
  */
 bool part_validParams(double radius, POINT center, VECTOR speed,
                       bool verbose, ERREUR_ORIG origin, int id) {
@@ -142,7 +142,7 @@ bool part_validParams(double radius, POINT center, VECTOR speed,
 
 // ====================================================================
 // String and file interface
-/** Create particle from data in a string
+/** Creates particle from data in a string
  *      see part_create
  * Parameters :
  *  - string : to parse data from
@@ -172,7 +172,7 @@ bool part_readData(const char *string) {
 }
 
 /** Append all the particles to a file
- *      write in the same format as string format in part_readData
+ *      writes in the same format as string format in part_readData
  * Parameters : 
  *  - file : file to append to
  */
@@ -192,13 +192,13 @@ void part_saveAllData(FILE *file) {
 
 // ====================================================================
 // Destructions
-/** Delete particle with given ID
+/** Deletes particle with given ID
  * Parameters :
  *  - partID : id of particle to delete
  *             see part_create
  * Return values :
  *  - if particle was successfully deleted
- *  - if returns false probably already deleted of never existed
+ *  - if returns false probably already deleted or never existed
  */
 bool part_deletePart(int partID) {
 
@@ -302,12 +302,12 @@ void particule_integration_rendu2() {
 
 // ====================================================================
 // Manage simulation
-/** return ID of closest part to a point, which it overlaps
+/** returns ID of the closest part to a point, which it overlaps
  * Parameters :
  *  - point : point to consider
  * Return values :
  *  - id of closest particles to the point and overlaping it
- *  - UNNASIGNED (=-1) if no particle overlap the point
+ *  - UNNASIGNED (=-1) if no particle overlaps the point
  */
 // TODO using sort
 int part_closestPartOn(POINT point) {
@@ -334,7 +334,7 @@ int part_closestPartOn(POINT point) {
 
 // ====================================================================
 // Drawings
-// Diplay all particles
+// Diplays all particles
 void part_display(void) {
     list_fctToAllElements(particles, part_draw);
 }
@@ -350,7 +350,7 @@ static void part_draw(void *pData) {
     }
 }
 
-// set color of graphics given vector speed
+// Sets color of graphics given vector speed
 static void part_setColor(VECTOR speed) {
 	
 	float red   = linear_interpolation(vector_norm(speed), 0, 0, 
@@ -366,7 +366,7 @@ static void part_setColor(VECTOR speed) {
 
 // ====================================================================
 // Simulation update fct
-/** Init the partciles for the next tick calculation
+/** Initializes the particles for the next tick calculation
  *  It is to be called before part_calcTick and part_nextTick
  */
 void part_initTick() {
@@ -381,12 +381,12 @@ void part_calcTick() {
     list_fctToAll2combinations(particles, part_interact);
 }
 
-/** Update kinematic of all particles to finish the next tick 
+/** Updates kinematic of all particles to finish the next tick 
  * to be called after part_initTick and part_calcTick
  * Parameters :
- *  - delta_t : time ammount to run the simulation on
+ *  - delta_t : time amount to run the simulation on
  *              the smaller, the more precise the results
- *              valide domain : >=0
+ *              valid domain : >=0
  */
 void part_nextTick(double delta_t) {
     PARTICULE *part = NULL;
@@ -404,7 +404,7 @@ void part_nextTick(double delta_t) {
 
 /** Apply a force field to all particles
  * to be called between part_initTick and part_nextTick
- * it doesn't matter if it called before/after part_calcTick.
+ * it doesn't matter if it is called before/after part_calcTick.
  * Parameters :
  *  - forceFieldAt : function of the force field to apply
  *                   given a point (center of the particle), it should
@@ -445,7 +445,7 @@ static void part_interact(void *dataA, void *dataB) {
     }
 }
 
-// return force norm between 2 particles
+// returns force norm between 2 particles
 static double part_calcForce(PARTICULE *p1, PARTICULE *p2, double distance) {
     double force_norm = 0;
     double seuil_d = p1->radius + p2->radius + fmin(p1->radius, p2->radius);
@@ -483,26 +483,26 @@ static void part_applyForce(PARTICULE *p1, PARTICULE *p2, double distance,
     p2->force = vector_sum(p2->force, vector_multiply(force, -1));
 }
 
-// update kinematic of given particle on interval delta_t
+// updates kinematic of given particle on interval delta_t
 static void updateKinematic(PARTICULE* part, double delta_t) {
     double speed_norm = 0;
 
     if (part != NULL) {
-        // update acceleration
+        // updates acceleration
         part->acceleration = vector_multiply(part->force, 1/part->mass);
 
-        if (!part->locked) { // a locked particule doesn't build up speed
-            // update speed
+        if (!part->locked) { // a locked particle doesn't build up speed
+            // updates speed
             part->speed = vector_sum(part->speed,
                                 vector_multiply(part->acceleration, delta_t));
             speed_norm  = vector_norm(part->speed);
     
-            if (speed_norm > MAX_VITESSE) { // scale down the vector
+            if (speed_norm > MAX_VITESSE) { // scales down the vector
                 part->speed = vector_multiply(part->speed,
                                               MAX_VITESSE/speed_norm);
             }
     
-            // update position
+            // updates position
             part->center = point_translate(part->center,
                                        vector_multiply(part->speed, delta_t));
         }
@@ -511,7 +511,7 @@ static void updateKinematic(PARTICULE* part, double delta_t) {
 
 
 // ====================================================================
-// set the mass of a particle (proportional to radius^2)
+// sets the mass of a particle (proportional to radius^2)
 static void part_initMass(PARTICULE *part) {
     part->mass = pow(part->radius, 2) * KMASSE;
 }
@@ -556,8 +556,8 @@ static void deletePart(void *toDelete) {
     }
 }
 
-// Comparator of particles, from their x coordinate
-// return -1 if a<b, 1 if a>b, 0 if a==b
+// Comparator of particles, from their x coordinates
+// returns -1 if a<b, 1 if a>b, 0 if a==b
 static int sortPart(void *p_a, void *p_b) {
     PARTICULE *a = (PARTICULE*) p_a;
     PARTICULE *b = (PARTICULE*) p_b;
@@ -575,7 +575,7 @@ static int sortPart(void *p_a, void *p_b) {
     return 0;
 }
 
-// return ID of particle
+// returns ID of particle
 static int idPart(void *p_a) {
     int val = UNASSIGNED; 
 
