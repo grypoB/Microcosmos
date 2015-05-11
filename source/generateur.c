@@ -201,7 +201,6 @@ int gen_closestGen(POINT point, double* dist)
 	double newDist = 0;
     GENERATEUR* current = NULL;
 	
-
 	if (list_goToFirst(&generators) != NULL) {
         // init the return to the first generator
         current = list_getData(generators, LIST_CURRENT);

@@ -35,7 +35,7 @@ enum Read_state {NB_GENERATEUR,
                  PARTICULE,
                  FIN,
                  ERREUR};
-static enum SelectedEntity {PART, GEN, BCKH} selected_entity;
+static enum SelectedEntity {PART, GEN, BCKH, NONE} selected_entity;
 static int selected;
 
 // Reading file
@@ -213,20 +213,31 @@ void sim_select(double x, double y) {
 	
     else 
     {
-		if((closestBckH == UNASSIGNED) ? (selected_entity = BCKH) : (selected_entity = GEN));
-		else if((closestGen == UNASSIGNED) ? (selected_entity = GEN) : (selected_entity = BCKH));
-		else if((dist_gen) < (dist_bckh)) selected_entity = GEN;
-		else if((dist_gen) > (dist_bckh)) selected_entity = BCKH;
-		else if((closestBckH == UNASSIGNED) && (closestGen == UNASSIGNED)); //ne fait rien
-			
-		switch(selected_entity)
+		if((closestBckH == UNASSIGNED) && (closestGen == UNASSIGNED))
 		{
-			case GEN: selected = closestGen;
-			break;
-			case BCKH:selected = closestBckH;
-			break;
-			default: (printf("PORTNAWAK\n"));
+			selected_entity = NONE;
 		}
+		else if(closestBckH == UNASSIGNED)
+		{
+			selected_entity = GEN;
+			selected = closestGen;
+		}
+		else if(closestGen  == UNASSIGNED)
+		{
+			selected_entity = BCKH;
+			selected = closestBckH;;
+		}
+		else if((dist_gen) < (dist_bckh))
+		{
+			selected_entity = GEN;
+			selected = closestGen;
+		}
+		else if((dist_gen) > (dist_bckh))
+		{
+			selected_entity = BCKH;
+			selected = closestBckH;
+		}
+		
 	}
     
     #ifdef DEBUG
@@ -248,13 +259,12 @@ void sim_deleteSelection() {
 		switch(selected_entity)
 		{
 			case PART: part_deletePart(selected);
-					printf("Pomme\n");
 			break;
 			case GEN:  gen_deleteGen(selected);
-					printf("Mangue\n");
 			break;
 			case BCKH: bckH_deleteBckH(selected);
-					printf("FRAISES CHANTILLY\n");
+			break;
+			case NONE:
 			break;
 		}
 	}
