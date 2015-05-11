@@ -21,6 +21,10 @@ extern "C"
 
 
 #define DELETE_KEY 'd'
+#define START_KEY  'p'
+#define STEP_KEY   ' '
+#define LOAD_KEY   'l'
+#define SAVE_KEY   's'
 
 // id for all callbacks
 // file_cb
@@ -258,6 +262,14 @@ static void mouse(int button, int state, int x, int y) {
 static void keyboard(unsigned char key, int x, int y) {
     if (key == DELETE_KEY) {
         sim_deleteSelection();
+    } else if (key == START_KEY) {
+        simulation_cb(START);
+    } else if (key == STEP_KEY) {
+        simulation_cb(LOAD);
+    } else if (key == LOAD_KEY) {
+        file_cb(LOAD);
+    } else if (key == SAVE_KEY) {
+        file_cb(SAVE);
     }
 
     glutPostRedisplay();
