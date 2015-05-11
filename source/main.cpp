@@ -1,7 +1,7 @@
 /* Nom: main.cpp
  * Description: module sous-système de contrôle: gestion du dialogue 
  avec l'utilisateur et interface graphique
- * Date: 19.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -32,7 +32,7 @@ extern "C"
 
 
 
-// OpenGl callbacks
+// Glut callbacks
 // visuals
 static void reshape(int w, int h);
 static void display(void);
@@ -48,7 +48,7 @@ static void idle(void);
 static void next_step(void);
 
 // init graphic display
-static void initOpenGl(void);
+static void initGlut(void);
 // filename is the string to display in the load section
 static void initGlui(char* filename);
 
@@ -110,13 +110,13 @@ int main (int argc, char *argv[])
             sim_openFile(argv[2], mode);
             open_window();
             glutInit(&argc, argv);
-            initOpenGl();
+            initGlut();
             initGlui(argv[2]);
             glutMainLoop();
         break;
         case DEFAULT :
             glutInit(&argc, argv);
-            initOpenGl();
+            initGlut();
             initGlui(NULL); // don't print anything in the load section
             glutMainLoop();
         case MODE_UNSET:
@@ -152,10 +152,10 @@ static MODE read_mode(const char string[])
     return mode;
 }
 
-static void initOpenGl()
+static void initGlut()
 {
     #ifdef DEBUG
-    printf("Init Opengl...");
+    printf("Init Glut...");
     #endif
 
     /* Initialise Glut and Create Window */
