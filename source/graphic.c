@@ -1,6 +1,6 @@
 /* Nom: graphic.c
  * Description: module pour les dessins Opengl
- * Date: 17.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
