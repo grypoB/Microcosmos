@@ -1,6 +1,6 @@
 /* Nom: sim.c
  * Description: module qui lit le fichier en entrée
- * Date: 19.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -69,7 +69,7 @@ void sim_openFile(const char filename[], enum Mode mode)
             break;
             case INTEGRATION: particule_integration_rendu2();
             break;
-            // handle GRAPHIC, SIMULATION and DEFAULT the same way
+            // handles GRAPHIC, SIMULATION and DEFAULT the same way
             case GRAPHIC:
             case SIMULATION:
             case DEFAULT:
@@ -78,7 +78,7 @@ void sim_openFile(const char filename[], enum Mode mode)
             break;
         }
 	}
-    else // delete entity which were created if file has errors
+    else // deletes entity which were created if file has errors
     {
         sim_clean();
     }
@@ -129,7 +129,7 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
     POINT *point = NULL;
 
     if (xmin!=NULL && xmax!=NULL && ymin!=NULL && ymax!=NULL) {
-        // init with default values
+        // initialize with default values
         *xmin = 0;
         *xmax = 0;
         *ymin = 0;

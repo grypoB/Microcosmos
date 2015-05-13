@@ -1,6 +1,6 @@
 /* Nom: graphic.c
  * Description: module pour les dessins Opengl
- * Date: 17.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Pauline Maury Laribière
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -20,7 +20,7 @@ AQUA, BLACK, BLUE, FUCHSIA, GRAY, GREEN, LIME, MAROON, NAVY, OLIVE, ORANGE,
 PURPLE, RED, SILVER, TEAL, WHITE, YELLOW
 } GRAPHIC_COLOR;
 
-// different display possibilities for a circle in graphic_draw_circle
+// different displays possibilities for a circle in graphic_draw_circle
 typedef enum  {
     CONTINUOUS, // continuous line
     DASH_LINE,  // dashed line

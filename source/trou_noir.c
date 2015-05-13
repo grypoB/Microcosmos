@@ -1,6 +1,6 @@
 /* Nom: trou_noir.c
  * Description: module qui gère les trous noirs
- * Date: 17.04.2015
+ * Date: 11.06.2015
  * version : 1.0
  * responsable du module : Alexandre Devienne
  * groupe : Alexandre Devienne, Pauline Maury Laribière
@@ -18,7 +18,7 @@
 #include "trou_noir.h"
 #include "particule.h"
 
-// for drawing of center polygon of the black hole
+// for drawing of the black hole's center polygon
 #define NB_COTES 4
 #define RAYON 2
 // size of the outer circle line
@@ -56,7 +56,7 @@ static LIST_HEAD blackHoles = {0};
 
 // ====================================================================
 // Creation of black hole
-/** Create a black hole with given parameter
+/** Creates a black hole with given parameters
  * Parameters :
  *  - center : position of it's center when created
  * Return values :
@@ -81,13 +81,13 @@ int bckH_create(POINT center) {
 
 // ====================================================================
 // Destructions
-/** Delete black holes with given ID
+/** Deletes black holes with given ID
  * Parameters :
  *  - bckHID : id of black hole to delete
  *             see bckH_create
  * Return values :
  *  - if black hole was successfully deleted
- *  - if returns false probably already deleted of never existed
+ *  - if returns false probably already deleted or never existed
  */
 bool bckH_deleteBckH(int bckHID) {
 
@@ -100,7 +100,7 @@ bool bckH_deleteBckH(int bckHID) {
 
 }
 
-/** Delete all existing black holes
+/** Deletes all existing black holes
  * Note : use with care
  */
 void bckH_deleteAll() {
@@ -110,13 +110,13 @@ void bckH_deleteAll() {
 
 // ====================================================================
 // String and file interface
-/** Create black hole from data in a string
+/** Creates black hole from data in a string
  *      see bckH_create
  * Parameters :
  *  - string : to parse data from
  *             Expected format (all in double): posx posy
  * Return values :
- *  - if blach hole was successfully created
+ *  - if true, black hole was successfully created
  *  - if false, error in string format or parameters value (see bckH_create)
  *              and appropriate errors will be displayed in terminal
  */
@@ -168,15 +168,15 @@ void bckH_getAllCenters(LIST_HEAD *pHead)
     }
 }
 
-// return the total number of current black hole
+// returns the total number of current black holes
 int bckH_totalNB() {
     return list_getNbElements(blackHoles);
 }
 
 
 // ====================================================================
-// Manage simulation
-//return ID of closest blackhole to a point
+// Manages simulation
+//returns ID of closest blackhole to a point
 int bckh_closestBckH(POINT point, double* dist)
 {
 	int bckHID = UNASSIGNED;
@@ -184,10 +184,11 @@ int bckh_closestBckH(POINT point, double* dist)
     TROU_NOIR* current = NULL;
 	
 	if (list_goToFirst(&blackHoles) != NULL) {
+		// initializes the return to the first blackhole
         current = list_getData(blackHoles, LIST_CURRENT);
 		*dist = point_distance(current->center, point);
         bckHID = current->id;
-        do {
+        do { // cycles through the rest of blackholes
             current = list_getData(blackHoles, LIST_CURRENT);
             newDist = point_distance(current->center, point);
 
@@ -204,7 +205,7 @@ int bckh_closestBckH(POINT point, double* dist)
 
 // ====================================================================
 // Drawings
-//Display all black holes 
+//Displays all black holes 
 void bckH_display(void)
 {
     list_fctToAllElements(blackHoles, bckH_draw);
@@ -224,7 +225,7 @@ static void bckH_draw(void *data)
 }
 
 // ====================================================================
-// Simulation update fct
+// Simulation updates functions
 /* Apply forces to all particles */
 void bckH_calcTick() {
     // apply forces to particles
@@ -232,9 +233,9 @@ void bckH_calcTick() {
 }
 
 
-/* Destroy all particles too close from the black holes */
+/* Destroys all particles too close from the black holes */
 void bckH_nextTick() {
-    // eat those particle which were a bit too close
+    // eats those particle which were a bit too close
     TROU_NOIR *bckH = NULL;
     int partID = UNASSIGNED;
 
@@ -250,7 +251,7 @@ void bckH_nextTick() {
     }
 }
 
-/* Calc the force all black holes apply on a point p */
+/* Calculates the force all black holes apply on a point p */
 static VECTOR bckH_forceField(POINT p) {
     TROU_NOIR *bckH = NULL;
     VECTOR force = vector_null();
@@ -262,7 +263,7 @@ static VECTOR bckH_forceField(POINT p) {
 
             force_norm  = bckH_calcForceToParticles(*bckH, p);
             force = vector_sum(force,
-                               vector_fitLine(p, bckH->center, force_norm));
+                               vector_fitLine(p, bckH->center, force_norm));                    //????????????? vector fitline
 
         } while (list_goToNext(&blackHoles) != NULL);
     }
@@ -283,7 +284,7 @@ static double bckH_calcForceToParticles(TROU_NOIR bckH, POINT p) {
 }
 
 // ====================================================================
-// utilities functions (managing datas tructure)
+// utilities functions (managing data structure)
 // return pointer to an empty slot in the data structure
 static TROU_NOIR* newBckH() {
     TROU_NOIR *newBckH = malloc(sizeof(TROU_NOIR));
