@@ -128,40 +128,42 @@ void sim_extremPoints(double *xmin, double *xmax, double *ymin, double *ymax)
     LIST_HEAD centers = list_create(NULL, NULL, NULL);
     POINT *point = NULL;
 
-    // init with default values
-    *xmin = 0;
-    *xmax = 0;
-    *ymin = 0;
-    *ymax = 0;
+    if (xmin!=NULL && xmax!=NULL && ymin!=NULL && ymax!=NULL) {
+        // init with default values
+        *xmin = 0;
+        *xmax = 0;
+        *ymin = 0;
+        *ymax = 0;
 
-    // retrieve all center point from all entities
-    part_getAllCenters(&centers);
-    gen_getAllCenters(&centers);
-    bckH_getAllCenters(&centers);
+        // retrieve all center point from all entities
+        part_getAllCenters(&centers);
+        gen_getAllCenters(&centers);
+        bckH_getAllCenters(&centers);
 
-    if (list_goToFirst(&centers) != NULL) {
+        if (list_goToFirst(&centers) != NULL) {
 
-        // initialize with values from points
-        point = list_getData(centers, LIST_CURRENT);
-        *xmin = point->x;
-        *xmax = point->x;
-        *ymin = point->y;
-        *ymax = point->y;
-
-        while (list_goToNext(&centers) != NULL) {
+            // initialize with values from points
             point = list_getData(centers, LIST_CURRENT);
+            *xmin = point->x;
+            *xmax = point->x;
+            *ymin = point->y;
+            *ymax = point->y;
 
-            if(point->x < *xmin) *xmin = point->x;
-            if(point->x > *xmax) *xmax = point->x;
-            if(point->y < *ymin) *ymin = point->y;
-            if(point->y > *ymax) *ymax = point->y;
+            while (list_goToNext(&centers) != NULL) {
+                point = list_getData(centers, LIST_CURRENT);
+
+                if(point->x < *xmin) *xmin = point->x;
+                if(point->x > *xmax) *xmax = point->x;
+                if(point->y < *ymin) *ymin = point->y;
+                if(point->y > *ymax) *ymax = point->y;
+            }
         }
-    }
 
-    #ifdef DEBUG
-    printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",
-		   *xmin, *xmax, *ymin, *ymax);
-    #endif
+        #ifdef DEBUG
+        printf("Extrem points : xmin=%f, xmax=%f, ymin=%f, ymax=%f\n",
+                *xmin, *xmax, *ymin, *ymax);
+        #endif
+    }
 
     // free memory
     list_deleteAll(&centers);
@@ -204,30 +206,19 @@ void sim_select(double x, double y) {
     int closestGen  = gen_closestGen(point, &dist_gen);
     int closestBckH = bckh_closestBckH(point, &dist_bckh);
     
-    if(part_closestPartOn(point) != UNASSIGNED)
-    {
+    if(part_closestPartOn(point) != UNASSIGNED) {
 		selected_entity = PART;
 		selected = part_closestPartOn(point);
 		part_setLock(selected, true);
 	}   
-	
-    else 
-    {
-		if((closestBckH == UNASSIGNED) ? (selected_entity = BCKH) : (selected_entity = GEN));
-		else if((closestGen == UNASSIGNED) ? (selected_entity = GEN) : (selected_entity = BCKH));
-		else if((dist_gen) < (dist_bckh)) selected_entity = GEN;
-		else if((dist_gen) > (dist_bckh)) selected_entity = BCKH;
-		else if((closestBckH == UNASSIGNED) && (closestGen == UNASSIGNED)); //ne fait rien
-			
-		switch(selected_entity)
-		{
-			case GEN: selected = closestGen;
-			break;
-			case BCKH:selected = closestBckH;
-			break;
-			default: (printf("PORTNAWAK\n"));
-		}
-	}
+    else if (closestGen==UNASSIGNED || (closestGen!=UNASSIGNED
+            && closestBckH!=UNASSIGNED && dist_bckh<dist_gen)) {
+        selected = closestBckH;
+        selected_entity = BCKH;
+	} else {
+        selected = closestGen;
+        selected_entity = GEN;
+    }
     
     #ifdef DEBUG
     printf("selected type: %d\n", selected_entity);
@@ -248,13 +239,10 @@ void sim_deleteSelection() {
 		switch(selected_entity)
 		{
 			case PART: part_deletePart(selected);
-					printf("Pomme\n");
 			break;
 			case GEN:  gen_deleteGen(selected);
-					printf("Mangue\n");
 			break;
 			case BCKH: bckH_deleteBckH(selected);
-					printf("FRAISES CHANTILLY\n");
 			break;
 		}
 	}
