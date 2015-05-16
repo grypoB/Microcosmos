@@ -301,6 +301,8 @@ void particule_force_rendu1() {
 void particule_integration_rendu2() {
     PARTICULE *part = NULL;
 
+    part_initTick();
+    part_calcTick();
     part_nextTick(DELTA_T);
 
     // get the first particule created (id = 0)
