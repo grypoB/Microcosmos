@@ -263,7 +263,7 @@ static VECTOR bckH_forceField(POINT p) {
 
             force_norm  = bckH_calcForceToParticles(*bckH, p);
             force = vector_sum(force,
-                               vector_fitLine(p, bckH->center, force_norm));                    //????????????? vector fitline
+                               vector_fitLine(p, bckH->center, force_norm));
 
         } while (list_goToNext(&blackHoles) != NULL);
     }

@@ -69,7 +69,7 @@ double vector_norm(VECTOR v)
  *                          vector must fit
  *      - vec_norm : norm of the vector to return 
  */
-VECTOR vector_fitLine(POINT p1, POINT p2, double vec_norm) {									//????????????
+VECTOR vector_fitLine(POINT p1, POINT p2, double vec_norm) {
     double dist = point_distance(p1, p2);
 
     if (dist == 0.) {
@@ -98,7 +98,7 @@ double linear_interpolation(double xC,
 
 
 // Return a random number in [0,1).
-double randomDouble() {													//what ??
+double randomDouble() {
     static bool initialized = false;
 
     if (!initialized) {

@@ -87,13 +87,13 @@ int part_create(double radius, POINT center, VECTOR speed) {
     if (part_validParams(radius, center, speed, true, ERR_PARTIC, id)) {
         pPart = newPart();
 
-        pPart->locked		= false;
-        pPart->id 			= id;
-        pPart->radius 		= radius;
+        pPart->locked       = false;
+        pPart->id           = id;
+        pPart->radius       = radius;
         part_initMass(pPart);
-        pPart->center 		= center;
-        pPart->speed		= speed;
-        pPart->force		= vector_null();
+        pPart->center       = center;
+        pPart->speed        = speed;
+        pPart->force        = vector_null();
         pPart->acceleration = vector_null();
 
         returnID = id;

@@ -60,7 +60,7 @@ typedef struct List_element LIST_ELEMENT;
 typedef struct List_head    LIST_HEAD;
 
 // Structure which should be exclusively handled by this module
-struct List_element {                                               //?????????????? element particule/gen/bckh
+struct List_element {
 
     void *data; // pointer to data of the node/element
 
