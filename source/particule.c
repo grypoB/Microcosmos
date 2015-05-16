@@ -319,6 +319,7 @@ void particule_integration_rendu2() {
 // ====================================================================
 // Manage simulation
 /** returns ID of the closest part to a point, which it overlaps
+ * (dist<radius)
  * Parameters :
  *  - point : point to consider
  * Return values :
@@ -347,6 +348,40 @@ int part_closestPartOn(POINT point) {
     return partID;
 }
 
+/** returns IDs of all part overlaping a point
+ * (dist<radius)
+ * Parameters :
+ *  - point : point to consider
+ *  - idList : linked list to append the particles IDs to
+ * Return values :
+ *  - true if a part overlaps the point (i.e: an ID was added to the list)
+ *  - false if no particle overlap the point
+ * Note : if NULL is given as parameter for idList
+ *        it will still return a boolean as described above
+ */
+// Please, do not modify the values appended to the list
+bool part_partsOn(POINT point, LIST_HEAD *idList) {
+    bool partOnPoint = false;
+    PARTICULE* current = NULL;
+
+    if (list_goToFirst(&particles) != NULL) {
+        do {
+            current = list_getData(particles, LIST_CURRENT);
+
+            if (point_distance(current->center, point) < current->radius) {
+                partOnPoint = true;
+
+                if (idList!=NULL) { // store id of particle
+                    list_add(idList, &(current->id));
+                } else { // breaks early of 'while' loop
+                    list_goToLast(&particles);
+                }
+            }
+        } while (list_goToNext(&particles) != NULL);
+    }
+
+    return partOnPoint;
+}
 
 // ====================================================================
 // Drawings

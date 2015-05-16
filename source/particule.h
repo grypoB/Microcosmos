@@ -83,6 +83,9 @@ void part_nextTick(double delta_t);
 void part_applyForceField(VECTOR (*forceFieldAt) (POINT p));
 /* return ID of closest part to a point, which it overlaps */
 int part_closestPartOn(POINT point);
+/* returns IDs of all particles overlaping a point */
+// Please, do not modify the values appended to the list
+bool part_partsOn(POINT point, LIST_HEAD *idList);
 // Displays all particles
 void part_display(void);
 
