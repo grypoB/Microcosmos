@@ -230,7 +230,7 @@ void gen_nextTick(double delta_t) {
             
             // Randomly spawn a particle (NBP = average spawn rate per second)
             if (randomDouble()<delta_t*NBP &&
-                part_closestPartOn(gen->center)==UNASSIGNED) {
+                part_partsOn(gen->center, NULL)==false) {
                 (void) part_create(gen->radius, gen->center, gen->speed);
             }
 

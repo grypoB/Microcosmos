@@ -236,16 +236,26 @@ void bckH_calcTick() {
 /* Destroys all particles too close from the black holes */
 void bckH_nextTick() {
     // eats those particle which were a bit too close
+    LIST_HEAD partIDs = {NULL};
     TROU_NOIR *bckH = NULL;
-    int partID = UNASSIGNED;
+    int *currentPartID = NULL;
+
 
     if (list_goToFirst(&blackHoles) != NULL) {
         do {
             bckH = list_getData(blackHoles, LIST_CURRENT);
+            partIDs = list_create(NULL, NULL, NULL);
+            part_partsOn(bckH->center, &partIDs);
 
-            while ((partID=part_closestPartOn(bckH->center)) != UNASSIGNED) {
-                part_deletePart(partID);
+            if (list_goToFirst(&partIDs) != NULL) {
+                do {
+                    currentPartID = list_getData(partIDs, LIST_CURRENT);
+                    part_deletePart(*currentPartID);
+                } while (list_goToNext(&partIDs) != NULL);
             }
+
+            // do not delete those id, just the data structure (linked list)
+            list_deleteAll(&partIDs);
 
         } while (list_goToNext(&blackHoles) != NULL);
     }
