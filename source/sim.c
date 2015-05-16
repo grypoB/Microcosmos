@@ -182,6 +182,12 @@ void sim_display(void)
 // handles calculation for the next step of the simulation
 void sim_next_step(void)
 {
+    #ifdef DEBUG
+    static double simTime = 0;
+    simTime += DELTA_T;
+    printf("Time = %f\n", simTime);
+    #endif
+
     gen_nextTick(DELTA_T);  // create new particles
     part_initTick();
     
