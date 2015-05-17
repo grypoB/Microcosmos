@@ -40,7 +40,7 @@
 \caption{Final architecture}
 \end{figure}
 
-From \emph{rendu 2} to \emph{rendu final}, there were not any changes in the
+From \emph{rendu 2} to \emph{rendu 3}, there were not any changes in the
 program architecture, we simply finished the code how we had foreseen to do.
 
 The only change to note is that \emph{trou\_noir.c} and \emph{generateur.c} rely not on \texttt{int part\_closestPartOn(POINT p)}
@@ -55,7 +55,7 @@ We consider using arrays, where dichotomy search could have been used, but it wo
 
 \subsection{Calculation and memory costs}
 Let's study the calculation and memory costs of one step of the simulation,
-which is done in 5 steps.
+which is done in 5 parts.
 
 Let $nbP$, $nbTN$ and $nbG$ the number of respectively particles, blacks holes and generators.
 To simplify the calculation, let consider $nbP$ the number of particles after the step of the simulation.
@@ -102,8 +102,8 @@ Destroying particles &  \multicolumn{1}{|c|}{\multirow{2}{*}{$nbTN\cdot nbP$}}\\
 \label{tab-calc}
 \end{table}
 
-\paragraph{Memory costs} All the entities data is stored in a generic linked list
-which memory costs is linear in the number of elements thus $nbP$, $nbG$ and $nbTN$.
+\paragraph{Memory costs} All the entities datas are stored in a generic linked list
+which memory costs are linear in the number of elements thus $nbP + nbG + nbTN$.
 In addition to this, in each 5 steps we are not using any recursion and each time we only
 declare a few more variables, which number doesn't depend on any amount of entities
 at the exception from the last step (destroying particles touching black holes).
@@ -118,7 +118,7 @@ After a more precise analysis, we see that our algorithm cannot create more than
 elements in the linked list, thus we add $nbP$ to the memory costs of the 4 previous steps
 (the black holes data are already accounted for)
 
-Thus the total memory costs is:
+Thus the total memory cost is:
 \begin{align}
 \mathcal{O}(nbP + nbG + nbTN)
 \end{align}
@@ -141,11 +141,11 @@ Moreover, it forced us to be rigorous in our way to commit our work
 because we had to explain every time which changes had been made
 (in so called commit messages).
 
-Before each \emph{rendu}, we shared the work that had to be done
-according the different testing mode of the program.
-For the first \emph{rendu}, one had to do the Error mode and the other the Force mode.
-Then, for the second one, there were the Graphic and the Integration mode.
-Finally, for the last \emph{rendu}, we shared the last specifications:
+For each \emph{rendu}, we divided the work that had to be done
+according to the different testing mode of the program.
+For the \emph{rendu 1}, one had to do the Error mode and the other the Force mode.
+Then, for \emph{rendu 2}, there were the Graphic and the Integration mode.
+Finally, for \emph{rendu 3}, we shared the last specifications:
 one finished the OpenGL and GLUT
 and the other the remaining part of the Simulation mode.
 The person responsible for each module is summarized in table \ref{tab-module}.
@@ -154,45 +154,45 @@ This means we only coded once together, but thanks to the Git repository,
 we were able to help each other out, easily, efficiently and remotely (which happened often).
 
 \paragraph{Start of the project.} Before even coding a single line, we tried to elaborate the final
-architecture we will use. With this (draft of the) architecture done, it was easier
+architecture we would use. With this (draft of the) architecture done, it was easier
 to divide the work between us two.
-Then we began the program with the basics of the particle module and geometry (low level vector calculation).
+Then we began the program with the basics of the particle and geometry module (low level vector calculation).
 Then we work our way up, from sim to main. With every time, writing only the basics of the code so we could begin testing from \texttt{main.cpp}
 the function we had coded all the way down.
 
 \paragraph{Testing.}
 We mainly compared how our program behaved compared to the specification and the demo program.
 First with the given testing file, then if a bug arose (or to thoroughly test our code)
-we tried with different test files (using a special verbose debug mode version of our code).
+we tried with different test files (using a special verbose debug version of our code).
 Then if everything looked fine, we could move on to implementing another feature.
 
 To test the generic linked list module, a separate testing environment (outside of the project)
 was used, and it proved very useful to iron all the bugs out.
 
 \paragraph{Bugs and issues.}
-The most frequent bug was due to issues with pointers and not initializing variables before using them.
+The most frequent bugs were due to issues with pointers and not initializing variables before using them.
 
-Also, it was frequent that even when testing our code we left some bugs in.
-Even if there roots were found rapidly when we put both our minds into it, it often slowed us.
+It was also frequent that when testing our code we left some bugs in, which we only found later.
+Even if there roots were rapidly found (when we put both our minds into it) it often slowed us.
 
 The bug which took us the longest to solve was the proper drawing of the black holes (dashed lines).
-We indeed tried a lot of things, before realizing we only had to change the \texttt{glBegin} statement from GL\_LINE to GL\_LINES.
+We indeed tried a lot of things, before realizing we only had to change the \texttt{glBegin} parameter from \texttt{GL\_LINE} to \texttt{GL\_LINES}.
 
 % =====================================================================
-%\subsection{Person responsible for each module} % change to a table in a floatinng figure
+%\subsection{Person responsible for each module} % change to a table in a floating figure
 
 % =====================================================================
 \subsection{Auto-evaluation of our work}
-To conclude, we can say that we are satisfied with our work.
+We can say that we are satisfied with our work.
 Even though our programming levels were very different,
 we both learned a lot thanks to this project.
 
-Now that we gain this experience, we will surely pay more attention to testing our code
+Now that we gained this experience, we will surely pay more attention to testing our code
 before moving on to a new feature.
 We might also use more advanced Git features (like branches) to have an even better workflow and
 avoid some complex merges we had to do.
 
-We did not used the intermediary \emph{rendu} but it was still a nice asset to have.
+We did not used the public intermediary \emph{rendu} but it was still a nice asset to have.
 
 A weak point was the fact that the course subjects had to be understood
 and used very quickly to succeed in the project.
@@ -203,7 +203,7 @@ A strong point of the project was its diversity in themes (modeling of particles
 Also it was nice to be able to unleash our creativity to create fun and surprising scenarios (see last illustration),
 once the project was fully complete (as for \emph{Recolor}).
 
-An improvement might have been a project were we could start being creative earlier, and not just at the end.
+An improvement might have been a project were we could have started being creative earlier, and not just at the end.
 
 \begin{table}[H]
 \begin{center}
@@ -219,7 +219,7 @@ An improvement might have been a project were we could start being creative earl
 \hline
 \texttt{particule.c} & & X\\
 \hline
-\texttt{générateur.c} & & X\\
+\texttt{generateur.c} & & X\\
 \hline
 \texttt{trou\_noir.c} & & X\\
 \hline
@@ -238,7 +238,7 @@ An improvement might have been a project were we could start being creative earl
 \section{Conclusion}
 This project was challenging to begin, but once the workflow was established, it went smoothly
 (if we omit those obscure \texttt{Segmentation fault} along the way).
-It was a rewarding experience and we are proud of the final results.
+It was a rewarding experience and we are proud of the result.
 
 \begin{figure}[H]
 \centering
@@ -254,7 +254,7 @@ It was a rewarding experience and we are proud of the final results.
 \includegraphics[width=0.48\textwidth]{7.jpg}
 
 \caption{7 images of a single simulation scenario (which begins on the upper left image). In every image there is 9 generators (to the left) and 1 black hole (to the right).
-The other circles are particles which total number varies (from first image to last) : 2, 3, 8, 14, 30, 30, 127, 96.}
+The other circles are particles which total number varies (from the first image to the last) : 2, 8, 14, 30, 30, 127, 96.}
 \end{figure}
 \label{lastpage}
 \end{multicols*}
