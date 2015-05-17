@@ -54,7 +54,21 @@ It was necessary to make sure that all the memory allocated to the program was i
 We consider using arrays, where dicotomial could have been used, but it would not have reduced the algorithm 'worst-case' complexity 
 
 \subsection{Calculation and memory costs}
-Let's study the calculation and memory costs of one step of the simulation
+Let's study the calculation and memory costs of one step of the simulation,
+which is done in 5 steps.
+
+Let $nbP$, $nbTN$ and $nbGG$ the number of respectively particles, blacks holes and generators.
+To simplify the calculation, let consider $nbP$ the number of particles after the step of the simulation.
+Indeed this number could be increased by the creation of particles from the generators (to a maximum of $nbG$).
+
+
+
+\paragraph{Calculation costs}
+Using the Big Oh notation, the calculation costs of all steps from the simulation
+are summarized in table \ref{tab-calc}. Thus the total complexity of the algorithm is :
+\begin{align}
+\mathcal{O}(nbP (nbP + nbG + nbTN))
+\end{align}
 
 
 \begin{table}[H]
@@ -84,30 +98,49 @@ Destroying particles &  \multicolumn{1}{|c|}{\multirow{2}{*}{$nbTN\cdot nbP$}}\\
 \hline
 \end{tabular}
 \end{center}
-\caption{BLOU BLOU AFD FDD}
+\caption{Algorithm complexity for a single simulation step}
+\label{tab-calc}
 \end{table}
 
-\paragraph{Calculation costs}
-The divided 5 stjdfskglk ;
+\paragraph{Memory costs} All the entities data is stored in a generic linked list
+which memory costs is linear in the number of elements thus $nbP$, $nbG$ and $nbTN$.
+In addition to this, in each 5 steps we are not using any recursion and each time we only
+declare a few more variables, which number doesn't depend on any ammount of entities
+at the exception from the last step (destroying particles touching black holes).
 
-\paragraph{Memory costs}
+For the first 4 steps we have a memory cost of $\mathcal{O}(nbP + nbG + nbTN)$
+
+The last step is a bit more complex :
+it creates a linked list of all the particles to destroy for every black holes.
+So we could thing this step is in $\mathcal{O}(nbP \cdot nbTN)$ but because we destroy those particle before
+checking the next black holes, we cannot store them in a subsequent linked list.
+After a more precise analysis, we see that our algorithm cannot create more than $nbP$ different
+element in the linked list, thus we add $nbP$ to the memory costs of the 4 previous steps
+(the black holes data are already accounted for)
+
+Thus the total memory costs is:
+\begin{align}
+\mathcal{O}(nbP + nbG + nbTN)
+\end{align}
 
 
 \subsection{Illustrations}
-
+See page \pageref{lastpage}
 % find nice pictures
 % ...
 
 % =====================================================================
 \section{Methodology}
 \subsection{Work organisation}
-First of all, even before starting the project,
-Alexandre had the idea to use GitHub to work together.
-During the whole project, this was a major asset because we could easily share
-what we had done with the other without having to send mails
-and always check which file had changed and such.
+
+\paragraph{Workflow.} We used a Git repository (hosted privately on GitHub) from the biginning,
+to avoid the hassle of sending emails and merging documents manually.
+It also provided us a great syncing tool, so we could be sure we were working on
+the latest version of the code.
 Moreover, it forced us to be rigorous in our way to commit our work
-because we had to explain every time which changes had been made.
+because we had to explain every time which changes had been made
+(in so called commit messages).
+
 Before each rendu, we shared the work that had to be done
 according the different testing mode of the program.
 For the first rendu, one had to do the Error mode and the other the Force mode.
@@ -115,21 +148,63 @@ Then, for the second one, there were the Graphic and the Integration mode.
 Finally, for the last rendu, we shared the last specifications:
 one finished the OPENGL and GLUT
 and the other the rest of the whole Simulation mode.
-Of course, these shares were not exclusive
-and there were still a lot of help between ourselves.
+The person responsible for each module is summarized in table \ref{tab-module}.
 
-We began the program with the main.cpp and sim.c for the rendu 1.
-Very soon, we made the geometry.c module because it eased our work
-by reducing the amount of redundant code.
-Concerning the testing, first, we always both separately compared each file
-with the demo file that had been given to see check that everything looked
-and functioned the right way.
-Also, other testing file were made in order to check if everything was working right.
-The most frequent bug was due to issues with pointers and forgets to initialise correctly datas.
-There were also major issues 
+This means we only coded once together, but thanks to the Git repository,
+we were able to help each other out, easily and efficiently (which happened often).
+
+\paragraph{Start of the project.} Before even coding a single line, we tried to elaborate the final
+architecture we will use. With this (draft of the) structure done, it was easier
+to divide the work between us two.
+Then we began the program with the basics of the particle module and geometry (low level vector calculation)
+Then we work our way up, from sim to main. With every time, writing only the basics of the code so we could begin testing from main.cpp
+the function we had coded all the way down.
+
+\paragraph{Testing.}
+We mainly compared how our program behaved compared to the specification and the demo program.
+First with the given testing file, then if a bug arised (or to thoroughply test our code)
+we tried with different test files (using a special verbose debug mode version of our code).
+Then if everything was looking fine, we could move on to implementing a other part of our code.
+
+To test the generic linked list module, a separate testing environment (outside of the project)
+was used, and it proved very useful to iron all the bugs out.
+
+\paragraph{Bugs and issues.}
+The most frequent bug was due to issues with pointers and not initializing variables before using them.
+
+Also, it was frequent that even when testing our code we left some bugs in.
+Even if there roots were found rapidly when we put both our minds into it, it often slowed us.
+
+The bug which took us the longest to solve was the proper drawing of the black holes (dashed lines).
+We indeed tried a lot of things, before realizing we only had to change the \texttt{glBegin} statement from GL\_LINE to GL\_LINES.
 
 % =====================================================================
 %\subsection{Person responsible for each module} % change to a table in a floatinng figure
+
+% =====================================================================
+\subsection{Auto-evaluation of our work}
+To conclude, we can say that we are satisfied with our work.
+Even though our programming levels were very different,
+we both learned a thanks to this project.
+
+Now that we gain this experience, we will surely pay more attention to testing our code
+before moving on to a new feature.
+We might also use more advanced Git features (like branches) to have an even better workflow and
+avoid some complex merges we had to do.
+
+We did not used the intermediary \emph{rendu} but it was still a nice asset to have.
+
+A weak point was the fact that the course subjects had to be understood
+and handled very quickly to succeed in the project.
+Also, we were not sure during the weekly exercice sessions if we should focus
+on the project or the exercices.
+
+A strong point of the project was its diversity in themes (modeling of particles movement, graphics and user interaction handling)
+Also it was nice to be able to enleash our creativity to create fun and surprising scenarios (see last illustration),
+once the project was fully complete (as for \emph{Recolor}).
+
+An improvement might have been a project were we could start being creative earlier, and not just at the end.
+
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{|c|c|c|}
@@ -157,27 +232,30 @@ There were also major issues
 \end{tabular}
 \end{center}
 \caption{Person responsible for each module}
+\label{tab-module}
 \end{table}
 
-% =====================================================================
-\subsection{Auto-evaluation of our work}
-To conclude, we can say that we are satisfied with our work.
-Even though our programming levels were very different,
-we both learned a lot thanks to this project.
-We did not used the intermediary rendu to change
-but there were very interesting to see another way of coding the same things.
-A weak point was the fact that the lessons of the course had to be understood
-and handled very quickly to succeed to do the program.
-A strong point was the help of the assistants every week.
-(je bullshit mais je sais pas quoi metre… )
-A possible upgrade would be to have even more exercises in every week’s series
-to have the possibility to train ourselves more (BULLSHIT EXTREME ICI AUSSI).
-
 \section{Conclusion}
-This project was awesome, we learned all these cool stuf,
-but was difficult cause of
-still great thanks to all the material YOU gave us
+This project was challenging to begin, but once the workflow was established, it went smoothly
+(if we ommit those obscure \texttt{Segmentation fault} along the way).
+It was a rewarding experience and we are proud of the final results.
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.48\textwidth]{1.jpg}
+\includegraphics[width=0.48\textwidth]{2.jpg}
+\includegraphics[width=0.48\textwidth]{3.jpg}
+\includegraphics[width=0.48\textwidth]{4.jpg}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.48\textwidth]{5.jpg}
+\includegraphics[width=0.48\textwidth]{6.jpg}
+\includegraphics[width=0.48\textwidth]{7.jpg}
+
+\caption{7 images of a single simulation scenario (which begins on the upper left image). In every image there is 9 generators (to the left) and 1 black hole (to the right).
+The other circles are particles which total number varies (from first image to last) : 2, 3, 8, 14, 30, 30, 127, 96.}
+\end{figure}
 \label{lastpage}
 \end{multicols*}
 \end{document}
