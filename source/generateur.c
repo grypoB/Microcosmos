@@ -195,6 +195,7 @@ void gen_getAllCenters(LIST_HEAD *pHead)
 // ====================================================================
 // Manage simulation
 //return ID of closest generator to a point
+//TODO using sort
 int gen_closestGen(POINT point, double* dist)
 {
 	int genID = UNASSIGNED;
@@ -220,7 +221,10 @@ int gen_closestGen(POINT point, double* dist)
 	return genID;
 }
 
-
+/** Make the generator spawn particles
+ *  Randomnly spawn particle for each generator, dependant on
+ *  delata_t (the bigger, the more chance)
+ */
 void gen_nextTick(double delta_t) {
     GENERATEUR *gen = NULL;
 
@@ -268,7 +272,7 @@ static GENERATEUR* newGen() {
     GENERATEUR* newGen = malloc(sizeof(GENERATEUR));
 
     if (!genList_initialized) {
-        // TODO add support the other fct
+        // TODO add support to the sort
         generators = list_create(deleteGen, NULL, idGen);
         genList_initialized = true;
     }

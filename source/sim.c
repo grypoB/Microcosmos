@@ -233,7 +233,7 @@ void sim_select(double x, double y) {
     printf("finally selected: %d\n", selected);
     #endif
     
-    printf("%s\n", __func__);
+    //printf("%s\n", __func__);
 }
 
 // delete the current selection
@@ -252,7 +252,7 @@ void sim_deleteSelection() {
 			break;
 		}
 	}
-    printf("%s\n", __func__);
+    //printf("%s\n", __func__);
 }
 
 // deselect the current selection
@@ -266,7 +266,7 @@ void sim_deselect() {
 		}
 		selected = UNASSIGNED;
 	}
-	printf("%s\n", __func__);
+	//printf("%s\n", __func__);
 }
 
 

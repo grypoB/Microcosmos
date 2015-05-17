@@ -20,6 +20,7 @@ extern "C"
 }
 
 
+// keboard action supported
 #define DELETE_KEY 'd'
 #define START_KEY  'p'
 #define STEP_KEY   ' '
@@ -87,6 +88,7 @@ namespace
     GLfloat left = -RMAX, right = RMAX, 
             down = -RMAX, up    = RMAX;
 
+    // limits of the frame of the simulation (from sim_extremPoints)
 	double xmin=0, xmax=0, ymin=0, ymax=0;
 }
 
